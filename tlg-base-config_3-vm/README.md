@@ -1,9 +1,10 @@
 ﻿# TLG (Test Lab Guide) 3 VM Base Configuration
-
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmaxskunkworks%2Ftlg%2Fmaster%2Ftlg-base-config_3-vm%2Fazuredeploy.json" target="_blank">
+**This version configured to be deployed from the oualabadmins/lab_deploy repo.** See the section _MAX notes_ below for information on how to deploy for MAX Skunkworks lab admins.
+**Time to deploy**: Approx. 32 minutes
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Foualabadmins%2Flab_deploy%2Fmaster%2Ftlg-base-config_3-vm%2Fazuredeploy.json" target="_blank">
 <img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.png"/>
 </a>
-<a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2Fmaxskunkworks%2Ftlg%2Fmaster%2Ftlg-base-config_3-vm%2Fazuredeploy.json" target="_blank">
+<a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2Foualabadmins%2Flab_deploy%2Fmaster%2Ftlg-base-config_3-vm%2Fazuredeploy.json" target="_blank">
 <img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/visualizebutton.png"/>
 </a>
 
@@ -47,6 +48,11 @@ the JoinDomain extensions. The asymmetric VM deployment adds a few minutes to th
 * The private IP address of the **ADDC** VM is always *10.0.0.10*. This IP is set as the DNS IP for the virtual network and all member NICs.
 * The default VM size for all VMs in the deployment is Standard_D2_v2.
 * Deployment outputs include public IP address and FQDN for each VM.
+
+## MAX notes
+
+* **IMPORTANT**: Only deploy this template into a subscription with no ExpressRoute circuit. Use _MAXLAB R&D EXT 1_, _MAXLAB R&D EXT 2_ or _MAXLAB R&D Sandbox_.
+* You can test client VM deployment using the custom Windows 10 image at https://tlgqscus01client.blob.core.windows.net/vhds/Win10.vhd. Enter that value into the **clientVhdUri** field, make sure the value of **deployClientVm** is _Yes_, and then deploy to the _Central US_ region, which is where the storage account containing the image resides.
 
 `Tags: TLG, Test Lab Guide, Base Configuration`
 ___
