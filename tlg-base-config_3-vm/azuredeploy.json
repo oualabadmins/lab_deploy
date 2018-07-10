@@ -52,7 +52,7 @@
       "metadata": {
         "description": "The URI of the storage account containing the client VHD. Leave blank if you are not deploying a client VM."
       },
-      "defaultValue": ""
+      "defaultValue": "https://tlgqscus01client.blob.core.windows.net/vhds/Win10.vhd"
     },
     "vmSize": {
       "type": "string",
@@ -72,7 +72,7 @@
       "metadata": {
         "description": "Auto-generated container in staging storage account to receive post-build staging folder upload."
       },
-      "defaultValue": "https://raw.githubusercontent.com/maxskunkworks/tlg/master/tlg-base-config_3-vm"
+      "defaultValue": "https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/tlg-base-config_3-vm"
     },
     "_artifactsLocationSasToken": {
       "type": "securestring",
