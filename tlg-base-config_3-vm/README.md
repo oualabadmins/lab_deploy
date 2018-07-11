@@ -24,6 +24,9 @@ Use of a custom client image is required because the Windows 10 gallery image is
 * For more information about eligible subscriptions, see https://docs.microsoft.com/en-us/azure/virtual-machines/windows/client-images#subscription-eligibility.
 * For more information about how to prepare a generalized VHD, see https://docs.microsoft.com/en-us/azure/virtual-machines/windows/prepare-for-upload-vhd-image.
 
+## Usage
+
+You can either click the "Deploy to Azure button to open the deployment UI in the Azure portal, or run the script at https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/tlg-base-config_3-vm/scripts/Deploy-TLG.ps1 on your local computer.
 
 ## Credits
 Thanks to both Simon Davies and Willem Kasdorp, from whom I borrowed various DSC configuration elements.
