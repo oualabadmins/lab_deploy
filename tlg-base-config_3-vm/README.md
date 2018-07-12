@@ -1,7 +1,10 @@
-﻿# TLG (Test Lab Guide) 3 VM Base Configuration
+﻿# TLG (Test Lab Guide) - 3 VM Base Configuration (v0.9)
+
 **This version configured to be deployed from the oualabadmins/lab_deploy repo.** See the section _MAX notes_ below for information on how to deploy for MAX Skunkworks lab admins.
 
-**Time to deploy**: Approx. 30 minutes
+**Time to deploy**: Approx. 40 minutes
+
+Working as of _7/12/2018_
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Foualabadmins%2Flab_deploy%2Fmaster%2Ftlg-base-config_3-vm%2Fazuredeploy.json" target="_blank">
 <img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.png"/>
@@ -26,7 +29,10 @@ Use of a custom client image is required because the Windows 10 gallery image is
 
 ## Usage
 
-You can either click the "Deploy to Azure button to open the deployment UI in the Azure portal, or run the script at https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/tlg-base-config_3-vm/scripts/Deploy-TLG.ps1 on your local computer.
+You can deploy this template in one of two ways:
+
++ Click the "Deploy to Azure" button to open the deployment UI in the Azure portal
++ Execute the PowerShell script at https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/tlg-base-config_3-vm/scripts/Deploy-TLG.ps1 on your local computer.
 
 ## Credits
 Thanks to both Simon Davies and Willem Kasdorp, from whom I borrowed various DSC configuration elements.
