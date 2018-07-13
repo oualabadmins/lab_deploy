@@ -4,7 +4,7 @@
 
 **Time to deploy**: Approx. 40 minutes
 
-Working as of _7/12/2018_
+Last updated _7/13/2018_
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Foualabadmins%2Flab_deploy%2Fmaster%2Ftlg-base-config_3-vm%2Fazuredeploy.json" target="_blank">
 <img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.png"/>
@@ -42,7 +42,7 @@ Thanks to both Simon Davies and Willem Kasdorp, from whom I borrowed various DSC
 The following resources are deployed as part of the solution:
 
 + **ADDC VM**: Windows Server 2012 R2 or 2016 VM configured as a domain controller and DNS with static private IP address
-+ **App Server VM**: Windows Server 2012 R2 or 2016 VM joined to the domain. IIS is installed.
++ **App Server VM**: Windows Server 2012 R2 or 2016 VM joined to the domain. IIS is installed, and C:\Files containing example.txt is shared as "Files".
 + **Client VM**: Windows 10 client joined to the domain
 + **Storage account**: Diagnostics storage account, and client VM storage account if indicated. ADDC and App Server VMs in the deployment use managed disks, so no storage accounts are created for VHDs.
 + **NSG**: Network security group configured to allow inbound RDP on 3389
