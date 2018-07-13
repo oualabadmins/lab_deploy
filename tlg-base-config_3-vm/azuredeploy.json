@@ -108,8 +108,7 @@
 
       "appVmName": "APP1",
       "appConfigurationFunction": {
-        "InstallIIS": "InstallIIS.ps1\\InstallIIS",
-        "FileShare": "FileShare.ps1\\FileShare"
+        "AppConfig": "AppConfig.ps1\\AppConfig"
       },
       "appNicIP": "10.0.0.11",
       "appPublicIpName": "[concat(parameters('configName'),'-APP_IP')]",
