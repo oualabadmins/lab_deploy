@@ -65,7 +65,7 @@ the JoinDomain extensions. The asymmetric VM deployment adds a few minutes to th
 ## MAX notes
 
 * **IMPORTANT**: Only deploy this template into a subscription with no ExpressRoute circuit. Use _MAXLAB R&D EXT 1_, _MAXLAB R&D EXT 2_ or _MAXLAB R&D Sandbox_.
-* You can test client VM deployment using the custom Windows 10 image at https://tlgqscus01client.blob.core.windows.net/vhds/Win10.vhd. Enter that value into the **clientVhdUri** field, make sure the value of **deployClientVm** is _Yes_, and then deploy to the _Central US_ region, which is where the storage account containing the image resides.
+* You can test client VM deployment using the custom Windows 10 image at https://sandboxwusimages.blob.core.windows.net/vhds/Win10.vhd. Enter that value into the **clientVhdUri** field, make sure the value of **deployClientVm** is _Yes_, and then deploy to the _West US_ region, which is where the storage account containing the image resides.
 * If you are deploying from a private repo, get the token by opening a file from the repo in the browser and click the "Raw" button. The token will be at the end of the URL in the address field, starting with "?token=<string>". Add the token (including ?token=) to the **_artifactsLocationSasToken** parameter.
 
 `Tags: TLG, Test Lab Guide, Base Configuration`

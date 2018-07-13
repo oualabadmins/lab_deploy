@@ -23,7 +23,8 @@
       ],
       "metadata": {
         "description": "The OS of application servers in your deployment."
-      }
+      },
+      "defaultValue": "2016-Datacenter"
     },
     "adminUsername": {
       "type": "string",
@@ -52,7 +53,7 @@
       "metadata": {
         "description": "The URI of the storage account containing the client VHD. Leave blank if you are not deploying a client VM."
       },
-      "defaultValue": "https://tlgqscus01client.blob.core.windows.net/vhds/Win10.vhd"
+      "defaultValue": "https://sandboxwusimages.blob.core.windows.net/vhds/Win10.vhd"
     },
     "vmSize": {
       "type": "string",
