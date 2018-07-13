@@ -12,7 +12,7 @@
       "type": "string"
     },
     "modulesURL": {
-      "type": "object"
+      "type": "string"
     },
     "configurationFunction": {
       "type": "object"

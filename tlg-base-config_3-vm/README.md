@@ -1,4 +1,4 @@
-﻿# TLG (Test Lab Guide) - 3 VM Base Configuration (v0.9.1)
+﻿# TLG (Test Lab Guide) - 3 VM Base Configuration (v0.9.2)
 
 **This version configured to be deployed from the oualabadmins/lab_deploy repo.** See the section _MAX notes_ below for information on how to deploy for MAX Skunkworks lab admins.
 
