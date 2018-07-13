@@ -12,10 +12,10 @@
       "type": "string"
     },
     "modulesURL": {
-      "type": "string"
+      "type": "object"
     },
     "configurationFunction": {
-      "type": "string"
+      "type": "object"
     }
   },
   "variables": {},
