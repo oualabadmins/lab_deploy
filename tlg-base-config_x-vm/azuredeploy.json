@@ -570,7 +570,7 @@
             "value": "copyIndex(clientVms)]"
           },
           "nicName": {
-            "value": "copyIndex(1)]"
+            "value": "copyIndex(clientVms)]"
           },
           "vhdUri": {
             "value": "[parameters('clientVhdUri')]"
