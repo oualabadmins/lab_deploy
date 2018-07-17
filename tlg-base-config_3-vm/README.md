@@ -1,4 +1,4 @@
-﻿# TLG (Test Lab Guide) - 3 VM Base Configuration (v0.9.5)
+﻿# TLG (Test Lab Guide) - 3 VM Base Configuration (v1.0)
 
 **This version configured to be deployed from the oualabadmins/lab_deploy repo.** See the section _MAX notes_ below for information on how to deploy for MAX Skunkworks lab admins.
 
@@ -42,7 +42,7 @@ Thanks to both Simon Davies and Willem Kasdorp, from whom I borrowed various DSC
 The following resources are deployed as part of the solution:
 
 + **ADDC VM**: Windows Server 2012 R2 or 2016 VM configured as a domain controller and DNS with static private IP address
-+ **App Server VM**: Windows Server 2012 R2 or 2016 VM joined to the domain. IIS is installed, and C:\Files containing example.txt is shared as "Files".
++ **App Server VM**: Windows Server 2012 R2 or 2016 VM joined to the domain. IIS and .NET 4.5 are installed, and the directory C:\Files containing the file example.txt is shared as "\\APP1\Files" with full control for the User1 domain account.
 + **Client VM**: Windows 10 client joined to the domain
 + **Storage account**: Diagnostics storage account, and client VM storage account if indicated. ADDC and App Server VMs in the deployment use managed disks, so no storage accounts are created for VHDs.
 + **NSG**: Network security group configured to allow inbound RDP on 3389
@@ -55,9 +55,10 @@ The following resources are deployed as part of the solution:
 
 ## Solution notes
 
+* All guest OS configuration is executed with DSC, using the resources CreateADPDC.ps1.zip and AppConfig.ps1.zip.
 * The domain user *User1* is created in the domain and added to the Domain Admins group. User1's password is the one you provide in the *adminPassword* parameter.
-* The *App server* and *Client* VM resources depend on the **ADDC** resource deployment to ensure that the AD domain exists prior to execution of 
-the JoinDomain extensions. The asymmetric VM deployment adds a few minutes to the overall deployment time.
+* The *App server* and *Client* VM resources depend on the **ADDC** resource deployment in order to ensure that the AD domain exists prior to execution of 
+the JoinDomain extensions for the member VMs. This asymmetric VM deployment process adds several minutes to the overall deployment time.
 * The private IP address of the **ADDC** VM is always *10.0.0.10*. This IP is set as the DNS IP for the virtual network and all member NICs.
 * The default VM size for all VMs in the deployment is Standard_D2_v2.
 * Deployment outputs include public IP address and FQDN for each VM.
