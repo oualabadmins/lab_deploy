@@ -406,7 +406,6 @@
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for the app server VM.",
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/',parameters('configName'),'-APP_NIC')]",
         "[concat('Microsoft.Resources/deployments/','ADDC')]"
       ],
       "properties": {
@@ -423,7 +422,7 @@
             "value": "[concat('APP',parameters('numberOfAppVms')[copyIndex(1)])]"
           },
           "nicName": {
-            "value": "[concat(parameters('configName'),'-APP_NIC')]"
+            "value": "[concat(parameters('configName'),'-APP_NIC-',parameters('numberOfAppVms')[copyIndex(1)])]"
           },
           "modulesURL": {
             "value": "[variables('assetLocation')]"
@@ -445,7 +444,6 @@
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for the client VM.",
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/',parameters('configName'),'-CLI_NIC')]",
         "[concat('Microsoft.Resources/deployments/','ADDC')]"
       ],
       "properties": {
@@ -462,7 +460,7 @@
             "value": "[concat('CLIENT',parameters('numberOfClientVms')[copyIndex(1)])]"
           },
           "nicName": {
-            "value": "[concat(parameters('configName'),'-CLI_NIC')]"
+            "value": "[concat(parameters('configName'),'-CLIENT_NIC-',parameters('numberOfClientVms')[copyIndex(1)])]"
           },
           "vhdUri": {
             "value": "[parameters('clientVhdUri')]"
