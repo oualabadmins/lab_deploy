@@ -29,7 +29,7 @@
                 {
                   "name": "[concat('ipconfig',parameters('sharedConfig').count)]",
                   "properties": {
-                    "privateIPAllocationMethod": "Dynamic",
+                    "privateIPAllocationMethod": "[parameters('sharedConfig').ipAllocation]",
                     "publicIPAddress": {
                       "id": "[resourceId ('Microsoft.Network/publicIPAddresses/',variables('publicIp'))]"
                     },

@@ -141,7 +141,10 @@
       "adNicIP": "10.0.0.10",
       "adPublicIpName": "[concat(parameters('configName'),'-AD_IP')]",
 
-      "appConfigurationFunction": "AppConfig.ps1\\AppConfig"
+      "appVmName": "[concat('APP',copyIndex(appVms))]",
+      "appConfigurationFunction": "AppConfig.ps1\\AppConfig",
+
+      "clientVmName": "[concat('APP',copyIndex(clientVms))]"
     },
 
     "SharedVmConfig": {
@@ -287,7 +290,7 @@
             "value": "APP"
           },
           "count": {
-            "value": "copyIndex(1)"
+            "value": "copyIndex(appIps)"
           },
           "ipAllocation": {
             "value": "Dynamic"
@@ -325,7 +328,7 @@
             "value": "CLIENT"
           },
           "count": {
-            "value": "copyIndex(1)"
+            "value": "copyIndex(clientIps)"
           },
           "ipAllocation": {
             "value": "Dynamic"
@@ -404,7 +407,7 @@
             "value": "APP"
           },
           "count": {
-            "value": "copyIndex(1)"
+            "value": "copyIndex(appNics)"
           },
           "ipAllocation": {
             "value": "Dynamic"
@@ -434,7 +437,7 @@
         "[concat('Microsoft.Network/virtualNetworks/',parameters('configName'),'-vnet')]"
       ],
       "copy": {
-        "name": "appNics",
+        "name": "clientNics",
         "count": "[parameters('numberOfClientVms')]"
       },
       "properties": {
@@ -451,7 +454,7 @@
             "value": "CLIENT"
           },
           "count": {
-            "value": "copyIndex(1)"
+            "value": "copyIndex(clientNics)"
           },
           "ipAllocation": {
             "value": "Dynamic"
@@ -528,7 +531,7 @@
             "value": "[variables('SharedVmConfig')]" 
           },
           "vmName": {
-            "value": "[concat('APP',copyIndex(1))]"
+            "value": "copyIndex(appVms)]"
           },
           "nicName": {
             "value": "[concat(parameters('configName'),'-APP_NIC-',copyIndex(1))]"
@@ -566,7 +569,7 @@
             "value": "[variables('SharedVmConfig')]" 
           },
           "vmName": {
-            "value": "[concat('CLIENT',copyIndex(1))]"
+            "value": "copyIndex(clientVms)]"
           },
           "nicName": {
             "value": "[concat(parameters('configName'),'-CLIENT_NIC-',copyIndex(1))]"
