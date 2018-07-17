@@ -108,29 +108,7 @@
       "vnetName": "[concat(parameters('configName'),'-VNET')]",
       "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-VNET'), 'subnet-01')]",
       "subnet": "10.0.0.0/8",
-      "nsgName": "[concat(parameters('configName'),'-NSG')]",
-      "appPublicIpName": {
-        "copy": [
-          {
-            "name": "appPublicIps",
-            "count": "[parameters('numberOfAppVms')]",
-            "input": {
-              "name": "[concat(parameters('configName'),'-APP_IP',copyIndex(1))]"
-            }
-          }
-        ]
-      },
-      "clientPublicIpName": {
-        "copy": [
-          {
-            "name": "clientPublicIps",
-            "count": "[parameters('numberOfClientVms')]",
-            "input": {
-              "name": "[concat(parameters('configName'),'-CLIENT_IP',copyIndex(1))]"
-            }
-          }
-        ]
-      }
+      "nsgName": "[concat(parameters('configName'),'-NSG')]"
     },
 
     "VMs": {
