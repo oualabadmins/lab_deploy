@@ -233,7 +233,7 @@
         "name": "appIps",
         "count": "[parameters('numberOfAppVms')]"
       },
-      "name": "[concat(variables('VMs').appPublicIpName, parameters('numberOfAppVms')[copyIndex(1)])]",
+      "name": "[concat(variables('VMs').appPublicIpName, parameters('numberOfAppVms')[copyIndex()])]",
       "location": "[resourceGroup().location]",
       "comments": "This is the public IP address for the app server VM.",
       "properties": {
@@ -251,7 +251,7 @@
         "name": "clientIps",
         "count": "[parameters('numberOfClientVms')]"
       },
-      "name": "[concat(variables('VMs').cliPublicIpName, parameters('numberOfClientVms')[copyIndex(1)])]",
+      "name": "[concat(variables('VMs').cliPublicIpName, parameters('numberOfClientVms')[copyIndex()])]",
       "location": "[resourceGroup().location]",
       "comments": "This is the public IP address for the client VM.",
       "properties": {
@@ -289,7 +289,7 @@
       }
     },
     {
-      "name": "[concat(parameters('configName'),'-APP_NIC-',parameters('numberOfAppVms')[copyIndex(1)])]",
+      "name": "[concat(parameters('configName'),'-APP_NIC-',parameters('numberOfAppVms')[copyIndex()])]",
       "copy": {
         "name": "appNics",
         "count": "[parameters('numberOfAppVms')]"
@@ -326,7 +326,7 @@
       }
     },
     {
-      "name": "[concat(parameters('configName'),'-CLIENT_NIC-',parameters('numberOfClientVms')[copyIndex(1)])]",
+      "name": "[concat(parameters('configName'),'-CLIENT_NIC-',parameters('numberOfClientVms')[copyIndex()])]",
       "copy": {
         "name": "clientNics",
         "count": "[parameters('numberOfClientVms')]"
@@ -397,7 +397,7 @@
       }
     },
     {
-      "name": "[concat('APP',parameters('numberOfAppVms')[copyIndex(1)])]",
+      "name": "[concat('APP',parameters('numberOfAppVms')[copyIndex()])]",
       "type": "Microsoft.Resources/deployments",
       "copy": {
         "name": "appVms",
@@ -419,10 +419,10 @@
             "value": "[variables('SharedVmConfig')]" 
           },
           "vmName": {
-            "value": "[concat('APP',parameters('numberOfAppVms')[copyIndex(1)])]"
+            "value": "[concat('APP',parameters('numberOfAppVms')[copyIndex()])]"
           },
           "nicName": {
-            "value": "[concat(parameters('configName'),'-APP_NIC-',parameters('numberOfAppVms')[copyIndex(1)])]"
+            "value": "[concat(parameters('configName'),'-APP_NIC-',parameters('numberOfAppVms')[copyIndex()])]"
           },
           "modulesURL": {
             "value": "[variables('assetLocation')]"
@@ -434,7 +434,7 @@
       }
     },
     {
-      "name": "[concat('CLIENT',parameters('numberOfClientVms')[copyIndex(1)])]",
+      "name": "[concat('CLIENT',parameters('numberOfClientVms')[copyIndex()])]",
       "condition": "[equals(parameters('deployClientVm'),'Yes')]",
       "type": "Microsoft.Resources/deployments",
       "copy": {
@@ -457,10 +457,10 @@
             "value": "[variables('SharedVmConfig')]" 
           },
           "vmName": {
-            "value": "[concat('CLIENT',parameters('numberOfClientVms')[copyIndex(1)])]"
+            "value": "[concat('CLIENT',parameters('numberOfClientVms')[copyIndex()])]"
           },
           "nicName": {
-            "value": "[concat(parameters('configName'),'-CLIENT_NIC-',parameters('numberOfClientVms')[copyIndex(1)])]"
+            "value": "[concat(parameters('configName'),'-CLIENT_NIC-',parameters('numberOfClientVms')[copyIndex()])]"
           },
           "vhdUri": {
             "value": "[parameters('clientVhdUri')]"
