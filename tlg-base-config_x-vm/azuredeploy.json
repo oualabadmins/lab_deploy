@@ -48,6 +48,18 @@
       },
       "defaultValue": "Yes"
     },
+    "numberOfAppVms": {
+      "type": "int",
+      "metadata": {
+        "description": "The number of app server VMs to deploy."
+      }
+    },
+    "numberOfClientVms": {
+      "type": "int",
+      "metadata": {
+        "description": "The number of client VMs to deploy."
+      }
+    },
     "clientVhdUri": {
       "type": "string",
       "metadata": {
@@ -107,14 +119,12 @@
       "adNicIP": "10.0.0.10",
       "adPublicIpName": "[concat(parameters('configName'),'-AD_IP')]",
 
-      "appVmName": "APP1",
       "appConfigurationFunction": {
         "AppConfig": "AppConfig.ps1\\AppConfig"
       },
       "appNicIP": "10.0.0.11",
       "appPublicIpName": "[concat(parameters('configName'),'-APP_IP')]",
 
-      "cliVmName": "CLIENT1",
       "clientNicIP": "10.0.0.12",
       "cliPublicIpName": "[concat(parameters('configName'),'-CLI_IP')]"
     },
@@ -198,7 +208,7 @@
       "apiVersion": "2017-06-01",
       "location": "[resourceGroup().location]",
       "kind": "Storage",
-      "comments": "This storage account contains VHDs for VMs in the deployment.",
+      "comments": "This storage account contains VHDs for client VMs in the deployment.",
       "sku": {
         "name": "Standard_LRS"
       }
@@ -219,7 +229,11 @@
     {
       "apiVersion": "2017-06-01",
       "type": "Microsoft.Network/publicIPAddresses",
-      "name": "[variables('VMs').appPublicIpName]",
+      "copy": {
+        "name": "appIps",
+        "count": "[parameters('numberOfAppVms')]"
+      },
+      "name": "[concat(variables('VMs').appPublicIpName, parameters('numberOfAppVms')[copyIndex(1)])]",
       "location": "[resourceGroup().location]",
       "comments": "This is the public IP address for the app server VM.",
       "properties": {
@@ -233,7 +247,11 @@
       "apiVersion": "2017-06-01",
       "condition": "[equals(parameters('deployClientVm'),'Yes')]",
       "type": "Microsoft.Network/publicIPAddresses",
-      "name": "[variables('VMs').cliPublicIpName]",
+      "copy": {
+        "name": "clientIps",
+        "count": "[parameters('numberOfClientVms')]"
+      },
+      "name": "[concat(variables('VMs').cliPublicIpName, parameters('numberOfClientVms')[copyIndex(1)])]",
       "location": "[resourceGroup().location]",
       "comments": "This is the public IP address for the client VM.",
       "properties": {
@@ -271,7 +289,11 @@
       }
     },
     {
-      "name": "[concat(parameters('configName'),'-APP_NIC')]",
+      "name": "[concat(parameters('configName'),'-APP_NIC-',parameters('numberOfAppVms')[copyIndex(1)])]",
+      "copy": {
+        "name": "appNics",
+        "count": "[parameters('numberOfAppVms')]"
+      },
       "type": "Microsoft.Network/networkInterfaces",
       "location": "[resourceGroup().location]",
       "dependsOn": [
@@ -304,7 +326,11 @@
       }
     },
     {
-      "name": "[concat(parameters('configName'),'-CLI_NIC')]",
+      "name": "[concat(parameters('configName'),'-CLIENT_NIC-',parameters('numberOfClientVms')[copyIndex(1)])]",
+      "copy": {
+        "name": "clientNics",
+        "count": "[parameters('numberOfClientVms')]"
+      },
       "condition": "[equals(parameters('deployClientVm'),'Yes')]",
       "type": "Microsoft.Network/networkInterfaces",
       "location": "[resourceGroup().location]",
@@ -371,8 +397,12 @@
       }
     },
     {
-      "name": "AppServer",
+      "name": "[concat('APP',parameters('numberOfAppVms')[copyIndex(1)])]",
       "type": "Microsoft.Resources/deployments",
+      "copy": {
+        "name": "appVms",
+        "count": "[parameters('numberOfAppVms')]"
+      },
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for the app server VM.",
       "dependsOn": [
@@ -390,7 +420,7 @@
             "value": "[variables('SharedVmConfig')]" 
           },
           "vmName": {
-            "value": "[variables('VMs').appVmName]"
+            "value": "[concat('APP',parameters('numberOfAppVms')[copyIndex(1)])]"
           },
           "nicName": {
             "value": "[concat(parameters('configName'),'-APP_NIC')]"
@@ -405,9 +435,13 @@
       }
     },
     {
-      "name": "Client",
+      "name": "[concat('CLIENT',parameters('numberOfClientVms')[copyIndex(1)])]",
       "condition": "[equals(parameters('deployClientVm'),'Yes')]",
       "type": "Microsoft.Resources/deployments",
+      "copy": {
+        "name": "clientVms",
+        "count": "[parameters('numberOfClientVms')]"
+      },
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for the client VM.",
       "dependsOn": [
@@ -425,7 +459,7 @@
             "value": "[variables('SharedVmConfig')]" 
           },
           "vmName": {
-            "value": "[variables('VMs').cliVmName]"
+            "value": "[concat('CLIENT',parameters('numberOfClientVms')[copyIndex(1)])]"
           },
           "nicName": {
             "value": "[concat(parameters('configName'),'-CLI_NIC')]"
