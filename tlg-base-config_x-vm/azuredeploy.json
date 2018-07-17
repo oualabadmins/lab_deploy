@@ -141,57 +141,7 @@
       "adNicIP": "10.0.0.10",
       "adPublicIpName": "[concat(parameters('configName'),'-AD_IP')]",
 
-      "appObjects": {
-        "copy": [
-          {
-            "name": "appName",
-            "count": "[parameters('numberOfAppVms')]",
-            "input": {
-              "name": "[concat('APP',copyIndex(1))]"
-            }
-          },
-          {
-            "name": "appPublicIp",
-            "count": "[parameters('numberOfAppVms')]",
-            "input": {
-              "name": "[concat(parameters('configName'),'-APP_IP',copyIndex(1))]"
-            }
-          },
-          {
-            "name": "appNic",
-            "count": "[parameters('numberOfAppVms')]",
-            "input": {
-              "name": "[concat(parameters('configName'),'-APP_NIC',copyIndex(1))]"
-            }
-          }
-        ],
-        "appConfigurationFunction": "AppConfig.ps1\\AppConfig"
-      },
-      "clientObjects": {
-        "copy": [
-          {
-            "name": "clientName",
-            "count": "[parameters('numberOfClientVms')]",
-            "input": {
-              "name": "[concat('CLIENT',copyIndex(1))]"
-            }
-          },
-          {
-            "name": "clientPublicIp",
-            "count": "[parameters('numberOfClientVms')]",
-            "input": {
-              "name": "[concat(parameters('configName'),'-CLIENT_IP',copyIndex(1))]"
-            }
-          },
-          {
-            "name": "clientNic",
-            "count": "[parameters('numberOfClientVms')]",
-            "input": {
-              "name": "[concat(parameters('configName'),'-CLIENT_NIC',copyIndex(1))]"
-            }
-          }
-        ]
-      }
+      "appConfigurationFunction": "AppConfig.ps1\\AppConfig"
     },
 
     "SharedVmConfig": {
@@ -283,6 +233,9 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "comments": "NEW This is the deployment resource for the ADDC public IP.",
+      "dependsOn": [
+        "[concat('Microsoft.Network/virtualNetworks/',parameters('configName'),'-vnet')]"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -309,170 +262,216 @@
       }
     },
     {
-      "name": "[concat(parameters('configName'),'-publicIp',copyIndex(1))]",
+      "name": "[concat(parameters('configName'),'-APP_IP',copyIndex(1))]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
-      "comments": "NEW This is the deployment resource for public IPs.",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(variables('templates'),'/publicip.json',parameters('_artifactsLocationSasToken'))]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "configName": { 
-            "value": "[parameters('configName')]" 
-          },
-          "tier": {
-            "value": "DC"
-          },
-          "count": {
-            "value": "1"
-          },
-          "ipAllocation": {
-            "value": "Static"
-          },
-          "dnsLabelPrefix": {
-            "value": "[parameters('dnsLabelPrefix')]"
-          }
-        }
-      }
-    },
-    {
-      "apiVersion": "2017-06-01",
-      "type": "Microsoft.Network/publicIPAddresses",
+      "comments": "NEW This is the deployment resource for APP public IPs.",
+      "dependsOn": [
+        "[concat('Microsoft.Network/virtualNetworks/',parameters('configName'),'-vnet')]"
+      ],
       "copy": {
         "name": "appIps",
         "count": "[parameters('numberOfAppVms')]"
       },
-      "name": "[variables('VMs').appObjects.copy]",
-      "location": "[resourceGroup().location]",
-      "comments": "This is the public IP address for the app server VM.",
       "properties": {
-        "publicIPAllocationMethod": "Dynamic",
-        "dnsSettings": {
-          "domainNameLabel": "[toLower(concat(parameters('dnsLabelPrefix'),'app','-',copyIndex(1)))]"
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/publicip.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "APP"
+          },
+          "count": {
+            "value": "copyIndex(1)"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "dnsLabelPrefix": {
+            "value": "[parameters('dnsLabelPrefix')]"
+          }
         }
       }
     },
     {
-      "apiVersion": "2017-06-01",
+      "name": "[concat(parameters('configName'),'-CLIENT_IP',copyIndex(1))]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
       "condition": "[equals(parameters('deployClientVm'),'Yes')]",
-      "type": "Microsoft.Network/publicIPAddresses",
+      "comments": "NEW This is the deployment resource for CLIENT public IPs.",
+      "dependsOn": [
+        "[concat('Microsoft.Network/virtualNetworks/',parameters('configName'),'-vnet')]"
+      ],
       "copy": {
         "name": "clientIps",
         "count": "[parameters('numberOfClientVms')]"
       },
-      "name": "[variables('network').clientPublicIpName]",
-      "location": "[resourceGroup().location]",
-      "comments": "This is the public IP address for the client VM.",
       "properties": {
-        "publicIPAllocationMethod": "Dynamic",
-        "dnsSettings": {
-          "domainNameLabel": "[toLower(concat(parameters('dnsLabelPrefix'),'cli','-',copyIndex(1)))]"
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/publicip.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "CLIENT"
+          },
+          "count": {
+            "value": "copyIndex(1)"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "dnsLabelPrefix": {
+            "value": "[parameters('dnsLabelPrefix')]"
+          }
         }
       }
     },
     {
-      "name": "[concat(parameters('configName'),'-AD_NIC')]",
-      "type": "Microsoft.Network/networkInterfaces",
-      "location": "[resourceGroup().location]",
+      "name": "[concat(parameters('configName'),'-AD_NIC_DEPLOY')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "NEW This is the deployment resource for the ADDC NIC.",
       "dependsOn": [
         "[concat('Microsoft.Network/virtualNetworks/',parameters('configName'),'-vnet')]"
       ],
-      "apiVersion": "2018-01-01",
-      "comments": "This is the network interface for the ADDC VM.",
       "properties": {
-        "ipConfigurations": [
-          {
-            "name": "ipconfig1",
-            "properties": {
-              "privateIPAllocationMethod": "Static",
-              "privateIPAddress": "[variables('VMs').adNicIP]",
-              "publicIPAddress": {
-                "id": "[resourceId ('Microsoft.Network/publicIPAddresses/',variables('VMs').adPublicIpName)]"
-              },
-              "subnet": {
-                "id": "[variables('network').subnetRef]"
-              }
-            }
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/nic.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "DC"
+          },
+          "count": {
+            "value": "1"
+          },
+          "ipAllocation": {
+            "value": "Static"
+          },
+          "privateIp": {
+            "value": "[variables('VMs').adNicIP]"
+          },
+          "subnetRef": {
+            "value": "[variables('network').subnetRef]"
+          },
+          "domainName": {
+            "value": "[parameters('domainName')]"
+          },
+          "dnsServer": {
+            "value": "[variables('VMs').adNicIP]"
           }
-        ]
+        }
       }
     },
     {
-      "name": "[concat(parameters('configName'),'-APP_NIC-',copyIndex(1))]",
+      "name": "[concat(parameters('configName'),'-APP_NIC_DEPLOY',copyIndex(1))]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "NEW This is the deployment resource for APP NICs.",
+      "dependsOn": [
+        "[concat('Microsoft.Network/virtualNetworks/',parameters('configName'),'-vnet')]"
+      ],
       "copy": {
         "name": "appNics",
         "count": "[parameters('numberOfAppVms')]"
       },
-      "type": "Microsoft.Network/networkInterfaces",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[concat('Microsoft.Network/virtualNetworks/',parameters('configName'),'-vnet')]"
-      ],
-      "apiVersion": "2018-01-01",
-      "comments": "This is the network interface for the app server VM.",
       "properties": {
-        "ipConfigurations": [
-          {
-            "name": "ipconfig1",
-            "properties": {
-              "privateIPAllocationMethod": "Dynamic",
-              "publicIPAddress": {
-                "id": "[resourceId ('Microsoft.Network/publicIPAddresses/',variables('network').appPublicIpName)]"
-              },
-              "subnet": {
-                "id": "[variables('network').subnetRef]"
-              }
-            }
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/nic.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "APP"
+          },
+          "count": {
+            "value": "copyIndex(1)"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "privateIp": {
+            "value": ""
+          },
+          "subnetRef": {
+            "value": "[variables('network').subnetRef]"
+          },
+          "domainName": {
+            "value": "[parameters('domainName')]"
+          },
+          "dnsServer": {
+            "value": "[variables('VMs').adNicIP]"
           }
-        ],
-        "dnsSettings": {
-          "dnsServers": [
-            "[variables('VMs').adNicIP]"
-          ],
-          "internalDomainNameSuffix": "[parameters('domainName')]"
         }
       }
     },
     {
-      "name": "[concat(parameters('configName'),'-CLIENT_NIC-',copyIndex(1))]",
-      "copy": {
-        "name": "clientNics",
-        "count": "[parameters('numberOfClientVms')]"
-      },
+      "name": "[concat(parameters('configName'),'-CLIENT_NIC_DEPLOY',copyIndex(1))]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
       "condition": "[equals(parameters('deployClientVm'),'Yes')]",
-      "type": "Microsoft.Network/networkInterfaces",
-      "location": "[resourceGroup().location]",
+      "comments": "NEW This is the deployment resource for CLIENT NICs.",
       "dependsOn": [
         "[concat('Microsoft.Network/virtualNetworks/',parameters('configName'),'-vnet')]"
       ],
-      "apiVersion": "2018-01-01",
-      "comments": "This is the network interface for the client VM.",
+      "copy": {
+        "name": "appNics",
+        "count": "[parameters('numberOfClientVms')]"
+      },
       "properties": {
-        "ipConfigurations": [
-          {
-            "name": "ipconfig1",
-            "properties": {
-              "privateIPAllocationMethod": "Dynamic",
-              "publicIPAddress": {
-                "id": "[resourceId ('Microsoft.Network/publicIPAddresses/',variables('network').clientPublicIpName)]"
-              },
-              "subnet": {
-                "id": "[variables('network').subnetRef]"
-              }
-            }
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/nic.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "CLIENT"
+          },
+          "count": {
+            "value": "copyIndex(1)"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "privateIp": {
+            "value": ""
+          },
+          "subnetRef": {
+            "value": "[variables('network').subnetRef]"
+          },
+          "domainName": {
+            "value": "[parameters('domainName')]"
+          },
+          "dnsServer": {
+            "value": "[variables('VMs').adNicIP]"
           }
-        ],
-        "dnsSettings": {
-          "dnsServers": [
-            "[variables('VMs').adNicIP]"
-          ],
-          "internalDomainNameSuffix": "[parameters('domainName')]"
         }
       }
     },
+
     {
       "name": "ADDC",
       "type": "Microsoft.Resources/deployments",
