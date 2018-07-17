@@ -233,7 +233,7 @@
         "name": "appIps",
         "count": "[parameters('numberOfAppVms')]"
       },
-      "name": "[concat(variables('VMs').appPublicIpName, parameters('numberOfAppVms')[copyIndex()])]",
+      "name": "[concat(variables('VMs').appPublicIpName,'-',copyIndex(1))]",
       "location": "[resourceGroup().location]",
       "comments": "This is the public IP address for the app server VM.",
       "properties": {
@@ -251,7 +251,7 @@
         "name": "clientIps",
         "count": "[parameters('numberOfClientVms')]"
       },
-      "name": "[concat(variables('VMs').cliPublicIpName, parameters('numberOfClientVms')[copyIndex()])]",
+      "name": "[concat(variables('VMs').cliPublicIpName,'-',copyIndex(1))]",
       "location": "[resourceGroup().location]",
       "comments": "This is the public IP address for the client VM.",
       "properties": {
@@ -289,7 +289,7 @@
       }
     },
     {
-      "name": "[concat(parameters('configName'),'-APP_NIC-',parameters('numberOfAppVms')[copyIndex()])]",
+      "name": "[concat(parameters('configName'),'-APP_NIC-',copyIndex(1))]",
       "copy": {
         "name": "appNics",
         "count": "[parameters('numberOfAppVms')]"
@@ -309,7 +309,7 @@
               "privateIPAllocationMethod": "Static",
               "privateIPAddress": "[variables('VMs').appNicIP]",
               "publicIPAddress": {
-                "id": "[resourceId ('Microsoft.Network/publicIPAddresses/',variables('VMs').appPublicIpName)]"
+                "id": "[resourceId ('Microsoft.Network/publicIPAddresses/',variables('VMs').appPublicIpName,'-',copyIndex(1))]"
               },
               "subnet": {
                 "id": "[variables('network').subnetRef]"
@@ -326,7 +326,7 @@
       }
     },
     {
-      "name": "[concat(parameters('configName'),'-CLIENT_NIC-',parameters('numberOfClientVms')[copyIndex()])]",
+      "name": "[concat(parameters('configName'),'-CLIENT_NIC-',copyIndex(1))]",
       "copy": {
         "name": "clientNics",
         "count": "[parameters('numberOfClientVms')]"
@@ -347,7 +347,7 @@
               "privateIPAllocationMethod": "Static",
               "privateIPAddress": "[variables('VMs').clientNicIP]",
               "publicIPAddress": {
-                "id": "[resourceId ('Microsoft.Network/publicIPAddresses/',variables('VMs').cliPublicIpName)]"
+                "id": "[resourceId ('Microsoft.Network/publicIPAddresses/',variables('VMs').cliPublicIpName,'-',copyIndex(1))]"
               },
               "subnet": {
                 "id": "[variables('network').subnetRef]"
@@ -397,7 +397,7 @@
       }
     },
     {
-      "name": "[concat('APP',parameters('numberOfAppVms')[copyIndex()])]",
+      "name": "[concat('APP',copyIndex(1))]",
       "type": "Microsoft.Resources/deployments",
       "copy": {
         "name": "appVms",
@@ -419,10 +419,10 @@
             "value": "[variables('SharedVmConfig')]" 
           },
           "vmName": {
-            "value": "[concat('APP',parameters('numberOfAppVms')[copyIndex()])]"
+            "value": "[concat('APP',copyIndex(1))]"
           },
           "nicName": {
-            "value": "[concat(parameters('configName'),'-APP_NIC-',parameters('numberOfAppVms')[copyIndex()])]"
+            "value": "[concat(parameters('configName'),'-APP_NIC-',copyIndex(1))]"
           },
           "modulesURL": {
             "value": "[variables('assetLocation')]"
@@ -434,7 +434,7 @@
       }
     },
     {
-      "name": "[concat('CLIENT',parameters('numberOfClientVms')[copyIndex()])]",
+      "name": "[concat('CLIENT',copyIndex(1))]",
       "condition": "[equals(parameters('deployClientVm'),'Yes')]",
       "type": "Microsoft.Resources/deployments",
       "copy": {
@@ -457,10 +457,10 @@
             "value": "[variables('SharedVmConfig')]" 
           },
           "vmName": {
-            "value": "[concat('CLIENT',parameters('numberOfClientVms')[copyIndex()])]"
+            "value": "[concat('CLIENT',copyIndex(1))]"
           },
           "nicName": {
-            "value": "[concat(parameters('configName'),'-CLIENT_NIC-',parameters('numberOfClientVms')[copyIndex()])]"
+            "value": "[concat(parameters('configName'),'-CLIENT_NIC-',copyIndex(1))]"
           },
           "vhdUri": {
             "value": "[parameters('clientVhdUri')]"
