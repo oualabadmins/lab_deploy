@@ -1,0 +1,31 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "apiProfile": "2017-03-09-profile",
+    "parameters": {
+     "SharedConfig": {
+        "type": "object"
+        }
+    },
+    "variables": {
+        "ipName": "[concat(parameters('sharedConfig').configName,'-',parameters('sharedConfig').tier,'_IP-',parameters('sharedConfig').count)]"
+    },
+    "resources": [
+        {
+            "apiVersion": "2017-06-01",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[variables('ipName')]",
+            "location": "[resourceGroup().location]",
+            "comments": "Public IP address",
+            "properties": {
+              "publicIPAllocationMethod": "[parameters('sharedConfig').ipAllocation]",
+              "dnsSettings": {
+                "domainNameLabel": "[toLower(parameters('sharedConfig').dnsLabelPrefix)]"
+              }
+            }
+          }        
+    ],
+    "outputs": {
+        
+    }
+}

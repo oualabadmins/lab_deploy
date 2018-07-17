@@ -1,0 +1,54 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "apiProfile": "2017-03-09-profile",
+    "parameters": {
+     "SharedConfig": {
+        "type": "object"
+        } 
+    },
+    "variables": {
+        "publicIp": "[concat(parameters('sharedConfig').configName,'-',parameters('sharedConfig').tier,'_IP-',parameters('sharedConfig').count)]"
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('sharedConfig').tier,'_NIC-',parameters('sharedConfig').count)]",
+            "copy": {
+              "name": "[concat(parameters('sharedConfig').tier,'NIC')]",
+              "count": "[parameters('sharedConfig').count]"
+            },
+            "type": "Microsoft.Network/networkInterfaces",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "[concat('Microsoft.Network/virtualNetworks/',parameters('sharedConfig').configName,'-vnet')]"
+            ],
+            "apiVersion": "2018-01-01",
+            "comments": "NIC",
+            "properties": {
+              "ipConfigurations": [
+                {
+                  "name": "[concat('ipconfig',parameters('sharedConfig').count)]",
+                  "properties": {
+                    "privateIPAllocationMethod": "Dynamic",
+                    "publicIPAddress": {
+                      "id": "[resourceId ('Microsoft.Network/publicIPAddresses/',variables('publicIp'))]"
+                    },
+                    "subnet": {
+                      "id": "[parameters('sharedConfig').subnetRef]"
+                    }
+                  }
+                }
+              ],
+              "dnsSettings": {
+                "dnsServers": [
+                  "[parameters('sharedConfig').adNicIP]"
+                ],
+                "internalDomainNameSuffix": "[parameters('sharedConfig').domainName]"
+              }
+            }
+          }   
+    ],
+    "outputs": {
+        
+    }
+}

@@ -141,8 +141,56 @@
       "adNicIP": "10.0.0.10",
       "adPublicIpName": "[concat(parameters('configName'),'-AD_IP')]",
 
-      "appConfigurationFunction": {
-        "AppConfig": "AppConfig.ps1\\AppConfig"
+      "appObjects": {
+        "copy": [
+          {
+            "name": "appName",
+            "count": "[parameters('numberOfAppVms')]",
+            "input": {
+              "name": "[concat('APP',copyIndex(1))]"
+            }
+          },
+          {
+            "name": "appPublicIp",
+            "count": "[parameters('numberOfAppVms')]",
+            "input": {
+              "name": "[concat(parameters('configName'),'-APP_IP',copyIndex(1))]"
+            }
+          },
+          {
+            "name": "appNic",
+            "count": "[parameters('numberOfAppVms')]",
+            "input": {
+              "name": "[concat(parameters('configName'),'-APP_NIC',copyIndex(1))]"
+            }
+          }
+        ],
+        "appConfigurationFunction": "AppConfig.ps1\\AppConfig"
+      },
+      "clientObjects": {
+        "copy": [
+          {
+            "name": "clientName",
+            "count": "[parameters('numberOfClientVms')]",
+            "input": {
+              "name": "[concat('CLIENT',copyIndex(1))]"
+            }
+          },
+          {
+            "name": "clientPublicIp",
+            "count": "[parameters('numberOfClientVms')]",
+            "input": {
+              "name": "[concat(parameters('configName'),'-CLIENT_IP',copyIndex(1))]"
+            }
+          },
+          {
+            "name": "clientNic",
+            "count": "[parameters('numberOfClientVms')]",
+            "input": {
+              "name": "[concat(parameters('configName'),'-CLIENT_NIC',copyIndex(1))]"
+            }
+          }
+        ]
       }
     },
 
@@ -231,15 +279,62 @@
       }
     },
     {
-      "apiVersion": "2017-06-01",
-      "type": "Microsoft.Network/publicIPAddresses",
-      "name": "[variables('VMs').adPublicIpName]",
-      "location": "[resourceGroup().location]",
-      "comments": "This is the public IP address for the ADDC VM.",
+      "name": "[concat(parameters('configName'),'-AD_IP')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "NEW This is the deployment resource for the ADDC public IP.",
       "properties": {
-        "publicIPAllocationMethod": "Static",
-        "dnsSettings": {
-          "domainNameLabel": "[toLower(concat(parameters('dnsLabelPrefix'),'ad'))]"
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/publicip.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "DC"
+          },
+          "count": {
+            "value": "1"
+          },
+          "ipAllocation": {
+            "value": "Static"
+          },
+          "dnsLabelPrefix": {
+            "value": "[parameters('dnsLabelPrefix')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('configName'),'-publicIp',copyIndex(1))]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "NEW This is the deployment resource for public IPs.",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/publicip.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "DC"
+          },
+          "count": {
+            "value": "1"
+          },
+          "ipAllocation": {
+            "value": "Static"
+          },
+          "dnsLabelPrefix": {
+            "value": "[parameters('dnsLabelPrefix')]"
+          }
         }
       }
     },
@@ -250,7 +345,7 @@
         "name": "appIps",
         "count": "[parameters('numberOfAppVms')]"
       },
-      "name": "[variables('network').appPublicIpName]",
+      "name": "[variables('VMs').appObjects.copy]",
       "location": "[resourceGroup().location]",
       "comments": "This is the public IP address for the app server VM.",
       "properties": {

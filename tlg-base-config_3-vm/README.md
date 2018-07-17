@@ -65,8 +65,9 @@ the JoinDomain extensions for the member VMs. This asymmetric VM deployment proc
 
 ## MAX notes
 
-* **IMPORTANT**: Only deploy this template into a subscription with no ExpressRoute circuit. Use _MAXLAB R&D EXT 1_, _MAXLAB R&D EXT 2_ or _MAXLAB R&D Sandbox_.
-* You can test client VM deployment using the custom Windows 10 image at https://sandboxwusimages.blob.core.windows.net/vhds/Win10.vhd. Enter that value into the **clientVhdUri** field, make sure the value of **deployClientVm** is _Yes_, and then deploy to the _West US_ region, which is where the storage account containing the image resides.
+* **IMPORTANT**: Only deploy this template into a subscription with no ExpressRoute circuit. 
+* For testing purposes, use the _MAXLAB R&D Sandbox_ subscription.
+* You can test client VM deployment using the custom Windows 10 image at https://sandboxwusimages.blob.core.windows.net/vhds/Win10.vhd. This value is prepopulated in the **clientVhdUri** field. Make sure the value of **deployClientVm** is _Yes_, and then deploy to the _West US_ region, which is where the storage account containing the image resides.
 * If you are deploying from a private repo, get the token by opening a file from the repo in the browser and click the "Raw" button. The token will be at the end of the URL in the address field, starting with "?token=_string_". Add the token (including ?token=) to the **_artifactsLocationSasToken** parameter.
 
 `Tags: TLG, Test Lab Guide, Base Configuration`
