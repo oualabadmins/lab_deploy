@@ -1,4 +1,4 @@
-﻿# TLG (Test Lab Guide) - X VM Base Configuration (v0.9.5)
+﻿# TLG (Test Lab Guide) - X VM Base Configuration (v0.9.0)
 
 **This version configured to be deployed from the oualabadmins/lab_deploy repo.** See the section _MAX notes_ below for information on how to deploy for MAX Skunkworks lab admins.
 
@@ -32,7 +32,7 @@ Use of a custom client image is required because the Windows 10 gallery image is
 You can deploy this template in one of two ways:
 
 + Click the "Deploy to Azure" button to open the deployment UI in the Azure portal
-+ Execute the PowerShell script at https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/tlg-base-config_x-vm/scripts/Deploy-TLG.ps1 on your local computer.
++ Execute the PowerShell script at https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/tlg-base-config_x-vm/scripts/Deploy-TLG-X.ps1 on your local computer.
 
 ## Credits
 Thanks to both Simon Davies and Willem Kasdorp, from whom I borrowed various DSC configuration elements.

@@ -1,5 +1,5 @@
-﻿<#  Deploy-TLG.ps1
-    Kelley Vice 7/11/2018
+﻿<#  Deploy-TLG-X.ps1
+    Kelley Vice 7/17/2018
 
     This script deploys the TLG (Test Lab Guide) 3 VM Base Configuration to your Azure RM subscription.
     You must have the AzureRM PowerShell module installed on your computer to run this script.
@@ -20,6 +20,8 @@ $serverOS = "2016-Datacenter" # The OS of application servers in your deployment
 $adminUserName = "" # The name of the domain administrator account to create, i.e. globaladmin.
 $adminPassword = "" # The administrator account password.
 $deployClientVm = "Yes" # Yes or No
+$numberOfAppVms = "1" # Number of app server VMs to deploy
+$numberOfClientVms = "1" # Number of client VMs to deploy
 $clientVhdUri = "" # The URI of the storage account containing the client VHD. Leave blank if you are not deploying a client VM.
 $vmSize = "Standard_DS2_v2" # Select a VM size for all server VMs in your deployment.
 $dnsLabelPrefix = "" # DNS label prefix for public IPs. Must be lowercase and match the regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$.
@@ -35,6 +37,8 @@ $parameters.Add("serverOS",$serverOS)
 $parameters.Add("adminUserName",$adminUserName)
 $parameters.Add("adminPassword",$adminPassword)
 $parameters.Add("deployClientVm",$deployClientVm)
+$parameters.Add("numberOfAppVms",$numberOfAppVms)
+$parameters.Add("numberOfClientVms",$numberOfClientVms)
 $parameters.Add("clientVhdUri",$clientVhdUri)
 $parameters.Add("vmSize",$vmSize)
 $parameters.Add("dnsLabelPrefix",$dnsLabelPrefix)
