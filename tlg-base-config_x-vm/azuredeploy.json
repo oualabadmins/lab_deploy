@@ -121,12 +121,7 @@
 
       "appConfigurationFunction": {
         "AppConfig": "AppConfig.ps1\\AppConfig"
-      },
-      "appNicIP": "10.0.0.11",
-      "appPublicIpName": "[concat(parameters('configName'),'-APP_IP','-',copyIndex(1))]",
-
-      "clientNicIP": "10.0.0.12",
-      "cliPublicIpName": "[concat(parameters('configName'),'-CLI_IP','-',copyIndex(1))]"
+      }
     },
 
     "SharedVmConfig": {
@@ -233,7 +228,7 @@
         "name": "appIps",
         "count": "[parameters('numberOfAppVms')]"
       },
-      "name": "[concat(variables('VMs').appPublicIpName,'-',copyIndex(1))]",
+      "name": "[concat(parameters('configName'),'-APP_IP-',copyIndex(1))]",
       "location": "[resourceGroup().location]",
       "comments": "This is the public IP address for the app server VM.",
       "properties": {
@@ -251,7 +246,7 @@
         "name": "clientIps",
         "count": "[parameters('numberOfClientVms')]"
       },
-      "name": "[concat(variables('VMs').cliPublicIpName,'-',copyIndex(1))]",
+      "name": "[concat(parameters('configName'),'-CLIENT_IP-',copyIndex(1))]",
       "location": "[resourceGroup().location]",
       "comments": "This is the public IP address for the client VM.",
       "properties": {
@@ -308,7 +303,7 @@
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "publicIPAddress": {
-                "id": "[resourceId ('Microsoft.Network/publicIPAddresses/',variables('VMs').appPublicIpName,'-',copyIndex(1))]"
+                "id": "[resourceId ('Microsoft.Network/publicIPAddresses/',parameters('configName'),'-APP_IP-',copyIndex(1))]"
               },
               "subnet": {
                 "id": "[variables('network').subnetRef]"
@@ -345,7 +340,7 @@
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "publicIPAddress": {
-                "id": "[resourceId ('Microsoft.Network/publicIPAddresses/',variables('VMs').cliPublicIpName,'-',copyIndex(1))]"
+                "id": "[resourceId ('Microsoft.Network/publicIPAddresses/',parameters('configName'),'-CLIENT_IP-',copyIndex(1))]"
               },
               "subnet": {
                 "id": "[variables('network').subnetRef]"
@@ -476,14 +471,6 @@
     "DcFqdn": {
       "type": "string",
       "value": "[reference(variables('VMs').adPublicIpName).dnsSettings.fqdn]"
-    },
-    "AppPublicIpAddress": {
-      "type": "string",
-      "value": "[reference(variables('VMs').appPublicIpName).ipAddress]"
-    },
-    "AppFqdn": {
-      "type": "string",
-      "value": "[reference(variables('VMs').appPublicIpName).dnsSettings.fqdn]"
     }
   }
 }
