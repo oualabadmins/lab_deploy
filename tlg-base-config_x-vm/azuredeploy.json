@@ -85,7 +85,7 @@
       "metadata": {
         "description": "Auto-generated container in staging storage account to receive post-build staging folder upload."
       },
-      "defaultValue": "https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/tlg-base-config_3-vm"
+      "defaultValue": "https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/tlg-base-config_x-vm"
     },
     "_artifactsLocationSasToken": {
       "type": "securestring",
@@ -141,10 +141,7 @@
       "adNicIP": "10.0.0.10",
       "adPublicIpName": "[concat(parameters('configName'),'-AD_IP')]",
 
-      "appVmName": "[concat('APP',copyIndex(appVms))]",
-      "appConfigurationFunction": "AppConfig.ps1\\AppConfig",
-
-      "clientVmName": "[concat('APP',copyIndex(clientVms))]"
+      "appConfigurationFunction": "AppConfig.ps1\\AppConfig"
     },
 
     "SharedVmConfig": {
