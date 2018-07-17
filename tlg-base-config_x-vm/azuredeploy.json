@@ -123,10 +123,10 @@
         "AppConfig": "AppConfig.ps1\\AppConfig"
       },
       "appNicIP": "10.0.0.11",
-      "appPublicIpName": "[concat(parameters('configName'),'-APP_IP')]",
+      "appPublicIpName": "[concat(parameters('configName'),'-APP_IP','-',copyIndex(1))]",
 
       "clientNicIP": "10.0.0.12",
-      "cliPublicIpName": "[concat(parameters('configName'),'-CLI_IP')]"
+      "cliPublicIpName": "[concat(parameters('configName'),'-CLI_IP','-',copyIndex(1))]"
     },
 
     "SharedVmConfig": {
@@ -237,7 +237,7 @@
       "location": "[resourceGroup().location]",
       "comments": "This is the public IP address for the app server VM.",
       "properties": {
-        "publicIPAllocationMethod": "Static",
+        "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
           "domainNameLabel": "[toLower(concat(parameters('dnsLabelPrefix'),'app','-',copyIndex(1)))]"
         }
@@ -255,7 +255,7 @@
       "location": "[resourceGroup().location]",
       "comments": "This is the public IP address for the client VM.",
       "properties": {
-        "publicIPAllocationMethod": "Static",
+        "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
           "domainNameLabel": "[toLower(concat(parameters('dnsLabelPrefix'),'cli','-',copyIndex(1)))]"
         }
