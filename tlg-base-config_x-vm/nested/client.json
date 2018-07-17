@@ -16,6 +16,7 @@
     }
   },
   "variables": {
+    "nicName": "[concat(parameters('sharedVmConfig').configName,'-CLIENT_NIC-',parameters('sharedVmConfig').count)]",
     "imageName": "[concat(parameters('vmName'),'-image')]"
   },
   "resources": [
@@ -60,7 +61,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',parameters('nicName'))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
             }
           ]
         },

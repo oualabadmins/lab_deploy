@@ -18,7 +18,9 @@
       "type": "object"
     }
   },
-  "variables": {},
+  "variables": {
+    "nicName": "[concat(parameters('sharedVmConfig').configName,'-APP_NIC-',parameters('sharedVmConfig').count)]"
+  },
   "resources": [
     {
       "apiVersion": "2017-03-30",
@@ -55,7 +57,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',parameters('nicName'))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
             }
           ]
         },
