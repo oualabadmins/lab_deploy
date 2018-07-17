@@ -239,7 +239,7 @@
       "properties": {
         "publicIPAllocationMethod": "Static",
         "dnsSettings": {
-          "domainNameLabel": "[toLower(concat(parameters('dnsLabelPrefix'),'app'))]"
+          "domainNameLabel": "[toLower(concat(parameters('dnsLabelPrefix'),'app','-',copyIndex(1)))]"
         }
       }
     },
@@ -257,7 +257,7 @@
       "properties": {
         "publicIPAllocationMethod": "Static",
         "dnsSettings": {
-          "domainNameLabel": "[toLower(concat(parameters('dnsLabelPrefix'),'cli'))]"
+          "domainNameLabel": "[toLower(concat(parameters('dnsLabelPrefix'),'cli','-',copyIndex(1)))]"
         }
       }
     },
@@ -306,8 +306,7 @@
           {
             "name": "ipconfig1",
             "properties": {
-              "privateIPAllocationMethod": "Static",
-              "privateIPAddress": "[variables('VMs').appNicIP]",
+              "privateIPAllocationMethod": "Dynamic",
               "publicIPAddress": {
                 "id": "[resourceId ('Microsoft.Network/publicIPAddresses/',variables('VMs').appPublicIpName,'-',copyIndex(1))]"
               },
@@ -344,8 +343,7 @@
           {
             "name": "ipconfig1",
             "properties": {
-              "privateIPAllocationMethod": "Static",
-              "privateIPAddress": "[variables('VMs').clientNicIP]",
+              "privateIPAllocationMethod": "Dynamic",
               "publicIPAddress": {
                 "id": "[resourceId ('Microsoft.Network/publicIPAddresses/',variables('VMs').cliPublicIpName,'-',copyIndex(1))]"
               },
