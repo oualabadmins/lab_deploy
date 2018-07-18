@@ -489,8 +489,8 @@
           "vmName": {
             "value": "APP"
           },
-          "nicName": {
-            "value": ""
+          "count": {
+            "value": "[parameters('numberOfAppVms')]"
           },
           "modulesURL": {
             "value": "[variables('assetLocation')]"
@@ -523,8 +523,8 @@
           "vmName": {
             "value": "CLIENT"
           },
-          "nicName": {
-            "value": ""
+          "count": {
+            "value": "[parameters('numberOfClientVms')]"
           },
           "vhdUri": {
             "value": "[parameters('clientVhdUri')]"

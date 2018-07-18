@@ -8,8 +8,8 @@
     "vmName": {
       "type": "string"
     },
-    "nicName": {
-      "type": "string"
+    "count": {
+      "type": "int"
     },
     "modulesURL": {
       "type": "string"
@@ -19,14 +19,18 @@
     }
   },
   "variables": {
-    "nicName": "[concat(parameters('sharedVmConfig').configName,'-APP_NIC-',parameters('sharedVmConfig').count)]"
+    "nicName": "[concat(parameters('sharedVmConfig').configName,'-APP_NIC-',copyIndex('appVms'))]"
   },
   "resources": [
     {
       "apiVersion": "2017-03-30",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat('APP',parameters('vmName'))]",
+      "name": "[concat('APP',copyIndex(1))]",
       "location": "[parameters('SharedVmConfig').location]",
+      "copy": {
+        "name": "appVms",
+        "count": "[parameters('count')]"
+      },
       "properties": {
         "hardwareProfile": {
           "vmSize": "[parameters('SharedVmConfig').vmSize]"
@@ -47,11 +51,7 @@
             "createOption": "FromImage"
           },
           "dataDisks": [
-            {
-              "createOption": "Empty",
-              "diskSizeGB": 1023,
-              "lun": 0
-            }
+            {}
           ]
         },
         "networkProfile": {
@@ -67,12 +67,12 @@
             "storageUri": "[reference(concat('Microsoft.Storage/storageAccounts/',parameters('SharedVmConfig').storageAccountNamePrefix),'2017-06-01').primaryEndpoints.blob]"
           }
         }
-      }
-    },
+      },
+      "resources": [
     {
       "apiVersion": "2017-03-30",
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(parameters('vmName'),'/JoinDomain')]",
+      "type": "extensions",
+      "name": "[concat(parameters('vmName'),copyIndex('appVms'),'/JoinDomain')]",
       "location": "[parameters('SharedVmConfig').location]",
       "tags": {
         "displayName": "Join Domain"
@@ -93,18 +93,14 @@
           "Password": "[parameters('SharedVmConfig').adminPassword]"
         }
       },
-      "dependsOn": [
-        "[parameters('vmName')]"
-      ]
+      "dependsOn": []
     },
     {
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(parameters('vmName'),'/AppConfig')]",
+      "type": "extensions",
+      "name": "[concat(parameters('vmName'),copyIndex('appVms'),'/AppConfig')]",
       "apiVersion": "2017-03-30",
       "location": "[parameters('SharedVmConfig').location]",
-      "dependsOn": [
-        "[parameters('vmName')]"
-      ],
+      "dependsOn": [],
       "properties": {
         "publisher": "Microsoft.Powershell",
         "type": "DSC",
@@ -125,17 +121,13 @@
       }
     },
     {
-
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(parameters('vmName'),'/BGInfo')]",
+      "type": "extensions",
+      "name": "[concat(parameters('vmName'),copyIndex('appVms'),'/BGInfo')]",
       "apiVersion": "2017-03-30",
       "scale": null,
       "location": "[parameters('SharedVmConfig').location]",
-      "dependsOn": [
-        "[parameters('vmName')]"
-      ],
+      "dependsOn": [],
       "properties": {
-
         "publisher": "Microsoft.Compute",
         "type": "BGInfo",
         "typeHandlerVersion": "2.1",
@@ -143,18 +135,14 @@
         "settings": {
           "properties": []
         }
-
       }
-
     },
     {
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(parameters('vmName'),'/Antimalware')]",
+      "type": "extensions",
+      "name": "[concat(parameters('vmName'),copyIndex('appVms'),'/Antimalware')]",
       "apiVersion": "2017-03-30",
       "location": "[parameters('SharedVmConfig').location]",
-      "dependsOn": [
-        "[parameters('vmName')]"
-      ],
+      "dependsOn": [],
       "properties": {
         "publisher": "Microsoft.Azure.Security",
         "type": "IaaSAntimalware",
@@ -177,6 +165,8 @@
         },
         "protectedSettings": null
       }
+    }        
+    ]
     }
   ],
   "outputs": {}
