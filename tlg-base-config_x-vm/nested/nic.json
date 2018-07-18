@@ -53,7 +53,7 @@
                     "privateIPAllocationMethod": "[parameters('ipAllocation')]",
                     "privateIPAddress": "[parameters('privateIp')]",
                     "publicIPAddress": {
-                      "id": "[concat(variables('publicIpID'),variables('currentIndex'))]"
+                      "id": "[concat(variables('publicIpID'),copyIndex(1))]"
                     },
                     "subnet": {
                       "id": "[parameters('subnetRef')]"
