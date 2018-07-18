@@ -30,7 +30,7 @@
     },
     "variables": {
         "currentIndex": "copyIndex(1)",
-        "publicIp": "[concat(parameters('configName'),'-',parameters('tier'),'_IP-',variables('currentIndex'))]",
+        "publicIp": "[concat(parameters('configName'),'-',parameters('tier'),'_IP-')]",
         "publicIpID": "[resourceId ('Microsoft.Network/publicIPAddresses/',variables('publicIp'))]"
     },
     "resources": [
@@ -53,7 +53,7 @@
                     "privateIPAllocationMethod": "[parameters('ipAllocation')]",
                     "privateIPAddress": "[parameters('privateIp')]",
                     "publicIPAddress": {
-                      "id": "[variables('publicIpID')]"
+                      "id": "[concat(variables('publicIpID'),variables('currentIndex'))]"
                     },
                     "subnet": {
                       "id": "[parameters('subnetRef')]"
