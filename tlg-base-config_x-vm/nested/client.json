@@ -16,7 +16,7 @@
     }
   },
   "variables": {
-    "currentIndex": "copyIndex('vms,1')",
+    "currentIndex": "copyIndex('vms')",
     "nicName": "[concat(parameters('sharedVmConfig').configName,'-CLIENT_NIC-',variables('currentIndex'))]",
     "imageName": "[concat(parameters('vmName'),'-image')]"
   },
@@ -24,7 +24,7 @@
     {
       "type": "Microsoft.Compute/images",
       "apiVersion": "2017-03-30",
-      "name": "[concat(variables('ImageName'),copyIndex('images,1'))]",
+      "name": "[concat(variables('ImageName'),copyIndex(1))]",
       "location": "[parameters('SharedVmConfig').location]",
       "copy": {
         "name": "images",

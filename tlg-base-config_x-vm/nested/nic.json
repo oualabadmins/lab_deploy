@@ -29,12 +29,12 @@
         }
     },
     "variables": {
-        "currentIndex": "copyIndex('nics,1')",
+        "currentIndex": "copyIndex('nics')",
         "publicIp": "[concat(parameters('configName'),'-',parameters('tier'),'_IP-',variables('currentIndex'))]"
     },
     "resources": [
         {
-            "name": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-',copyIndex('nics,1'))]",
+            "name": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-',copyIndex(1))]",
             "copy": {
               "name": "nics",
               "count": "[parameters('count')]"
