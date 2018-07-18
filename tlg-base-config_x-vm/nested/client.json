@@ -18,7 +18,8 @@
   "variables": {
     "currentIndex": "copyIndex('vms')",
     "nicName": "[concat(parameters('sharedVmConfig').configName,'-CLIENT_NIC-',variables('currentIndex'))]",
-    "imageName": "[concat(parameters('vmName'),'-image')]"
+    "imageName": "[concat(parameters('vmName'),'-image')]",
+    "segment1": "[concat(parameters('vmName'),variables('currentIndex'))]"
   },
   "resources": [
     {
@@ -85,7 +86,7 @@
     {
       "apiVersion": "2017-03-30",
       "type": "extensions",
-      "name": "[concat(parameters('vmName'),variables('currentIndex'),'/JoinDomain')]",
+      "name": "[concat(variables('segment1'),'/JoinDomain')]",
       "location": "[parameters('SharedVmConfig').location]",
       "tags": {
         "displayName": "Join Domain"
@@ -110,7 +111,7 @@
     },
     {
       "type": "extensions",
-      "name": "[concat(parameters('vmName'),variables('currentIndex'),'/BGInfo')]",
+      "name": "[concat(variables('segment1'),'/BGInfo')]",
       "apiVersion": "2017-03-30",
       "scale": null,
       "location": "[parameters('SharedVmConfig').location]",
@@ -127,7 +128,7 @@
     },
     {
       "type": "extensions",
-      "name": "[concat(parameters('vmName'),variables('currentIndex'),'/Antimalware')]",
+      "name": "[concat(variables('segment1'),'/Antimalware')]",
       "apiVersion": "2017-03-30",
       "location": "[parameters('SharedVmConfig').location]",
       "dependsOn": [],
