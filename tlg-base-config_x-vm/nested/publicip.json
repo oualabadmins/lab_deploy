@@ -22,7 +22,7 @@
     "variables": {
         "currentIndex": "copyIndex(1)",
         "ipName": "[concat(parameters('configName'),'-',parameters('tier'),'_IP-')]",
-        "dynamicDnsPrefix": "[toLower(concat(parameters('dnsLabelPrefix'),'-',parameters('tier'),variables('currentIndex')))]"
+        "dynamicDnsPrefix": "[toLower(concat(parameters('dnsLabelPrefix'),'-',parameters('tier'),'-'))]"
     },
     "resources": [
         {
@@ -38,7 +38,7 @@
             "properties": {
               "publicIPAllocationMethod": "[parameters('ipAllocation')]",
               "dnsSettings": {
-                "domainNameLabel": "[variables('dynamicDnsPrefix')]"
+                "domainNameLabel": "[concat(variables('dynamicDnsPrefix'),copyIndex(1))]"
               }
             }
           }        
