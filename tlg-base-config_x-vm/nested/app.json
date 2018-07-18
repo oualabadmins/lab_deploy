@@ -15,7 +15,7 @@
       "type": "string"
     },
     "configurationFunction": {
-      "type": "object"
+      "type": "string"
     }
   },
   "variables": {
