@@ -87,6 +87,16 @@
       },
       "defaultValue": "10.0.0.0/8"
     },
+    "dnsServers": {
+      "type": "array",
+      "metadata": {
+        "description": "The DNS address(es) of the DNS Server(s) used by the VNET."
+      },
+      "defaultValue": {
+        "dnsServer": "10.0.0.10",
+        "dnsServer": "8.8.8.8"
+      }
+    },
     "_artifactsLocation": {
       "type": "string",
       "metadata": {
@@ -116,7 +126,7 @@
       "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-VNET'), 'subnet-01')]",
       "subnet": "[parameters('subnetCIDR')]",
       "nsgName": "[concat(parameters('configName'),'-NSG')]",
-      "dnsServers": "10.0.0.10, 8.8.8.8"
+      "dnsServers": "[parameters('dnsServers')]"
     },
 
     "VMs": {
@@ -189,7 +199,7 @@
           ]
         },
         "dhcpOptions": {
-          "dnsServers": "[variables('network').dnsServers]"
+          "dnsServers": "[parameters('dnsServers')]"
         },
         "subnets": [
           {
@@ -352,7 +362,7 @@
             "value": "[parameters('domainName')]"
           },
           "dnsServer": {
-            "value": "[variables('network').dnsServers]"
+            "value": "[parameters('dnsServers')]"
           }
         }
       }
