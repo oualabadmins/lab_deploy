@@ -8,13 +8,13 @@
         } 
     },
     "variables": {
-        "publicIp": "[concat(parameters('sharedConfig').configName,'-',parameters('sharedConfig').tier,'_IP-',parameters('sharedConfig').count)]"
+        "publicIp": "[concat(parameters('sharedConfig').configName,'-',parameters('sharedConfig').tier,'_IP-',copyIndex('nics'))]"
     },
     "resources": [
         {
-            "name": "[concat(parameters('sharedConfig').tier,'_NIC-',parameters('sharedConfig').count)]",
+            "name": "[concat(parameters('sharedConfig').tier,'_NIC-',copyIndex('nics'))]",
             "copy": {
-              "name": "[concat(parameters('sharedConfig').tier,'NIC')]",
+              "name": "nics",
               "count": "[parameters('sharedConfig').count]"
             },
             "type": "Microsoft.Network/networkInterfaces",
@@ -27,7 +27,7 @@
             "properties": {
               "ipConfigurations": [
                 {
-                  "name": "[concat('ipconfig',parameters('sharedConfig').count)]",
+                  "name": "[concat('ipconfig',copyIndex('nics'))]",
                   "properties": {
                     "privateIPAllocationMethod": "[parameters('sharedConfig').ipAllocation]",
                     "publicIPAddress": {
@@ -49,6 +49,6 @@
           }   
     ],
     "outputs": {
-        
+
     }
 }
