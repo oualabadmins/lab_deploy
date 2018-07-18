@@ -47,7 +47,7 @@
             "properties": {
               "ipConfigurations": [
                 {
-                  "name": "[concat('ipconfig',copyIndex('nics'))]",
+                  "name": "[concat('ipconfig',variables('currentIndex'))]",
                   "properties": {
                     "privateIPAllocationMethod": "[parameters('ipAllocation')]",
                     "privateIPAddress": "[parameters('privateIp')]",
