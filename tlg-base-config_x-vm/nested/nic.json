@@ -47,10 +47,10 @@
             "properties": {
               "ipConfigurations": [
                 {
-                  "name": "[concat('ipconfig',copyIndex('nics'))]",
+                  "name": "[concat('ipconfig',copyIndex(1))]",
                   "properties": {
                     "privateIPAllocationMethod": "[parameters('ipAllocation')]",
-
+                    "privateIPAddress": "[parameters('privateIp')]",
                     "publicIPAddress": {
                       "id": "[reference(concat('Microsoft.Network/publicIPAddresses/',variables('publicIp'),'2017-06-01','Full').properties.ipAddress)]"
                     },
