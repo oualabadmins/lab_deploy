@@ -10,7 +10,7 @@
           "type": "string" 
         },
         "count": {
-          "type": "string" 
+          "type": "int" 
         },
         "ipAllocation": {
           "type": "string" 
