@@ -87,16 +87,6 @@
       },
       "defaultValue": "10.0.0.0/8"
     },
-    "dnsServers": {
-      "type": "array",
-      "metadata": {
-        "description": "The DNS address(es) of the DNS Server(s) used by the VNET."
-      },
-      "defaultValue": {
-        "dc1": "10.0.0.10",
-        "google": "8.8.8.8"
-      }
-    },
     "_artifactsLocation": {
       "type": "string",
       "metadata": {
