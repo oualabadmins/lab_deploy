@@ -12,7 +12,7 @@
     },
     "resources": [
         {
-            "name": "[concat(parameters('sharedConfig').tier,'_NIC-',copyIndex('nics'))]",
+            "name": "[parameters('sharedConfig').nicName]",
             "copy": {
               "name": "nics",
               "count": "[parameters('sharedConfig').count]"

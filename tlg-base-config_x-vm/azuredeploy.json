@@ -457,7 +457,7 @@
             "value": "[variables('VMs').adVmName]"
           },
           "nicName": {
-            "value": "[concat(parameters('configName'),'-AD_NIC')]"
+            "value": "[concat(parameters('configName'),'-AD_NIC-1')]"
           },
           "modulesURL": {
             "value": "[variables('assetLocation')]"
