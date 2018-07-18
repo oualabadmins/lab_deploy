@@ -71,6 +71,9 @@
           }   
     ],
     "outputs": {
-
+      "nicNames": {
+        "value": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-',copyIndex(1))]",
+        "type": "object"
+      }
     }
 }
