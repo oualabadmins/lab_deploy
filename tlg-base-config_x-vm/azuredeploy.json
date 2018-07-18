@@ -83,7 +83,7 @@
     "subnetCIDR": {
       "type": "string",
       "metadata": {
-        "description": "The CIDR subnet for your virtual network, i.e. 10.0.0.0/8."
+        "description": "The CIDR subnet for your virtual network, i.e. 10.0.0.0/8. DO NOT CHANGE"
       },
       "defaultValue": "10.0.0.0/8"
     },
@@ -93,8 +93,8 @@
         "description": "The DNS address(es) of the DNS Server(s) used by the VNET."
       },
       "defaultValue": {
-        "dnsServer": "10.0.0.10",
-        "dnsServer": "8.8.8.8"
+        "dc1": "10.0.0.10",
+        "google": "8.8.8.8"
       }
     },
     "_artifactsLocation": {
@@ -126,7 +126,10 @@
       "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-VNET'), 'subnet-01')]",
       "subnet": "[parameters('subnetCIDR')]",
       "nsgName": "[concat(parameters('configName'),'-NSG')]",
-      "dnsServers": "[parameters('dnsServers')]"
+      "dnsServers": {
+        "local": "10.0.0.10",
+        "internet": "8.8.8.8"
+      }
     },
 
     "VMs": {
@@ -199,7 +202,10 @@
           ]
         },
         "dhcpOptions": {
-          "dnsServers": "[parameters('dnsServers')]"
+          "dnsServers": [
+            "[variables('network').dnsServers.local]",
+            "[variables('network').dnsServers.internet]"
+          ]
         },
         "subnets": [
           {
@@ -362,7 +368,10 @@
             "value": "[parameters('domainName')]"
           },
           "dnsServer": {
-            "value": "[parameters('dnsServers')]"
+            "value": [
+                "[variables('network').dnsServers.local]",
+                "[variables('network').dnsServers.internet]"
+            ]
           }
         }
       }
@@ -404,7 +413,7 @@
             "value": "[parameters('domainName')]"
           },
           "dnsServer": {
-            "value": "[variables('VMs').adNicIP]"
+            "value": "[variables('network').dnsServers.local]"
           }
         }
       }
@@ -447,7 +456,7 @@
             "value": "[parameters('domainName')]"
           },
           "dnsServer": {
-            "value": "[variables('VMs').adNicIP]"
+            "value": "[variables('network').dnsServers.local]"
           }
         }
       }
