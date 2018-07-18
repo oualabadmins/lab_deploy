@@ -1,4 +1,4 @@
-﻿# TLG (Test Lab Guide) - X VM Base Configuration (v0.9.1)
+﻿# TLG (Test Lab Guide) - X VM Base Configuration (v0.9.2)
 
 **This version configured to be deployed from the oualabadmins/lab_deploy repo.** See the section _MAX notes_ below for information on how to deploy for MAX Skunkworks lab admins.
 
@@ -7,23 +7,28 @@
 Last updated _7/18/2018_
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Foualabadmins%2Flab_deploy%2Fmaster%2Ftlg-base-config_x-vm%2Fazuredeploy.json" target="_blank">
-<img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.png"/>
+<img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 <a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2Foualabadmins%2Flab_deploy%2Fmaster%2Ftlg-base-config_x-vm%2Fazuredeploy.json" target="_blank">
-<img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/visualizebutton.png"/>
+<img src="http://armviz.io/visualizebutton.png"/>
 </a>
 
-This template deploys a **TLG (Test Lab Guide) X VM Base Configuration**, a Test Lab Guide (TLG) configuration that represents a simplified intranet connected to the Internet. This base configuration is the starting point for additional TLGs that can be found [here](http://aka.ms/catlgs).
+The **TLG (Test Lab Guide) X VM Base Configuration** template deploys a multi-VM environment based on the <a href="https://github.com/oualabadmins/lab_deploy/tree/master/tlg-base-config_x-vm">**TLG 3 VM Base Configuration**</a>, which represents a simplified intranet connected to the Internet. Additional TLGs can be found [here](http://aka.ms/catlgs).
 
 The **TLG (Test Lab Guide) X VM Base Configuration** provisions a Windows Server 2012 R2 or 2016 Active Directory domain controller using the specified domain name, one or more application servers running Windows Server 2012 R2 or 2016, and optionally one or more client VMs running Windows 10. 
 
 ![alt text](images/tlg-base-config_3-vm.png "Diagram of the base config deployment")
 
-**Note:** If you choose to deploy a client VM, you must upload a generalized Windows 10 VHD to an Azure storage account and provide the account name in the _clientVhdUri_ parameter. Note that SAS tokens are not supported, and the blob container must be configured for public read access.
+**Note:** If you choose to deploy client VMs, you must upload a generalized Windows 10 VHD to an Azure storage account in the same subscription and region as the resource group you are deploying, and provide the account name in the _clientVhdUri_ parameter. Use of a custom client image is required because the Windows 10 gallery image is only available in eligible subscriptions (Visual Studio or MSDN).
 
-Use of a custom client image is required because the Windows 10 gallery image is only available in eligible subscriptions (Visual Studio or MSDN). The path to the VHD should resemble the following example:
+The path to the VHD should resemble the following example:
 
      https://<storage account name>.blob.core.windows.net/vhds/<vhdName>.vhd
+
+
+If the blob container is not configured for public read access, get the SAS token and enter it in the *_artifactsLocationSasToken* parameter. The token should resemble this example:
+
+    ?sv=2015-04-05&st=2015-04-29T22%3A18%3A26Z&se=2015-04-30T02%3A23%3A26Z&sr=b&sp=rw&spr=https&sig=Z%2FRHIX5Xcg0Mq2rqI3OlWTjEg2tYkboXr1P9ZUXDtkk%3D
 * For more information about eligible subscriptions, see https://docs.microsoft.com/en-us/azure/virtual-machines/windows/client-images#subscription-eligibility.
 * For more information about how to prepare a generalized VHD, see https://docs.microsoft.com/en-us/azure/virtual-machines/windows/prepare-for-upload-vhd-image.
 
