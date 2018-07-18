@@ -47,7 +47,7 @@
             "properties": {
               "ipConfigurations": [
                 {
-                  "name": "[concat('ipconfig',variables('currentIndex'))]",
+                  "name": "ipconfig",
                   "properties": {
                     "privateIPAllocationMethod": "[parameters('ipAllocation')]",
                     "privateIPAddress": "[parameters('privateIp')]",
