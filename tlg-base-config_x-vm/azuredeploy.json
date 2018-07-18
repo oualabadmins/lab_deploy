@@ -241,17 +241,13 @@
       }
     },
     {
-      "name": "[concat(parameters('configName'),'-APP_IP',copyIndex(1))]",
+      "name": "[concat(parameters('configName'),'-APP_IP')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "comments": "NEW This is the deployment resource for APP public IPs.",
       "dependsOn": [
         "[concat('Microsoft.Network/virtualNetworks/',parameters('configName'),'-vnet')]"
       ],
-      "copy": {
-        "name": "appIps",
-        "count": "[parameters('numberOfAppVms')]"
-      },
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -266,7 +262,7 @@
             "value": "APP"
           },
           "count": {
-            "value": "copyIndex(appIps)"
+            "value": "[parameters('numberOfAppVms')]"
           },
           "ipAllocation": {
             "value": "Dynamic"
@@ -278,7 +274,7 @@
       }
     },
     {
-      "name": "[concat(parameters('configName'),'-CLIENT_IP',copyIndex(1))]",
+      "name": "[concat(parameters('configName'),'-CLIENT_IP')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "condition": "[equals(parameters('deployClientVm'),'Yes')]",
@@ -286,10 +282,6 @@
       "dependsOn": [
         "[concat('Microsoft.Network/virtualNetworks/',parameters('configName'),'-vnet')]"
       ],
-      "copy": {
-        "name": "clientIps",
-        "count": "[parameters('numberOfClientVms')]"
-      },
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -304,7 +296,7 @@
             "value": "CLIENT"
           },
           "count": {
-            "value": "copyIndex(clientIps)"
+            "value": "[parameters('numberOfClientVms')]"
           },
           "ipAllocation": {
             "value": "Dynamic"
@@ -358,17 +350,13 @@
       }
     },
     {
-      "name": "[concat(parameters('configName'),'-APP_NIC_DEPLOY',copyIndex(1))]",
+      "name": "[concat(parameters('configName'),'-APP_NIC_DEPLOY')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "comments": "NEW This is the deployment resource for APP NICs.",
       "dependsOn": [
         "[concat('Microsoft.Network/virtualNetworks/',parameters('configName'),'-vnet')]"
       ],
-      "copy": {
-        "name": "appNics",
-        "count": "[parameters('numberOfAppVms')]"
-      },
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -383,7 +371,7 @@
             "value": "APP"
           },
           "count": {
-            "value": "copyIndex(appNics)"
+            "value": "[parameters('numberOfAppVms')]"
           },
           "ipAllocation": {
             "value": "Dynamic"
@@ -404,7 +392,7 @@
       }
     },
     {
-      "name": "[concat(parameters('configName'),'-CLIENT_NIC_DEPLOY',copyIndex(1))]",
+      "name": "[concat(parameters('configName'),'-CLIENT_NIC_DEPLOY')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "condition": "[equals(parameters('deployClientVm'),'Yes')]",
@@ -412,10 +400,6 @@
       "dependsOn": [
         "[concat('Microsoft.Network/virtualNetworks/',parameters('configName'),'-vnet')]"
       ],
-      "copy": {
-        "name": "clientNics",
-        "count": "[parameters('numberOfClientVms')]"
-      },
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -430,7 +414,7 @@
             "value": "CLIENT"
           },
           "count": {
-            "value": "copyIndex(clientNics)"
+            "value": "[parameters('numberOfClientVms')]"
           },
           "ipAllocation": {
             "value": "Dynamic"
@@ -485,12 +469,8 @@
       }
     },
     {
-      "name": "[concat('APP',copyIndex(1))]",
+      "name": "APP_DEPLOY",
       "type": "Microsoft.Resources/deployments",
-      "copy": {
-        "name": "appVms",
-        "count": "[parameters('numberOfAppVms')]"
-      },
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for the app server VM.",
       "dependsOn": [
@@ -507,10 +487,10 @@
             "value": "[variables('SharedVmConfig')]" 
           },
           "vmName": {
-            "value": "copyIndex(appVms)"
+            "value": "APP"
           },
           "nicName": {
-            "value": "copyIndex(appVms)"
+            "value": ""
           },
           "modulesURL": {
             "value": "[variables('assetLocation')]"
@@ -522,15 +502,11 @@
       }
     },
     {
-      "name": "[concat('CLIENT',copyIndex(1))]",
+      "name": "CLIENT_DEPLOY",
       "condition": "[equals(parameters('deployClientVm'),'Yes')]",
       "type": "Microsoft.Resources/deployments",
-      "copy": {
-        "name": "clientVms",
-        "count": "[parameters('numberOfClientVms')]"
-      },
       "apiVersion": "2015-01-01",
-      "comments": "This is the deployment resource for the client VM.",
+      "comments": "This is the deployment resource for client VMs.",
       "dependsOn": [
         "[concat('Microsoft.Resources/deployments/','ADDC')]"
       ],
@@ -545,10 +521,10 @@
             "value": "[variables('SharedVmConfig')]" 
           },
           "vmName": {
-            "value": "copyIndex(clientVms)"
+            "value": "CLIENT"
           },
           "nicName": {
-            "value": "copyIndex(clientVms)"
+            "value": ""
           },
           "vhdUri": {
             "value": "[parameters('clientVhdUri')]"
