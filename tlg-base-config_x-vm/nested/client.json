@@ -48,7 +48,7 @@
       "name": "[concat('CLIENT',copyIndex(1))]",
       "location": "[parameters('SharedVmConfig').location]",
       "dependsOn": [
-        "[variables('ImageName')]"
+        "[concat(variables('ImageName'),copyIndex(1))]"
       ],
       "copy": {
         "name": "vms",
