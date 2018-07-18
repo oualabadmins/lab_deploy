@@ -436,11 +436,13 @@
     },
 
     {
-      "name": "ADDC_DEPLOY",
+      "name": "[concat(parameters('configName'),'-ADDC_DEPLOY')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for the ADDC VM.",
-      "dependsOn": [],
+      "dependsOn": [
+        "[concat(parameters('configName'),'-AD_NIC_DEPLOY')]"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -464,12 +466,12 @@
       }
     },
     {
-      "name": "APP_DEPLOY",
+      "name": "[concat(parameters('configName'),'-APP_DEPLOY')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for the app server VM.",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/','ADDC_DEPLOY')]"
+        "[concat('Microsoft.Resources/deployments/',parameters('configName'),'-ADDC_DEPLOY')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -497,13 +499,13 @@
       }
     },
     {
-      "name": "CLIENT_DEPLOY",
+      "name": "[concat(parameters('configName'),'-CLIENT_DEPLOY')]",
       "condition": "[equals(parameters('deployClientVm'),'Yes')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for client VMs.",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/','ADDC_DEPLOY')]"
+        "[concat('Microsoft.Resources/deployments/',parameters('configName'),'-ADDC_DEPLOY')]"
       ],
       "properties": {
         "mode": "Incremental",
