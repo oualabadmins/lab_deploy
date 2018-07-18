@@ -229,7 +229,7 @@
             "value": "AD"
           },
           "count": {
-            "value": "1"
+            "value": 1
           },
           "ipAllocation": {
             "value": "Dynamic"
@@ -329,7 +329,7 @@
             "value": "DC"
           },
           "count": {
-            "value": "1"
+            "value": 1
           },
           "ipAllocation": {
             "value": "Static"
