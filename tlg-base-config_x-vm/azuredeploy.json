@@ -313,7 +313,7 @@
       "apiVersion": "2015-01-01",
       "comments": "NEW This is the deployment resource for the ADDC NIC.",
       "dependsOn": [
-        "[variables('network').vnetName]"
+        "[concat(parameters('configName'),'-AD_IP')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -355,7 +355,7 @@
       "apiVersion": "2015-01-01",
       "comments": "NEW This is the deployment resource for APP NICs.",
       "dependsOn": [
-        "[variables('network').vnetName]"
+        "[concat(parameters('configName'),'-APP_IP')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -398,7 +398,7 @@
       "condition": "[equals(parameters('deployClientVm'),'Yes')]",
       "comments": "NEW This is the deployment resource for CLIENT NICs.",
       "dependsOn": [
-        "[variables('network').vnetName]"
+        "[concat(parameters('configName'),'-CLIENT_IP')]"
       ],
       "properties": {
         "mode": "Incremental",
