@@ -8,9 +8,6 @@
     "vmName": {
       "type": "string"
     },
-    "nicName": {
-      "type": "string"
-    },
     "modulesURL": {
       "type": "string"
     },
@@ -18,7 +15,9 @@
       "type": "object"
     }
   },
-  "variables": {},
+  "variables": {
+    "nicName": "[concat(parameters('sharedVmConfig').configName,'-AD_NIC-1')]"
+  },
   "resources": [
     {
       "apiVersion": "2017-03-30",

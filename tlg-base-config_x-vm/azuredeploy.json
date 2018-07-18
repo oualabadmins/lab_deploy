@@ -436,7 +436,7 @@
     },
 
     {
-      "name": "ADDC",
+      "name": "ADDC_DEPLOY",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for the ADDC VM.",
@@ -454,9 +454,6 @@
           "vmName": {
             "value": "[variables('VMs').adVmName]"
           },
-          "nicName": {
-            "value": "[concat(parameters('configName'),'-AD_NIC-1')]"
-          },
           "modulesURL": {
             "value": "[variables('assetLocation')]"
           },
@@ -472,7 +469,7 @@
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for the app server VM.",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/','ADDC')]"
+        "[concat('Microsoft.Resources/deployments/','ADDC_DEPLOY')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -506,7 +503,7 @@
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for client VMs.",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/','ADDC')]"
+        "[concat('Microsoft.Resources/deployments/','ADDC_DEPLOY')]"
       ],
       "properties": {
         "mode": "Incremental",
