@@ -41,9 +41,7 @@
             },
             "type": "Microsoft.Network/networkInterfaces",
             "location": "[resourceGroup().location]",
-            "dependsOn": [
-              "[concat('Microsoft.Network/virtualNetworks/',parameters('configName'),'-vnet')]"
-            ],
+            "dependsOn": [],
             "apiVersion": "2018-01-01",
             "comments": "NIC",
             "properties": {
