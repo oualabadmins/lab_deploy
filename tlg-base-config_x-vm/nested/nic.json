@@ -34,7 +34,7 @@
     },
     "resources": [
         {
-            "name": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC',copyIndex('nics'))]",
+            "name": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-',copyIndex('nics'))]",
             "copy": {
               "name": "nics",
               "count": "[parameters('count')]"
