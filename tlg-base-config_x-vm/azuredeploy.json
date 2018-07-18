@@ -115,7 +115,8 @@
       "vnetName": "[concat(parameters('configName'),'-VNET')]",
       "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-VNET'), 'subnet-01')]",
       "subnet": "[parameters('subnetCIDR')]",
-      "nsgName": "[concat(parameters('configName'),'-NSG')]"
+      "nsgName": "[concat(parameters('configName'),'-NSG')]",
+      "dnsServers": "10.0.0.10, 8.8.8.8"
     },
 
     "VMs": {
@@ -188,7 +189,7 @@
           ]
         },
         "dhcpOptions": {
-          "dnsServers": "[variables('VMs').adNicIP]"
+          "dnsServers": "[variables('network').dnsServers]"
         },
         "subnets": [
           {
