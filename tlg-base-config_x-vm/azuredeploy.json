@@ -80,6 +80,13 @@
         "description": "DNS label prefix for public IPs. Must be lowercase and match the regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$."
       }
     },
+    "subnetCIDR": {
+      "type": "string",
+      "metadata": {
+        "description": "The CIDR subnet for your virtual network, i.e. 10.0.0.0/8."
+      },
+      "defaultValue": "10.0.0.0/8"
+    },
     "_artifactsLocation": {
       "type": "string",
       "metadata": {
@@ -107,7 +114,7 @@
     "network": {
       "vnetName": "[concat(parameters('configName'),'-VNET')]",
       "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-VNET'), 'subnet-01')]",
-      "subnet": "10.0.0.0/8",
+      "subnet": "[parameters('subnetCIDR')]",
       "nsgName": "[concat(parameters('configName'),'-NSG')]"
     },
 
