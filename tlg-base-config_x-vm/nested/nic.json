@@ -10,7 +10,7 @@
           "type": "string" 
         },
         "count": {
-          "type": "int" 
+          "type": "string" 
         },
         "ipAllocation": {
           "type": "string" 
@@ -29,7 +29,8 @@
         }
     },
     "variables": {
-        "publicIp": "[concat(parameters('configName'),'-',parameters('tier'),'_IP-',copyIndex('nics'))]"
+        "currentIndex": "copyIndex('nics')",
+        "publicIp": "[concat(parameters('configName'),'-',parameters('tier'),'_IP-',variables('currentIndex'))]"
     },
     "resources": [
         {
