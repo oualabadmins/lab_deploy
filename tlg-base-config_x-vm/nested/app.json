@@ -95,7 +95,9 @@
           "Password": "[parameters('SharedVmConfig').adminPassword]"
         }
       },
-      "dependsOn": []
+      "dependsOn": [
+        "[concat('APP',copyIndex(1))]"
+      ]
     },
     {
       "type": "extensions",
