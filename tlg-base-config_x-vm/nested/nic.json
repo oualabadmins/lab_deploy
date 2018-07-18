@@ -52,7 +52,7 @@
                     "privateIPAllocationMethod": "[parameters('ipAllocation')]",
                     "privateIPAddress": "[parameters('privateIp')]",
                     "publicIPAddress": {
-                      "id": "[resourceId ('Microsoft.Network/publicIPAddresses/',variables('publicIp'))]"
+                      "id": "[reference(concat('Microsoft.Network/publicIPAddresses/',variables('publicIp'),'2017-06-01','Full').properties.ipAddress)]"
                     },
                     "subnet": {
                       "id": "[parameters('subnetRef')]"
