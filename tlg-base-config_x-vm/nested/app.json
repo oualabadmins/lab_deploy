@@ -19,13 +19,14 @@
     }
   },
   "variables": {
-    "nicName": "[concat(parameters('sharedVmConfig').configName,'-APP_NIC-',copyIndex('appVms'))]"
+    "currentIndex": "copyIndex('appVms,1')",
+    "nicName": "[concat(parameters('sharedVmConfig').configName,'-APP_NIC-',variables('currentIndex'))]"
   },
   "resources": [
     {
       "apiVersion": "2017-03-30",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat('APP',copyIndex(1))]",
+      "name": "[concat('APP',variables('currentIndex'))]",
       "location": "[parameters('SharedVmConfig').location]",
       "copy": {
         "name": "appVms",

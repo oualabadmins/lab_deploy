@@ -16,14 +16,15 @@
     }
   },
   "variables": {
-    "nicName": "[concat(parameters('sharedVmConfig').configName,'-CLIENT_NIC-',copyindex('vms'))]",
+    "currentIndex": "copyIndex('vms,1')",
+    "nicName": "[concat(parameters('sharedVmConfig').configName,'-CLIENT_NIC-',variables('currentIndex'))]",
     "imageName": "[concat(parameters('vmName'),'-image')]"
   },
   "resources": [
     {
       "type": "Microsoft.Compute/images",
       "apiVersion": "2017-03-30",
-      "name": "[concat(variables('ImageName'),copyIndex('images'))]",
+      "name": "[concat(variables('ImageName'),copyIndex('images,1'))]",
       "location": "[parameters('SharedVmConfig').location]",
       "copy": {
         "name": "images",
@@ -43,7 +44,7 @@
     {
       "apiVersion": "2017-03-30",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat('CLIENT',copyIndex('vms'))]",
+      "name": "[concat('CLIENT',copyIndex('vms,1'))]",
       "location": "[parameters('SharedVmConfig').location]",
       "dependsOn": [
         "[variables('ImageName')]"
@@ -63,7 +64,7 @@
         },
         "storageProfile": {
           "imageReference": {
-            "id": "[resourceId('Microsoft.Compute/images/',variables('ImageName'),copyIndex('images'))]"
+            "id": "[resourceId('Microsoft.Compute/images/',variables('ImageName'),variables('currentIndex'))]"
           }
         },
         "networkProfile": {
