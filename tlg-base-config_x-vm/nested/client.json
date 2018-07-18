@@ -8,23 +8,27 @@
     "vmName": {
       "type": "string"
     },
-    "nicName": {
-      "type": "string"
+    "count": {
+      "type": "int"
     },
     "vhdUri": {
       "type": "string"
     }
   },
   "variables": {
-    "nicName": "[concat(parameters('sharedVmConfig').configName,'-CLIENT_NIC-',parameters('sharedVmConfig').count)]",
+    "nicName": "[concat(parameters('sharedVmConfig').configName,'-CLIENT_NIC-',copyindex('vms'))]",
     "imageName": "[concat(parameters('vmName'),'-image')]"
   },
   "resources": [
     {
       "type": "Microsoft.Compute/images",
       "apiVersion": "2017-03-30",
-      "name": "[variables('ImageName')]",
+      "name": "[concat(variables('ImageName'),copyIndex('images'))]",
       "location": "[parameters('SharedVmConfig').location]",
+      "copy": {
+        "name": "images",
+        "count": "[parameters('count')]"
+      },      
       "properties": {
         "storageProfile": {
           "osDisk": {
@@ -39,23 +43,27 @@
     {
       "apiVersion": "2017-03-30",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat('CLIENT',parameters('vmName'))]",
+      "name": "[concat('CLIENT',copyIndex('vms'))]",
       "location": "[parameters('SharedVmConfig').location]",
       "dependsOn": [
         "[variables('ImageName')]"
       ],
+      "copy": {
+        "name": "vms",
+        "count": "[parameters('count')]"
+      },   
       "properties": {
         "hardwareProfile": {
           "vmSize": "[parameters('SharedVmConfig').vmSize]"
         },
         "osProfile": {
-          "computerName": "[parameters('vmName')]",
+          "computerName": "[concat('CLIENT',copyIndex('vms'))]",
           "adminUsername": "[parameters('SharedVmConfig').adminUsername]",
           "adminPassword": "[parameters('SharedVmConfig').adminPassword]"
         },
         "storageProfile": {
           "imageReference": {
-            "id": "[resourceId('Microsoft.Compute/images/',variables('ImageName'))]"
+            "id": "[resourceId('Microsoft.Compute/images/',variables('ImageName'),copyIndex('images'))]"
           }
         },
         "networkProfile": {
@@ -71,12 +79,12 @@
             "storageUri": "[reference(concat('Microsoft.Storage/storageAccounts/',parameters('SharedVmConfig').storageAccountNamePrefix),'2017-06-01').primaryEndpoints.blob]"
           }
         }
-      }
-    },
+      },
+      "resources": [
     {
       "apiVersion": "2017-03-30",
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(parameters('vmName'),'/JoinDomain')]",
+      "type": "extensions",
+      "name": "[concat(parameters('vmName'),copyIndex('vms'),'/JoinDomain')]",
       "location": "[parameters('SharedVmConfig').location]",
       "tags": {
         "displayName": "Join Domain"
@@ -97,19 +105,15 @@
           "Password": "[parameters('SharedVmConfig').adminPassword]"
         }
       },
-      "dependsOn": [
-        "[parameters('vmName')]"
-      ]
+      "dependsOn": []
     },
     {
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(parameters('vmName'),'/BGInfo')]",
+      "type": "extensions",
+      "name": "[concat(parameters('vmName'),copyIndex('vms'),'/BGInfo')]",
       "apiVersion": "2017-03-30",
       "scale": null,
       "location": "[parameters('SharedVmConfig').location]",
-      "dependsOn": [
-        "[parameters('vmName')]"
-      ],
+      "dependsOn": [],
       "properties": {
         "publisher": "Microsoft.Compute",
         "type": "BGInfo",
@@ -121,13 +125,11 @@
       }
     },
     {
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(parameters('vmName'),'/Antimalware')]",
+      "type": "extensions",
+      "name": "[concat(parameters('vmName'),copyIndex('vms'),'/Antimalware')]",
       "apiVersion": "2017-03-30",
       "location": "[parameters('SharedVmConfig').location]",
-      "dependsOn": [
-        "[parameters('vmName')]"
-      ],
+      "dependsOn": [],
       "properties": {
         "publisher": "Microsoft.Azure.Security",
         "type": "IaaSAntimalware",
@@ -150,6 +152,8 @@
         },
         "protectedSettings": null
       }
+    }        
+    ]
     }
   ],
   "outputs": {}
