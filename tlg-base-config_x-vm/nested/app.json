@@ -19,7 +19,7 @@
     }
   },
   "variables": {
-    "currentIndex": "copyIndex('appVms')",
+    "currentIndex": "copyIndex('vms')",
     "nicName": "[concat(parameters('sharedVmConfig').configName,'-APP_NIC-',variables('currentIndex'))]"
   },
   "resources": [
@@ -29,7 +29,7 @@
       "name": "[concat('APP',copyIndex(1))]",
       "location": "[parameters('SharedVmConfig').location]",
       "copy": {
-        "name": "appVms",
+        "name": "vms",
         "count": "[parameters('count')]"
       },
       "properties": {
@@ -37,7 +37,7 @@
           "vmSize": "[parameters('SharedVmConfig').vmSize]"
         },
         "osProfile": {
-          "computerName": "[parameters('vmName')]",
+          "computerName": "[concat('APP',variables('currentIndex'))]",
           "adminUsername": "[parameters('SharedVmConfig').adminUsername]",
           "adminPassword": "[parameters('SharedVmConfig').adminPassword]"
         },

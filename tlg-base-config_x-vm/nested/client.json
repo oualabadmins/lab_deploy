@@ -44,7 +44,7 @@
     {
       "apiVersion": "2017-03-30",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat('CLIENT',copyIndex('vms,1'))]",
+      "name": "[concat('CLIENT',copyIndex(1))]",
       "location": "[parameters('SharedVmConfig').location]",
       "dependsOn": [
         "[variables('ImageName')]"
@@ -58,7 +58,7 @@
           "vmSize": "[parameters('SharedVmConfig').vmSize]"
         },
         "osProfile": {
-          "computerName": "[concat('CLIENT',copyIndex('vms'))]",
+          "computerName": "[concat('CLIENT',variables('currentIndex'))]",
           "adminUsername": "[parameters('SharedVmConfig').adminUsername]",
           "adminPassword": "[parameters('SharedVmConfig').adminPassword]"
         },
