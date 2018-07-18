@@ -29,7 +29,7 @@
         }
     },
     "variables": {
-        "currentIndex": "copyIndex('nics')",
+        "currentIndex": "copyIndex(1)",
         "publicIp": "[concat(parameters('configName'),'-',parameters('tier'),'_IP-',variables('currentIndex'))]",
         "publicIpID": "[resourceId ('Microsoft.Network/publicIPAddresses/',variables('publicIp'))]"
     },

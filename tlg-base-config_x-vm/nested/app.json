@@ -19,7 +19,7 @@
     }
   },
   "variables": {
-    "currentIndex": "copyIndex('vms')",
+    "currentIndex": "copyIndex(1)",
     "nicName": "[concat(parameters('sharedVmConfig').configName,'-APP_NIC-',variables('currentIndex'))]",
     "segment1": "[concat(parameters('vmName'),variables('currentIndex'))]"
   },

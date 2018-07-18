@@ -20,7 +20,8 @@
           }
     },
     "variables": {
-        "ipName": "[concat(parameters('configName'),'-',parameters('tier'),'_IP-')]"
+        "ipName": "[concat(parameters('configName'),'-',parameters('tier'),'_IP-')]",
+        "dynamicDnsPrefix": "[toLower(concat(parameters('dnsLabelPrefix'),'-',parameters('tier'),copyIndex(1)))]"
     },
     "resources": [
         {
@@ -36,7 +37,7 @@
             "properties": {
               "publicIPAllocationMethod": "[parameters('ipAllocation')]",
               "dnsSettings": {
-                "domainNameLabel": "[toLower(parameters('dnsLabelPrefix'))]"
+                "domainNameLabel": "[variables('dynamicDnsPrefix')]"
               }
             }
           }        
