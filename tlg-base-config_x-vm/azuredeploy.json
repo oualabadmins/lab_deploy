@@ -357,12 +357,6 @@
           "domainName": {
             "value": "[parameters('domainName')]"
           },
-          "dnsServer": {
-            "value": [
-                "[variables('network').dnsServers.local]",
-                "[variables('network').dnsServers.internet]"
-            ]
-          }
         }
       }
     },
@@ -401,9 +395,6 @@
           },
           "domainName": {
             "value": "[parameters('domainName')]"
-          },
-          "dnsServer": {
-            "value": "[variables('network').dnsServers.local]"
           }
         }
       }
@@ -444,9 +435,6 @@
           },
           "domainName": {
             "value": "[parameters('domainName')]"
-          },
-          "dnsServer": {
-            "value": "[variables('network').dnsServers.local]"
           }
         }
       }

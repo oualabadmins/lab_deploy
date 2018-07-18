@@ -23,9 +23,6 @@
         },
         "domainName": {
           "type": "string" 
-        },
-        "dnsServer": {
-          "type": "array" 
         }
     },
     "variables": {
@@ -61,9 +58,7 @@
                 }
               ],
               "dnsSettings": {
-                "dnsServers": [
-                  "[parameters('dnsServer')]"
-                ],
+                "dnsServers": [],
                 "internalDomainNameSuffix": "[parameters('domainName')]"
               }
             }
