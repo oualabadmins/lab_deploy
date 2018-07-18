@@ -76,6 +76,9 @@
       "type": "extensions",
       "name": "/JoinDomain",
       "location": "[parameters('SharedVmConfig').location]",
+      "dependsOn": [
+        "[concat('APP',copyIndex(1))]"
+      ],
       "tags": {
         "displayName": "Join Domain"
       },
@@ -94,17 +97,16 @@
         "protectedsettings": {
           "Password": "[parameters('SharedVmConfig').adminPassword]"
         }
-      },
-      "dependsOn": [
-        "[concat('APP',copyIndex(1))]"
-      ]
+      }
     },
     {
       "type": "extensions",
       "name": "/AppConfig",
       "apiVersion": "2017-03-30",
       "location": "[parameters('SharedVmConfig').location]",
-      "dependsOn": [],
+      "dependsOn": [
+        "[concat('APP',copyIndex(1))]"
+      ],
       "properties": {
         "publisher": "Microsoft.Powershell",
         "type": "DSC",
@@ -130,7 +132,9 @@
       "apiVersion": "2017-03-30",
       "scale": null,
       "location": "[parameters('SharedVmConfig').location]",
-      "dependsOn": [],
+      "dependsOn": [
+        "[concat('APP',copyIndex(1))]"
+      ],
       "properties": {
         "publisher": "Microsoft.Compute",
         "type": "BGInfo",
@@ -146,7 +150,9 @@
       "name": "/Antimalware",
       "apiVersion": "2017-03-30",
       "location": "[parameters('SharedVmConfig').location]",
-      "dependsOn": [],
+      "dependsOn": [
+        "[concat('APP',copyIndex(1))]"
+      ],
       "properties": {
         "publisher": "Microsoft.Azure.Security",
         "type": "IaaSAntimalware",
