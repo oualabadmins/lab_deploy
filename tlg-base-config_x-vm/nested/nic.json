@@ -50,7 +50,7 @@
                   "name": "[concat('ipconfig',copyIndex('nics'))]",
                   "properties": {
                     "privateIPAllocationMethod": "[parameters('ipAllocation')]",
-                    "privateIPAddress": "[parameters('privateIp')]",
+
                     "publicIPAddress": {
                       "id": "[reference(concat('Microsoft.Network/publicIPAddresses/',variables('publicIp'),'2017-06-01','Full').properties.ipAddress)]"
                     },
