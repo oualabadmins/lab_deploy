@@ -3,24 +3,45 @@
     "contentVersion": "1.0.0.0",
     "apiProfile": "2017-03-09-profile",
     "parameters": {
-     "SharedConfig": {
-        "type": "object"
-        } 
+        "configName": { 
+          "type": "string" 
+        },
+        "tier": {
+          "type": "string" 
+        },
+        "count": {
+          "type": "int" 
+        },
+        "ipAllocation": {
+          "type": "string" 
+        },
+        "privateIp": {
+          "type": "string" 
+        },
+        "subnetRef": {
+          "type": "string" 
+        },
+        "domainName": {
+          "type": "string" 
+        },
+        "dnsServer": {
+          "type": "string" 
+        }
     },
     "variables": {
-        "publicIp": "[concat(parameters('sharedConfig').configName,'-',parameters('sharedConfig').tier,'_IP-',copyIndex('nics'))]"
+        "publicIp": "[concat(parameters('configName'),'-',parameters('tier'),'_IP-',copyIndex('nics'))]"
     },
     "resources": [
         {
-            "name": "[concat(parameters('sharedConfig').configName,'-',parameters('sharedConfig').tier,'_NIC',copyIndex('nics'))]",
+            "name": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC',copyIndex('nics'))]",
             "copy": {
               "name": "nics",
-              "count": "[parameters('sharedConfig').count]"
+              "count": "[parameters('count')]"
             },
             "type": "Microsoft.Network/networkInterfaces",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-              "[concat('Microsoft.Network/virtualNetworks/',parameters('sharedConfig').configName,'-vnet')]"
+              "[concat('Microsoft.Network/virtualNetworks/',parameters('configName'),'-vnet')]"
             ],
             "apiVersion": "2018-01-01",
             "comments": "NIC",
@@ -29,21 +50,22 @@
                 {
                   "name": "[concat('ipconfig',copyIndex('nics'))]",
                   "properties": {
-                    "privateIPAllocationMethod": "[parameters('sharedConfig').ipAllocation]",
+                    "privateIPAllocationMethod": "[parameters('ipAllocation')]",
+                    "privateIPAddress": "[parameters('privateIp')]",
                     "publicIPAddress": {
                       "id": "[resourceId ('Microsoft.Network/publicIPAddresses/',variables('publicIp'))]"
                     },
                     "subnet": {
-                      "id": "[parameters('sharedConfig').subnetRef]"
+                      "id": "[parameters('subnetRef')]"
                     }
                   }
                 }
               ],
               "dnsSettings": {
                 "dnsServers": [
-                  "[parameters('sharedConfig').adNicIP]"
+                  "[parameters('dnsServer')]"
                 ],
-                "internalDomainNameSuffix": "[parameters('sharedConfig').domainName]"
+                "internalDomainNameSuffix": "[parameters('domainName')]"
               }
             }
           }   

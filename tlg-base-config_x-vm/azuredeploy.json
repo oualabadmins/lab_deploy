@@ -226,13 +226,13 @@
             "value": "[parameters('configName')]" 
           },
           "tier": {
-            "value": "DC"
+            "value": "AD"
           },
           "count": {
             "value": "1"
           },
           "ipAllocation": {
-            "value": "Static"
+            "value": "Dynamic"
           },
           "dnsLabelPrefix": {
             "value": "[parameters('dnsLabelPrefix')]"
@@ -308,7 +308,7 @@
       }
     },
     {
-      "name": "[concat(parameters('configName'),'-AD_NIC_DEPLOY')]",
+      "name": "[concat(parameters('configName'),'-DC_NIC_DEPLOY')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "comments": "NEW This is the deployment resource for the ADDC NIC.",
