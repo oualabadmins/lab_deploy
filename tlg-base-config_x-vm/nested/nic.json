@@ -29,7 +29,6 @@
         }
     },
     "variables": {
-        "currentIndex": "copyIndex(1)",
         "publicIp": "[concat(parameters('configName'),'-',parameters('tier'),'_IP-')]",
         "publicIpID": "[resourceId ('Microsoft.Network/publicIPAddresses/',variables('publicIp'))]"
     },

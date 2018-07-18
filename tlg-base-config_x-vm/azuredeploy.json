@@ -352,7 +352,7 @@
             "value": "[parameters('domainName')]"
           },
           "dnsServer": {
-            "value": "[variables('VMs').adNicIP]"
+            "value": "[variables('network').dnsServers]"
           }
         }
       }
