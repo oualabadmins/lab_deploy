@@ -59,13 +59,13 @@
           "vmSize": "[parameters('SharedVmConfig').vmSize]"
         },
         "osProfile": {
-          "computerName": "[concat('CLIENT',variables('currentIndex'))]",
+          "computerName": "[concat('CLIENT',copyIndex(1))]",
           "adminUsername": "[parameters('SharedVmConfig').adminUsername]",
           "adminPassword": "[parameters('SharedVmConfig').adminPassword]"
         },
         "storageProfile": {
           "imageReference": {
-            "id": "[concat(variables('imageID'),variables('currentIndex'))]"
+            "id": "[concat(variables('imageID'),copyIndex(1))]"
           }
         },
         "networkProfile": {

@@ -37,7 +37,7 @@
           "vmSize": "[parameters('SharedVmConfig').vmSize]"
         },
         "osProfile": {
-          "computerName": "[concat('APP',variables('currentIndex'))]",
+          "computerName": "[concat('APP',copyIndex(1))]",
           "adminUsername": "[parameters('SharedVmConfig').adminUsername]",
           "adminPassword": "[parameters('SharedVmConfig').adminPassword]"
         },
