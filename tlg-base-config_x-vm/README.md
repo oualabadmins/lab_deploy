@@ -1,10 +1,10 @@
-﻿# TLG (Test Lab Guide) - X VM Base Configuration (v0.9.3)
+﻿# TLG (Test Lab Guide) - X VM Base Configuration (v0.9.4)
 
 **This version configured to be deployed from the oualabadmins/lab_deploy repo.** See the section _MAX notes_ below for information on how to deploy for MAX Skunkworks lab admins.
 
 **Time to deploy**: 40+ minutes depending on deployment parameters
 
-Last updated _7/18/2018_
+Last updated _7/19/2018_
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Foualabadmins%2Flab_deploy%2Fmaster%2Ftlg-base-config_x-vm%2Fazuredeploy.json" target="_blank">
 <img src="http://azuredeploy.net/deploybutton.png"/>

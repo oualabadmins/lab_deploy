@@ -19,7 +19,7 @@
     "currentIndex": "copyIndex(1)",
     "nicName": "[concat(parameters('sharedVmConfig').configName,'-CLIENT_NIC-',variables('currentIndex'))]",
     "imageName": "[concat(parameters('vmName'),'-image')]",
-    "segment1": "[concat(parameters('vmName'),variables('currentIndex'))]"
+    "imageID": "[resourceId('Microsoft.Compute/images/',variables('ImageName'))]"
   },
   "resources": [
     {
@@ -65,7 +65,7 @@
         },
         "storageProfile": {
           "imageReference": {
-            "id": "[resourceId('Microsoft.Compute/images/',variables('ImageName'),variables('currentIndex'))]"
+            "id": "[concat(variables('imageID'),variables('currentIndex'))]"
           }
         },
         "networkProfile": {
