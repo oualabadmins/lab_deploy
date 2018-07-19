@@ -7,7 +7,7 @@
       "metadata": {
         "description": "The name of the deployment, i.e. BaseConfig01. Do not use spaces or special characters other than _ or -. Used to concatenate resource names for the deployment."
       },
-      "defaultValue": "TlgBaseConfig-01"
+      "defaultValue": ""
     },
     "domainName": {
       "type": "string",
@@ -65,7 +65,7 @@
       "metadata": {
         "description": "Select a VM size for all server VMs in your deployment. If a client VM is deployed, it will use Standard_D2_v2."
       },
-      "defaultValue": "Standard_DS2_v2"
+      "defaultValue": "Standard_DS4_v2"
     },
     "dnsLabelPrefix": {
       "type": "string",
@@ -85,7 +85,7 @@
       "metadata": {
         "description": "Auto-generated container in staging storage account to receive post-build staging folder upload."
       },
-      "defaultValue": "https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/tlg-base-config_x-vm"
+      "defaultValue": "https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/max-base-config_x-vm"
     },
     "_artifactsLocationSasToken": {
       "type": "securestring",
