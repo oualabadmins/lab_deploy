@@ -1,6 +1,9 @@
 ﻿# MAX Skunkworks Lab - X VM Base Configuration with Gallery Client VM Image (v1.0)
 
-* **IMPORTANT**: Only deploy this template into a subscription with no ExpressRoute circuit.
+**IMPORTANT**: Only deploy this template into a subscription with no ExpressRoute circuit. These currently include:
++ MAXLAB R&D Sandbox
++ MAXLAB R&D EXT 1
++ MAXLAB R&D EXT 2
 
 **Time to deploy**: 40+ minutes depending on deployment parameters
 
@@ -13,7 +16,7 @@ Last updated _7/19/2018_
 <img src="http://armviz.io/visualizebutton.png"/>
 </a>
 
-The **X VM Base Configuration** provisions a Windows Server 2012 R2 or 2016 Active Directory domain controller using the specified domain name, one or more application servers running Windows Server 2012 R2 or 2016, and optionally one or more client VMs running Windows 10. All member VMs are joined to the domain.
+The **X VM Base Configuration** provisions a test environment in a private virtual network consisting of a Windows Server 2012 R2 or 2016 Active Directory domain controller using the specified domain name, one or more application servers running Windows Server 2012 R2 or 2016, and optionally one or more client VMs running Windows 10. All member VMs are joined to the domain.
 
 ## Usage
 
