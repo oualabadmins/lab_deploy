@@ -144,7 +144,8 @@
       "apiVersion": "2017-03-30",
       "location": "[parameters('SharedVmConfig').location]",
       "dependsOn": [
-        "[concat('APP',copyIndex(1))]"
+        "[concat('APP',copyIndex(1))]",
+        "/JoinDomain"
       ],
       "properties": {
         "publisher": "Microsoft.Azure.Security",
