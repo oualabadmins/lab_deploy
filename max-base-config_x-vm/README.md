@@ -22,7 +22,11 @@ This version of the template uses the Windows 10 gallery image, and can be deplo
 You can deploy this template in one of two ways:
 
 + Click the "Deploy to Azure" button to open the deployment UI in the Azure portal
-+ Execute the PowerShell script at https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/max-base-config_x-vm/scripts/Deploy-TLG-X.ps1 on your local computer.
++ Execute the PowerShell script at https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/max-base-config_x-vm/scripts/Deploy-TLG-X.ps1 on your local computer. Note that you'll need the AzureRM PowerShell module to do this. You can install it by running the following from an elevated PowerShell console:
+
+    ```PowerShell
+    Install-Module AzureRM -Force
+    ```
 
 ## Solution overview and deployed resources
 
