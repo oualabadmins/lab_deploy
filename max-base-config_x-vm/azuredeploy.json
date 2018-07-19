@@ -72,7 +72,7 @@
       "metadata": {
         "description": "Select a VM size for all Windows 10 client VMs in your deployment."
       },
-      "defaultValue": "Standard_DS2_v2"
+      "defaultValue": "Standard_DS4_v2"
     },
     "dnsLabelPrefix": {
       "type": "string",

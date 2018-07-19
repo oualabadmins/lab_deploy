@@ -55,7 +55,7 @@ The following resources are deployed as part of the solution:
 
 ## Known issues
 
-* The client VM deployment may take longer than expected, and then appear to fail. However, the client VMs and extension deploy successfully. This is due to an ongoing Azure client deployment bug, and only happens when the client VM size is smaller than DS4_v2.
+* The client VM deployment may take longer than expected, and then appear to fail. The client VMs and extensions may or may not deploy successfully. This is due to an ongoing Azure client deployment bug, and only happens when the client VM size is smaller than DS4_v2.
 
 `Tags: TLG, Test Lab Guide, Base Configuration`
 ___
