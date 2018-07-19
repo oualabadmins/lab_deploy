@@ -1,11 +1,13 @@
 ﻿<#  Deploy-TLG-X.ps1
     Kelley Vice 7/17/2018
 
-    This script deploys the TLG (Test Lab Guide) 3 VM Base Configuration to your Azure RM subscription.
-    You must have the AzureRM PowerShell module installed on your computer to run this script.
-    To install the AzureRM module, execute the following command from an elevated PowerShell prompt:
+    This script deploys the TLG (Test Lab Guide) X VM Base Configuration to your Azure RM subscription.
+    The **X VM Base Configuration** template deploys a multi-VM environment based on the TLG 3 VM Base 
+    Configuration, which represents a simplified intranet connected to the Internet.
 
-    Install-Module AzureRM
+    NOTE: You must have the AzureRM PowerShell module installed on your computer to run this script.
+    To install the AzureRM module, execute the following command from an elevated PowerShell prompt:
+        Install-Module AzureRM
 
 #>
 
