@@ -76,9 +76,12 @@
     "subnetCIDR": {
       "type": "string",
       "metadata": {
-        "description": "The CIDR subnet for your virtual network, i.e. 10.0.0.0/8. DO NOT CHANGE"
+        "description": "The CIDR subnet for your virtual network, i.e. 10.0.0.0/24."
       },
-      "defaultValue": "10.0.0.0/8"
+      "defaultValue": "10.0.0.0/24",
+      "allowedValues": [
+        "10.0.0.0/24", "10.10.0.0/24", "10.100.0.0/24", "10.10.10.0/24", "10.10.10.10/24", "10.10.10.100/24", "172.16.0.0/24", "172.16.10.0/24", "172.16.100.0/24", "172.16.10.0/24", "172.16.10.10/24", "172.16.10.100/24"
+      ]
     },
     "_artifactsLocation": {
       "type": "string",
@@ -110,7 +113,7 @@
       "subnet": "[parameters('subnetCIDR')]",
       "nsgName": "[concat(parameters('configName'),'-NSG')]",
       "dnsServers": {
-        "local": "10.0.0.10",
+        "local": "[variables('VMs').adNicIP]",
         "internet": "8.8.8.8"
       }
     },
@@ -120,7 +123,7 @@
       "adConfigurationFunction": {
         "CreateADPDC": "CreateADPDC.ps1\\CreateADPDC"
       },
-      "adNicIP": "10.0.0.10",
+      "adNicIP": "[replace(parameters('subnetCIDR'),'0/24','10')]",
       "adPublicIpName": "[concat(parameters('configName'),'-AD_IP')]",
 
       "appConfigurationFunction": "AppConfig.ps1\\AppConfig"
