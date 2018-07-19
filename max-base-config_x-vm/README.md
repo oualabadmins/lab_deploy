@@ -53,6 +53,10 @@ The following resources are deployed as part of the solution:
 * The private IP address of the DC VM is always *x.x.x.10*. This IP is set as the primary DNS IP for the virtual network's tenant subnet to allow member VMs to resolve the local AD domain.
 * Remember, when you RDP to your VM, you will use **domain\adminusername** for the custom domain of your environment, _not_ your corpnet credentials.
 
+## Known issues
+
+* The client VM deployment may take longer than expected, and then appear to fail. However, the client VMs and extension deploy successfully. This is due to an ongoing Azure client deployment bug, and only happens when the client VM size is smaller than DS4_v2.
+
 `Tags: TLG, Test Lab Guide, Base Configuration`
 ___
 Developed by the **MAX Skunkworks Lab**  
