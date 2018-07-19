@@ -356,7 +356,7 @@
           },
           "domainName": {
             "value": "[parameters('domainName')]"
-          },
+          }
         }
       }
     },
@@ -536,14 +536,5 @@
     }
   ],
 
-  "outputs": {
-    "DcPublicIpAddress": {
-      "type": "string",
-      "value": "[reference(variables('VMs').adPublicIpName).ipAddress]"
-    },
-    "DcFqdn": {
-      "type": "string",
-      "value": "[reference(variables('VMs').adPublicIpName).dnsSettings.fqdn]"
-    }
-  }
+  "outputs": {}
 }
