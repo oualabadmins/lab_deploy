@@ -19,8 +19,8 @@
     }
   },
   "variables": {
-    "currentIndex": "copyIndex(1)",
-    "nicName": "[concat(parameters('sharedVmConfig').configName,'-APP_NIC-',variables('currentIndex'))]"
+    "nicName": "[concat(parameters('sharedVmConfig').configName,'-APP_NIC-')]",
+    "nicID": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
   },
   "resources": [
     {
@@ -55,7 +55,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
+              "id": "[concat(variables('nicID'),copyIndex(1))]"
             }
           ]
         },
