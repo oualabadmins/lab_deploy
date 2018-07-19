@@ -5,9 +5,6 @@
     "SharedVmConfig": {
       "type": "object"
     },
-    "vmName": {
-      "type": "string"
-    },
     "count": {
       "type": "int"
     }
@@ -29,7 +26,7 @@
       },   
       "properties": {
         "hardwareProfile": {
-          "vmSize": "[parameters('SharedVmConfig').vmSize]"
+          "vmSize": "[parameters('SharedVmConfig').vmSizeClient]"
         },
         "osProfile": {
           "computerName": "[concat('CLIENT',copyIndex(1))]",
@@ -115,7 +112,8 @@
       "apiVersion": "2017-03-30",
       "location": "[parameters('SharedVmConfig').location]",
       "dependsOn": [
-        "[concat('CLIENT',copyIndex(1))]"
+        "[concat('CLIENT',copyIndex(1))]",
+        "/JoinDomain"
       ],
       "properties": {
         "publisher": "Microsoft.Azure.Security",

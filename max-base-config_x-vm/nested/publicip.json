@@ -20,7 +20,6 @@
           }
     },
     "variables": {
-        "currentIndex": "copyIndex(1)",
         "ipName": "[concat(parameters('configName'),'-',parameters('tier'),'_IP-')]",
         "dynamicDnsPrefix": "[toLower(concat(parameters('dnsLabelPrefix'),'-',parameters('tier'),'-'))]"
     },

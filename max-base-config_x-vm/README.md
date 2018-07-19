@@ -1,10 +1,14 @@
-﻿# MAX Skunkworks Lab - X VM Base Configuration with Gallery Client VM Image (v1.0)
+﻿# MAX Skunkworks Lab - X VM Base Configuration with Gallery Client VM Image (v1.1)
 
-* **IMPORTANT**: Only deploy this template into a subscription with no ExpressRoute circuit.
+**IMPORTANT**: Only deploy this template into a subscription with no ExpressRoute circuit. These currently include:
 
-**Time to deploy**: 40+ minutes depending on deployment parameters
++ MAXLAB R&D Sandbox
++ MAXLAB R&D EXT 1
++ MAXLAB R&D EXT 2
 
-Last updated _7/19/2018_
+**Time to deploy**: 40+ minutes
+
+The **X VM Base Configuration** provisions a test environment in a private virtual network consisting of a Windows Server 2012 R2 or 2016 Active Directory domain controller using the specified domain name, one or more application servers running Windows Server 2012 R2 or 2016, and optionally one or more client VMs running Windows 10. All member VMs are joined to the domain.
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Foualabadmins%2Flab_deploy%2Fmaster%2Fmax-base-config_x-vm%2Fazuredeploy.json" target="_blank">
 <img src="http://azuredeploy.net/deploybutton.png"/>
@@ -13,8 +17,6 @@ Last updated _7/19/2018_
 <img src="http://armviz.io/visualizebutton.png"/>
 </a>
 
-The **X VM Base Configuration** provisions a Windows Server 2012 R2 or 2016 Active Directory domain controller using the specified domain name, one or more application servers running Windows Server 2012 R2 or 2016, and optionally one or more client VMs running Windows 10. All member VMs are joined to the domain.
-
 ## Usage
 
 This version of the template uses the Windows 10 gallery image, and can be deployed to any non-ExpressRoute subscription and region.
@@ -22,13 +24,17 @@ This version of the template uses the Windows 10 gallery image, and can be deplo
 You can deploy this template in one of two ways:
 
 + Click the "Deploy to Azure" button to open the deployment UI in the Azure portal
-+ Execute the PowerShell script at https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/max-base-config_x-vm/scripts/Deploy-TLG-X.ps1 on your local computer.
++ Execute the PowerShell script at https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/max-base-config_x-vm/scripts/Deploy-TLG-X.ps1 on your local computer. Note that you'll need the AzureRM PowerShell module to do this. You can install it by running the following from an elevated PowerShell console:
+
+    ```PowerShell
+    Install-Module AzureRM -Force
+    ```
 
 ## Solution overview and deployed resources
 
 The following resources are deployed as part of the solution:
 
-+ **ADDC VM**: Windows Server 2012 R2 or 2016 VM configured as a domain controller and DNS with static private IP address
++ **AD DC VM**: Windows Server 2012 R2 or 2016 VM configured as a domain controller and DNS with static private IP address
 + **App Server VM(s)**: Windows Server 2012 R2 or 2016 VM(s) joined to the domain. IIS is installed, and C:\Files containing example.txt is shared as "Files".
 + **Client VM(s)**: Windows 10 client(s) joined to the domain
 + **Storage account**: Diagnostics storage account, and client VM storage account if indicated. ADDC and App Server VMs in the deployment use managed disks, so no storage accounts are created for VHDs.
@@ -44,9 +50,8 @@ The following resources are deployed as part of the solution:
 
 * The domain user *User1* is created in the domain and added to the Domain Admins group. User1's password is the one you provide in the *adminPassword* parameter.
 * The *App server* and *Client* VM resources depend on the **ADDC** resource deployment to ensure that the AD domain exists prior to execution of the JoinDomain extensions. The asymmetric VM deployment adds a few minutes to the overall deployment time.
-* The private IP address of the **ADDC** VM is always *10.0.0.10*. This IP is set as the DNS IP for the virtual network and all member NICs.
-* The default VM size for all VMs in the deployment is Standard_D2_v2.
-* Deployment outputs include public IP address and FQDN for each VM.
+* The private IP address of the DC VM is always *x.x.x.10*. This IP is set as the primary DNS IP for the virtual network's tenant subnet to allow member VMs to resolve the local AD domain.
+* Remember, when you RDP to your VM, you will use **domain\adminusername** for the custom domain of your environment, _not_ your corpnet credentials.
 
 `Tags: TLG, Test Lab Guide, Base Configuration`
 ___
@@ -55,3 +60,10 @@ Author: Kelley Vice (kvice@microsoft.com)
 https://github.com/maxskunkworks
 
 ![alt text](images/maxskunkworkslogo-small.jpg "MAX Skunkworks")
+
+Last update: _7/19/2018_
+
+## Changelog
+
+* **7/17/2018**: Original commit, derived from https://github.com/oualabadmins/lab_deploy/tree/master/tlg-base-config_x-vm. Configured to use the Win10 gallery image instead of the original custom image requirement.
+* **7/19/2018**: Updated to allow choice of tenant subnet CIDR address, and added separate parameters for server and client VM size.
