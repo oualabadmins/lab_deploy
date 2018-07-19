@@ -1,6 +1,7 @@
-﻿# MAX Skunkworks Lab - X VM Base Configuration with Gallery Client VM Image (v1.0)
+﻿# MAX Skunkworks Lab - X VM Base Configuration with Gallery Client VM Image (v1.1)
 
 **IMPORTANT**: Only deploy this template into a subscription with no ExpressRoute circuit. These currently include:
+
 + MAXLAB R&D Sandbox
 + MAXLAB R&D EXT 1
 + MAXLAB R&D EXT 2
@@ -61,3 +62,8 @@ https://github.com/maxskunkworks
 ![alt text](images/maxskunkworkslogo-small.jpg "MAX Skunkworks")
 
 Last update: _7/19/2018_
+
+## Changelog
+
+* **7/17/2018**: Original commit, derived from https://github.com/oualabadmins/lab_deploy/tree/master/tlg-base-config_x-vm. Configured to use the Win10 gallery image instead of the original custom image requirement.
+* **7/19/2018**: Updated to allow choice of tenant subnet CIDR address, and added separate parameters for server and client VM size.

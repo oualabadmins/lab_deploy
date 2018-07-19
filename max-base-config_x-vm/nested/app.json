@@ -5,9 +5,6 @@
     "SharedVmConfig": {
       "type": "object"
     },
-    "vmName": {
-      "type": "string"
-    },
     "count": {
       "type": "int"
     },
