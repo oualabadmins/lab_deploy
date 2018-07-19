@@ -492,9 +492,6 @@
           "SharedVmConfig": { 
             "value": "[variables('SharedVmConfig')]" 
           },
-          "vmName": {
-            "value": "APP"
-          },
           "count": {
             "value": "[parameters('numberOfAppVms')]"
           },
@@ -525,9 +522,6 @@
         "parameters": {
           "SharedVmConfig": { 
             "value": "[variables('SharedVmConfig')]" 
-          },
-          "vmName": {
-            "value": "CLIENT"
           },
           "count": {
             "value": "[parameters('numberOfClientVms')]"
