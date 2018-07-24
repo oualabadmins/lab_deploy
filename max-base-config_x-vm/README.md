@@ -39,7 +39,7 @@ The following resources are deployed as part of the solution:
 + **Client VM(s)**: Windows 10 client(s) joined to the domain
 + **Storage account**: Diagnostics storage account, and client VM storage account if indicated. ADDC and App Server VMs in the deployment use managed disks, so no storage accounts are created for VHDs.
 + **NSG**: Network security group configured to allow inbound RDP on 3389
-+ **Virtual network**: Virtual network for internal traffic, configured with custom DNS pointing to the ADDC's private IP address and tenant subnet 10.0.0.0/8 for a total of 16,777,214 available IP addresses.
++ **Virtual network**: Virtual network for internal traffic, configured with custom DNS pointing to the ADDC's private IP address and tenant subnet.
 + **Network interfaces**: 1 NIC per VM
 + **Public IP addresses**: 1 static public IP per VM. Note that some subscriptions may have limits on the number of static IPs that can be deployed for a given region.
 + **JoinDomain**: Each member VM uses the **JsonADDomainExtension** extension to join the domain.
@@ -50,7 +50,8 @@ The following resources are deployed as part of the solution:
 
 * The domain user *User1* is created in the domain and added to the Domain Admins group. User1's password is the one you provide in the *adminPassword* parameter.
 * The *App server* and *Client* VM resources depend on the **ADDC** resource deployment to ensure that the AD domain exists prior to execution of the JoinDomain extensions. The asymmetric VM deployment adds a few minutes to the overall deployment time.
-* The private IP address of the DC VM is always *x.x.x.10*. This IP is set as the primary DNS IP for the virtual network's tenant subnet to allow member VMs to resolve the local AD domain.
+* You can specify the tenant subnet in the *subnetCIDR* parameter. For most deployments, the default subnet 10.0.0.0/24 will work fine.
+* The private IP address of the DC VM is always *x.x.x.10* in the specified subnet. This IP is set as the primary DNS IP for the virtual network's tenant subnet to allow member VMs to resolve the local AD domain.
 * Remember, when you RDP to your VM, you will use **domain\adminusername** for the custom domain of your environment, _not_ your corpnet credentials.
 
 ## Known issues
