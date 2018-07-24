@@ -1,9 +1,9 @@
 {
   "$schema": "https://aka.ms/azure-quickstart-templates-metadata-schema#",    
-    "itemDisplayName": "Ubuntu Mate Desktop VM with VSCode",
+    "itemDisplayName": "Ubuntu Mate Desktop VM with ROS",
     "icon": "ubuntu",
-    "description": "This template allows you to deploy desktop workstation as a Linux VM with VSCode installed for editing with GUI",
-    "summary": "This template allows you to deploy desktop workstation as a Linux VM with VSCode installed for editing with GUI",
-    "githubUsername": "VaijanathB",
-    "dateUpdated": "2017-12-08"   
+    "description": "This template deploys a Linux VM with ROS",
+    "summary": "This template deploys a Linux VM with ROS",
+    "githubUsername": "kelleyvice-msft",
+    "dateUpdated": "2018-07-24"   
 }

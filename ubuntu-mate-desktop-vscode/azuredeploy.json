@@ -9,23 +9,39 @@
       },
       "defaultValue": "Standard_DS4_v2"
     },
+    "vmName": {
+      "type": "string",
+      "metadata": {
+        "description": "Host name of the VM."
+      }
+    },
     "username": {
       "type": "string",
       "metadata": {
-        "description": "Username for the Virtual Machine."
+        "description": "Username for the VM."
       }
     },
     "password": {
       "type": "securestring",
       "metadata": {
-        "description": "Password for the Virtual Machine."
+        "description": "Password for the VM username."
       }
     },
     "dnsLabelPrefix": {
       "type": "string",
       "metadata": {
-        "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
+        "description": "Unique DNS Name for the Public IP used to access the VM."
       }
+    },
+    "UbuntuOsVersion": {
+      "type": "string",
+      "metadata": {
+        "description": "Unique DNS Name for the Public IP used to access the VM."
+      },
+      "allowedValues": [
+        "16.04-LTS", "17.10", "18.04-LTS"
+      ],
+      "defaultValue": "16.04-LTS"
     },
     "_artifactsLocation": {
       "type": "string",
@@ -55,13 +71,13 @@
     "vmStorageAccountContainerName": "vhds",
     "imagePublisher": "Canonical",
     "imageOffer": "UbuntuServer",
-    "ubuntuOSVersion": "16.04-LTS",
+    "ubuntuOSVersion": "[parameters('UbuntuOsVersion')]",
     "OSDiskName": "OSDisk",
-    "vmName": "vm",
-    "nicName": "vmNic",
-    "publicIPAddressName": "vmPublicIp",
+    "vmName": "[parameters('vmName')]",
+    "nicName": "[concat(variables('vmName'),'-NIC')]",
+    "publicIPAddressName": "[concat(variables('vmName'),'-IP')]",
     "publicIPAddressType": "Dynamic",
-    "virtualNetworkName": "net",
+    "virtualNetworkName": "[concat(variables('vmName'),'-VNET')]",
     "vnetAddressPrefix": "10.0.0.0/16",
     "subnetName": "netSubnet",
     "subnetPrefix": "10.0.0.0/24",
