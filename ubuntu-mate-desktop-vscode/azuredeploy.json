@@ -55,7 +55,7 @@
     "vmStorageAccountContainerName": "vhds",
     "imagePublisher": "Canonical",
     "imageOffer": "UbuntuServer",
-    "ubuntuOSVersion": "16.04",
+    "ubuntuOSVersion": "16.04-LTS",
     "OSDiskName": "OSDisk",
     "vmName": "vm",
     "nicName": "vmNic",
