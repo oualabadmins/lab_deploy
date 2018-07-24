@@ -63,3 +63,78 @@ logger -t devvm "VSCode Installed: $?"
 
 logger -t devvm "Success"
 exit 0
+
+## kelley additions 7/24/2018
+
+# Override artful update errors
+sudo apt upgrade --allow-unauthenticated
+sudo apt update --allow-unauthenticated
+
+# Install foundation applications
+sudo apt-get install gedit
+
+# Install ROS Kinetic
+sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu xenial main" > /etc/apt/sources.list.d/ros-latest.list'
+sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
+sudo apt-get update
+sudo apt-get install ros-kinetic-desktop-full
+sudo rosdep init
+rosdep update
+sudo apt-get install python-rosinstall
+
+# Create dev workspace
+mkdir -p ~/ros_ws/src
+source /opt/ros/kinetic/setup.bash
+cd ~/ros_ws
+catkin_make
+
+# Install Intera SDK dependencies
+sudo apt-get update
+sudo apt-get install git-core python-argparse python-wstool python-vcstools python-rosdep ros-kinetic-control-msgs ros-kinetic-joystick-drivers ros-kinetic-xacro ros-kinetic-tf2-ros ros-kinetic-rviz ros-kinetic-cv-bridge ros-kinetic-actionlib ros-kinetic-actionlib-msgs ros-kinetic-dynamic-reconfigure ros-kinetic-trajectory-msgs ros-kinetic-rospy-message-converter
+
+# Install Intera Robto SDK
+cd ~/ros_ws/src
+wstool init .
+git clone https://github.com/RethinkRobotics/sawyer_robot.git
+wstool merge sawyer_robot/sawyer_robot.rosinstall
+wstool update
+source /opt/ros/kinetic/setup.bash
+cd ~/ros_ws
+catkin_make
+
+# Intera ROS environment setup
+cp ~/ros_ws/src/intera_sdk/intera.sh ~/ros_ws
+# Must now follow intera.sh ROS Environment Setup at http://sdk.rethinkrobotics.com/intera/Workstation_Setup
+
+
+# Install Gazebo
+sudo apt-get install gazebo7 ros-kinetic-qt-build ros-kinetic-gazebo-ros-control ros-kinetic-gazebo-ros-pkgs ros-kinetic-ros-control ros-kinetic-control-toolbox ros-kinetic-realtime-tools ros-kinetic-ros-controllers ros-kinetic-xacro python-wstool ros-kinetic-tf-conversions ros-kinetic-kdl-parser ros-kinetic-sns-ik-lib
+
+# Install Sawyer simulator
+mkdir -p ~/ros_ws/src
+cd ~/ros_ws/src
+git clone https://github.com/RethinkRobotics/sawyer_simulator.git
+cd ~/ros_ws/src
+wstool init .
+wstool merge sawyer_simulator/sawyer_simulator.rosinstall
+wstool update
+
+source /opt/ros/kinetic/setup.bash
+cd ~/ros_ws
+catkin_make
+# Now follow Simulation at http://sdk.rethinkrobotics.com/intera/Gazebo_Tutorial
+
+
+# Install Rviz
+rosrun rviz rviz
+
+# Install Moveit
+sudo apt-get update
+sudo apt-get install ros-kinetic-moveit
+cd ~/ros_ws/
+./intera.sh
+cd ~/ros_ws/src
+wstool merge https://raw.githubusercontent.com/RethinkRobotics/sawyer_moveit/master/sawyer_moveit.rosinstall
+wstool update
+cd ~/ros_ws/
+catkin_make
