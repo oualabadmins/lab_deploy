@@ -102,8 +102,6 @@
     "subID": "[subscription().subscriptionId]",
     "location": "[resourceGroup().location]",
 
-    "vnetName": "[variables('subID')[variables('location')[0]]]",
-    "subnetName": "[variables('subID')[variables('location')[1]]]",
     "regionSettings": "[variables(concat(variables('subID'), '-', variables('location')))]",
 
     "5555afd9-779e-4741-97eb-f96bccf2d2e1-westus": {
