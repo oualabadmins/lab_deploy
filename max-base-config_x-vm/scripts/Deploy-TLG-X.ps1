@@ -1,7 +1,7 @@
 ﻿<#  Deploy-MAX-X.ps1
     Kelley Vice 7/17/2018
 
-    This script deploys the X VM Base Configuration to your Azure RM subscription.
+    This script deploys the X VM Base Configuration to your non-ER Azure RM subscription.
     You must have the AzureRM PowerShell module installed on your computer to run this script.
     To install the AzureRM module, execute the following command from an elevated PowerShell prompt:
         Install-Module AzureRM -Force
