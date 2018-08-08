@@ -102,11 +102,9 @@
     "subID": "[subscription().subscriptionId]",
     "location": "[resourceGroup().location]",
 
-    "vnetName": "[variables('virtualNetworks')[variables('subID')[variables('location')]].vnet]",
-    "subnetName": "[variables('virtualNetworks')[variables('subID')[variables('location')]].subnet]",
+    "vnetName": "[variables('subID')[variables('location')].vnet]",
+    "subnetName": "[variables('subID')[variables('location')].subnet]",
 
-
-    "virtualNetworks": {
       "06ce3096-6a26-4cb9-a1fd-f6dfa0663709": [
         {
         "subscriptionName": "MAXLAB R&D INT 1",
@@ -146,8 +144,7 @@
           "subnet": "10.139.141.0/25"
         }
       }
-    ]
-    },
+    ],
 
     "VMs": {
       "adVmName": "DC1",
