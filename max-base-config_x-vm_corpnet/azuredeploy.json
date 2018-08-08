@@ -102,47 +102,43 @@
     "subID": "[subscription().subscriptionId]",
     "location": "[resourceGroup().location]",
 
-    "vnetName": "[variables('subID')[variables('location')].vnet]",
-    "subnetName": "[variables('subID')[variables('location')].subnet]",
+    "vnetRegion": "[variables('subID')[resourceGroup().location]]",
+    "vnetName": "[variables('vnetRegion')[variables('location')[0]]]",
+    "subnetName": "[variables('vnetRegion')[variables('location')[1]]]",
 
       "06ce3096-6a26-4cb9-a1fd-f6dfa0663709": [
         {
         "subscriptionName": "MAXLAB R&D INT 1",
-        "westcentralus": {
-          "vnet": "maxlab-CORP-WCUS-VNET-1",
-          "subnet": "10.169.5.0/25"
-        },
-        "westus2": {
-          "vnet": "MAXLab-CORP-WUS2-VNET-2",
-          "subnet": "10.158.21.128/25"
-        }
+        "westcentralus": [
+          "maxlab-CORP-WCUS-VNET-1","10.169.5.0/25"
+        ],
+        "westus2": [
+          "MAXLab-CORP-WUS2-VNET-2","10.158.21.128/25"
+        ]
       }
     ],
       "1166d0b0-8fa1-4250-ac09-d3eb50ea9a6a": [
         {
         "subscriptionName": "MAXLAB R&D INT 2",
-        "westus2": {
-          "vnet": "MAXLab-CORP-WUS2-VNET-1",
-          "subnet": "10.158.78.128/25"
-        }
+        "westus2": [
+          "MAXLab-CORP-WUS2-VNET-1","10.158.78.128/25"
+        ]
       }
     ],
       "5555afd9-779e-4741-97eb-f96bccf2d2e1": [
         {
         "subscriptionName": "MAXLAB R&D Primary",
-        "westus": {
-          "vnet": "MAXLab-CORP-USW-VNET-1",
-          "subnet": "10.138.39.128/25"
-        }
+        "westus": [
+          "MAXLab-CORP-USW-VNET-1","10.138.39.128/25"
+        ]
       }
     ],
       "38c5a697-bc6f-48e5-8bfa-2079c444fd25": [
         {
         "subscriptionName": "MAXLAB R&D Self Service",
-        "southcentralus": {
-          "vnet": "MAXLab-CORP-SCUS-VNET-1",
-          "subnet": "10.139.141.0/25"
-        }
+        "southcentralus": [
+          "MAXLab-CORP-SCUS-VNET-1","10.139.141.0/25"
+        ]
       }
     ],
 

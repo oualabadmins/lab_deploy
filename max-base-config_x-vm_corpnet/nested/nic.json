@@ -18,9 +18,6 @@
         "vnetName": {
           "type": "string" 
         },
-        "subnetRef": {
-          "type": "string" 
-        },
         "domainName": {
           "type": "string" 
         },
@@ -32,7 +29,8 @@
       "subnetName": "Subnet-1",
       "subnetRef": "[concat(variables('VnetPath'),'/subnets/', variables('subnetName'))]",
       "VnetResourceGroup": "ERNetwork",
-      "vnetPath": "[resourceId(variables('VnetResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+      "vnetPath": "[resourceId(variables('VnetResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
+      "outputPath": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-')]"
     },
     "resources": [
         {
@@ -73,11 +71,11 @@
     ],
     "outputs": {
       "nicNames": {
-        "value": "[reference(parameters('configName'),'-',parameters('tier'),'_NIC-',copyIndex(1)).name]",
+        "value": "[reference(variables('outputPath'),copyIndex(1)).name]",
         "type": "object"
       },
       "nicIPs": {
-        "value": "[reference(parameters('configName'),'-',parameters('tier'),'_NIC-',copyIndex(1)).ipConfigurations[0].properties.privateIPAddress]",
+        "value": "[reference(variables('outputPath'),copyIndex(1)).ipConfigurations[0].properties.privateIPAddress]",
         "type": "object"
       }
     }
