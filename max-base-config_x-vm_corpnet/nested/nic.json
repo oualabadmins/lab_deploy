@@ -31,7 +31,7 @@
       "subnetRef": "[concat(variables('VnetPath'),'/subnets/', variables('subnetName'))]",
       "VnetResourceGroup": "ERNetwork",
       "vnetPath": "[resourceId(variables('VnetResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
-      "outputPath": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-')]"
+      "nicPrefix": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-')]"
     },
     "resources": [
         {
@@ -72,11 +72,11 @@
     ],
     "outputs": {
       "nicNames": {
-        "value": "[reference(variables('outputPath'),copyIndex(1)).name]",
+        "value": "[reference('nicPrefix')[0].name]",
         "type": "object"
       },
       "nicIPs": {
-        "value": "[reference(variables('outputPath'),copyIndex(1)).ipConfigurations[0].properties.privateIPAddress]",
+        "value": "[reference('nicPrefix')[0].ipConfigurations[0].properties.privateIPAddress]",
         "type": "object"
       }
     }
