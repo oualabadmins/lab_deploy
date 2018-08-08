@@ -72,11 +72,11 @@
     ],
     "outputs": {
       "nicNames": {
-        "value": "[reference(variables(concat(variables('nicPrefix'),'1'.name)))]",
+        "value": "[reference(variables(concat(variables('nicPrefix'),'1').name))]",
         "type": "object"
       },
       "nicIPs": {
-        "value": "[reference(variables(concat(variables('nicPrefix'),'1'.ipConfigurations[0].properties.privateIPAddress)))]",
+        "value": "[reference(variables(concat(variables('nicPrefix'),'1').ipConfigurations[0].properties.privateIPAddress))]",
         "type": "object"
       }
     }
