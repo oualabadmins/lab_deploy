@@ -1,0 +1,429 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "configName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the deployment, i.e. BaseConfig01. Do not use spaces or special characters other than _ or -. Used to concatenate resource names for the deployment."
+      },
+      "defaultValue": ""
+    },
+    "domainName": {
+      "type": "string",
+      "metadata": {
+        "description": "The FQDN of the new AD domain."
+      },
+      "defaultValue": "corp.contoso.com"
+    },
+    "serverOS": {
+      "type": "string",
+      "allowedValues": [
+        "2012-R2-Datacenter", "2016-Datacenter"
+      ],
+      "metadata": {
+        "description": "The OS of application servers in your deployment."
+      },
+      "defaultValue": "2016-Datacenter"
+    },
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the domain administrator account to create, i.e. globaladmin. This will also be used to create a local admin account on each VMs."
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The administrator account password."
+      }
+    },
+    "deployClientVm": {
+      "type": "string",
+      "allowedValues": [
+        "No", "Yes"
+      ],
+      "metadata": {
+        "description": "Choose 'No' to deploy no client VM, or 'Yes' if you want to deploy a client VM from a custom generalized VHD that you have uploaded to an accessible storage account."
+      },
+      "defaultValue": "Yes"
+    },
+    "numberOfAppVms": {
+      "type": "int",
+      "metadata": {
+        "description": "The number of app server VMs to deploy."
+      }
+    },
+    "numberOfClientVms": {
+      "type": "int",
+      "metadata": {
+        "description": "The number of client VMs to deploy."
+      }
+    },
+    "vmSize": {
+      "type": "string",
+      "metadata": {
+        "description": "Select a VM size for all server VMs in your deployment."
+      },
+      "defaultValue": "Standard_DS4_v2"
+    },
+    "vmSizeClient": {
+      "type": "string",
+      "metadata": {
+        "description": "Select a VM size for all Windows 10 client VMs in your deployment."
+      },
+      "defaultValue": "Standard_DS4_v2"
+    },
+    "_artifactsLocation": {
+      "type": "string",
+      "metadata": {
+        "description": "Auto-generated container in staging storage account to receive post-build staging folder upload."
+      },
+      "defaultValue": "https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/max-base-config_x-vm"
+    },
+    "_artifactsLocationSasToken": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Auto-generated token to access _artifactsLocation."
+      },
+      "defaultValue": ""
+    }
+  },
+
+  "variables": {
+
+    "shortDomainName": "[first(split(parameters('domainName'),'.'))]",
+    "domainUserName": "[concat(variables('shortDomainName'),'\\',parameters('adminUsername'))]",
+    "assetLocation": "[concat(parameters('_artifactsLocation'),'/DSC')]",
+    "templates": "[concat(parameters('_artifactsLocation'),'/nested')]",
+    "storageAccountName": "[concat(uniqueString(resourceGroup().id),'storage')]",
+
+    "network": {
+      "vnetName": "[concat(parameters('configName'),'-VNET')]",
+      "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-VNET'), 'subnet-01')]",
+      "subnet": "[parameters('subnetCIDR')]",
+      "nsgName": "[concat(parameters('configName'),'-NSG')]",
+      "dnsServers": {
+        "local": "[variables('VMs').adNicIP]",
+        "internet": "8.8.8.8"
+      }
+    },
+
+    "subID": "[subscription().subscriptionId]",
+    "location": "[resourceGroup().location)]",
+
+    "vnetName": "[variables(concat(variables('virtualNetworks').variables('subID).variables('location').variables('vnet'))]",
+    "subnetName": "[variables(concat(variables('virtualNetworks').variables('subID).variables('location').variables('subnet'))]",
+
+    "virtualNetworks": {
+      "06ce3096-6a26-4cb9-a1fd-f6dfa0663709": {
+        "subscriptionName": "MAXLAB R&D INT 1",
+        "westcentralus": {
+          "vnet": "maxlab-CORP-WCUS-VNET-1",
+          "subnet": "10.169.5.0/25"
+        },
+        "westus2": {
+          "vnet": "MAXLab-CORP-WUS2-VNET-2",
+          "subnet": "10.158.21.128/25"
+        }
+      },
+      "1166d0b0-8fa1-4250-ac09-d3eb50ea9a6a": {
+        "subscriptionName": "MAXLAB R&D INT 2",
+        "westus2": {
+          "vnet": "MAXLab-CORP-WUS2-VNET-1",
+          "subnet": "10.158.78.128/25"
+        }
+      },
+      "5555afd9-779e-4741-97eb-f96bccf2d2e1": {
+        "subscriptionName": "MAXLAB R&D Primary",
+        "westus": {
+          "vnet": "MAXLab-CORP-USW-VNET-1",
+          "subnet": "10.138.39.128/25"
+        }
+      },
+      "38c5a697-bc6f-48e5-8bfa-2079c444fd25": {
+        "subscriptionName": "MAXLAB R&D Self Service",
+        "southcentralus": {
+          "vnet": "MAXLab-CORP-SCUS-VNET-1",
+          "subnet": "10.139.141.0/25"
+        }
+      }
+    },
+
+    "VMs": {
+      "adVmName": "DC1",
+      "adConfigurationFunction": {
+        "CreateADPDC": "CreateADPDC.ps1\\CreateADPDC"
+      },
+      "adNicIP": "[replace(parameters('subnetCIDR'),'0/24','10')]",
+      "appConfigurationFunction": "AppConfig.ps1\\AppConfig"
+    },
+
+    "SharedVmConfig": {
+      "location": "[resourceGroup().location]",
+      "vmSize": "[parameters('vmSize')]",
+      "vmSizeClient": "[parameters('vmSizeClient')]",
+      "serverOS": "[parameters('serverOS')]",
+      "domainUsername": "[variables('domainUsername')]",
+      "adminUsername": "[parameters('adminUsername')]",
+      "adminPassword": "[parameters('adminPassword')]",
+      "storageAccountNamePrefix": "[variables('storageAccountName')]",
+      "sasToken": "[parameters('_artifactsLocationSasToken')]",
+      "domainName": "[parameters('domainName')]",
+      "configName": "[parameters('configName')]"
+    }
+  },
+
+  "resources": [
+    {
+      "apiVersion": "2018-01-01",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[variables('network').nsgName]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "NSG - Front End"
+      },
+      "comments": "This network security group enables RDP on port 3389.",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "rdp",
+            "properties": {
+              "description": "Allow RDP inbound",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "3389",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "https",
+            "properties": {
+              "description": "Allow HTTPS inbound",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "443",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 101,
+              "direction": "Inbound"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[variables('storageAccountName')]",
+      "apiVersion": "2017-06-01",
+      "location": "[resourceGroup().location]",
+      "kind": "Storage",
+      "comments": "This storage account contains VHDs for client VMs in the deployment.",
+      "sku": {
+        "name": "Standard_LRS"
+      }
+    },
+    {
+      "name": "[concat(parameters('configName'),'-AD_NIC_DEPLOY')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "NEW This is the deployment resource for the ADDC NIC.",
+      "dependsOn": [],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/nic.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "AD"
+          },
+          "count": {
+            "value": 1
+          },
+          "ipAllocation": {
+            "value": "Static"
+          },
+          "subnetRef": {
+            "value": "[variables('network').subnetRef]"
+          },
+          "domainName": {
+            "value": "[parameters('domainName')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('configName'),'-APP_NIC_DEPLOY')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "NEW This is the deployment resource for APP NICs.",
+      "dependsOn": ["[concat(parameters('configName'),'-AD_NIC_DEPLOY')]"],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/nic.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "APP"
+          },
+          "count": {
+            "value": "[parameters('numberOfAppVms')]"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "subnetRef": {
+            "value": "[variables('network').subnetRef]"
+          },
+          "domainName": {
+            "value": "[parameters('domainName')]"
+          },
+          "dcIp": {
+            "value": "[reference(concat(parameters('configName'),'-AD_NIC_DEPLOY')).ipConfigurations[0].properties.privateIPAddress]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('configName'),'-CLIENT_NIC_DEPLOY')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "condition": "[equals(parameters('deployClientVm'),'Yes')]",
+      "comments": "NEW This is the deployment resource for CLIENT NICs.",
+      "dependsOn": ["[concat(parameters('configName'),'-AD_NIC_DEPLOY')]"],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/nic.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "CLIENT"
+          },
+          "count": {
+            "value": "[parameters('numberOfClientVms')]"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "subnetRef": {
+            "value": "[variables('network').subnetRef]"
+          },
+          "domainName": {
+            "value": "[parameters('domainName')]"
+          },
+          "dcIp": {
+            "value": "[reference(concat(parameters('configName'),'-AD_NIC_DEPLOY')).ipConfigurations[0].properties.privateIPAddress]"
+          }
+        }
+      }
+    },
+
+    {
+      "name": "[concat(parameters('configName'),'-ADDC_DEPLOY')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "This is the deployment resource for the ADDC VM.",
+      "dependsOn": [
+        "[concat(parameters('configName'),'-AD_NIC_DEPLOY')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/addc.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "SharedVmConfig": { 
+            "value": "[variables('SharedVmConfig')]" 
+          },
+          "vmName": {
+            "value": "[variables('VMs').adVmName]"
+          },
+          "modulesURL": {
+            "value": "[variables('assetLocation')]"
+          },
+          "configurationFunction": {
+            "value": "[variables('VMs').adConfigurationFunction]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('configName'),'-APP_DEPLOY')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "This is the deployment resource for the app server VM.",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/',parameters('configName'),'-ADDC_DEPLOY')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/app.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "SharedVmConfig": { 
+            "value": "[variables('SharedVmConfig')]" 
+          },
+          "count": {
+            "value": "[parameters('numberOfAppVms')]"
+          },
+          "modulesURL": {
+            "value": "[variables('assetLocation')]"
+          },
+          "configurationFunction": {
+            "value": "[variables('VMs').appConfigurationFunction]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('configName'),'-CLIENT_DEPLOY')]",
+      "condition": "[equals(parameters('deployClientVm'),'Yes')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "This is the deployment resource for client VMs.",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/',parameters('configName'),'-ADDC_DEPLOY')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/client.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "SharedVmConfig": { 
+            "value": "[variables('SharedVmConfig')]" 
+          },
+          "count": {
+            "value": "[parameters('numberOfClientVms')]"
+          }
+        }
+      }
+    }
+  ],
+
+  "outputs": {}
+}
