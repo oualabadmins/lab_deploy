@@ -104,6 +104,38 @@
 
     "vnetName": "[variables('subID')[variables('location')[0]]]",
     "subnetName": "[variables('subID')[variables('location')[1]]]",
+    "regionSettings": "[variables(concat(variables('subID'), '-', variables('location')))]",
+
+    "5555afd9-779e-4741-97eb-f96bccf2d2e1-westus": {
+      "subscriptionName": "MAXLAB R&D Primary",
+      "vnetName": "MAXLab-CORP-USW-VNET-1",
+      "vnetSubnet": "10.138.39.128/25"
+    },
+    "06ce3096-6a26-4cb9-a1fd-f6dfa0663709-westus2": {
+      "subscriptionName": "MAXLAB R&D INT 1",
+      "vnetName": "MAXLab-CORP-WUS2-VNET-2",
+      "vnetSubnet": "10.158.21.128/25"
+    },
+    "06ce3096-6a26-4cb9-a1fd-f6dfa0663709-westcentralus": {
+      "subscriptionName": "MAXLAB R&D INT 1",
+      "vnetName": "maxlab-CORP-WCUS-VNET-1",
+      "vnetSubnet": "10.169.5.0/25"
+    },
+    "1166d0b0-8fa1-4250-ac09-d3eb50ea9a6a-westus2": {
+      "subscriptionName": "MAXLAB R&D INT 2",
+      "vnetName": "MAXLab-CORP-WUS2-VNET-1",
+      "vnetSubnet": "10.158.78.128/25"
+    },
+    "38c5a697-bc6f-48e5-8bfa-2079c444fd25-westcentralus": {
+      "subscriptionName": "MAXLAB R&D Self Service",
+      "vnetName": "MAXLab-CORP-WCUS-VNET-1",
+      "vnetSubnet": "10.169.5.128/25"
+    },
+    "38c5a697-bc6f-48e5-8bfa-2079c444fd25-southcentralus": {
+      "subscriptionName": "MAXLAB R&D Self Service",
+      "vnetName": "MAXLab-CORP-SCUS-VNET-1",
+      "vnetSubnet": "10.139.141.0/25"
+    },
 
       "06ce3096-6a26-4cb9-a1fd-f6dfa0663709": [
         {
@@ -272,7 +304,7 @@
             "value": "Static"
           },
           "vnetName": {
-            "value": "[variables('vnetName')]"
+            "value": "[variables('regionSettings').vnetName]"
           },
           "domainName": {
             "value": "[parameters('domainName')]"
@@ -306,7 +338,7 @@
             "value": "Dynamic"
           },
           "vnetName": {
-            "value": "[variables('vnetName')]"
+            "value": "[variables('regionSettings').vnetName]"
           },
           "domainName": {
             "value": "[parameters('domainName')]"
@@ -344,7 +376,7 @@
             "value": "Dynamic"
           },
           "vnetName": {
-            "value": "[variables('vnetName')]"
+            "value": "[variables('regionSettings').vnetName]"
           },
           "domainName": {
             "value": "[parameters('domainName')]"
