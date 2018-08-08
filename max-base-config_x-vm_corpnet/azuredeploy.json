@@ -60,7 +60,7 @@
         "description": "The number of client VMs to deploy."
       }
     },
-    "vmSize": {
+    "vmSizeServer": {
       "type": "string",
       "metadata": {
         "description": "Select a VM size for all server VMs in your deployment."
@@ -181,7 +181,7 @@
 
     "SharedVmConfig": {
       "location": "[resourceGroup().location]",
-      "vmSize": "[parameters('vmSize')]",
+      "vmSize": "[parameters('vmSizeServer')]",
       "vmSizeClient": "[parameters('vmSizeClient')]",
       "serverOS": "[parameters('serverOS')]",
       "domainUsername": "[variables('domainUsername')]",
