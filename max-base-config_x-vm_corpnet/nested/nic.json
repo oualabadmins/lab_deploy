@@ -73,11 +73,11 @@
     "outputs": {
       "nicNames": {
         "value": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicPrefix'),'1').name]",
-        "type": "object"
+        "type": "string"
       },
       "nicIPs": {
         "value": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicPrefix'),'1').ipConfigurations[0].properties.privateIPAddress]",
-        "type": "object"
+        "type": "string"
       }
     }
 }
