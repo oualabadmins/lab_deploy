@@ -280,7 +280,7 @@
       "name": "[concat(parameters('configName'),'-AD_NIC_DEPLOY')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
-      "comments": "NEW This is the deployment resource for the ADDC NIC.",
+      "comments": "This is the deployment resource for the ADDC NIC.",
       "dependsOn": [],
       "properties": {
         "mode": "Incremental",
@@ -314,8 +314,10 @@
       "name": "[concat(parameters('configName'),'-APP_NIC_DEPLOY')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
-      "comments": "NEW This is the deployment resource for APP NICs.",
-      "dependsOn": ["[concat(parameters('configName'),'-AD_NIC_DEPLOY')]"],
+      "comments": "This is the deployment resource for APP NICs.",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/',parameters('configName'),'-AD_NIC_DEPLOY')]"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -352,8 +354,10 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "condition": "[equals(parameters('deployClientVm'),'Yes')]",
-      "comments": "NEW This is the deployment resource for CLIENT NICs.",
-      "dependsOn": ["[concat(parameters('configName'),'-AD_NIC_DEPLOY')]"],
+      "comments": "This is the deployment resource for CLIENT NICs.",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/',parameters('configName'),'-AD_NIC_DEPLOY')]"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
