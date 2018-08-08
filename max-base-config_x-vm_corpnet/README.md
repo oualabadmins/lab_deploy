@@ -39,7 +39,7 @@ The following resources are deployed as part of the solution:
 + **App Server VM(s)**: Windows Server 2012 R2 or 2016 VM(s) joined to the domain. IIS is installed, and C:\Files containing example.txt is shared as "Files".
 + **Client VM(s)**: Windows 10 client(s) joined to the domain
 + **Storage account**: Diagnostics storage account, and client VM storage account if indicated. ADDC and App Server VMs in the deployment use managed disks, so no storage accounts are created for VHDs.
-+ **NSG**: Network security group configured to allow inbound traffic on ports 0, 25, 80, 443, 3389
++ **NSG**: Network security group configured to allow inbound traffic on ports 80, 443, 3389, 5985 and 5986.
 + **Network interfaces**: 1 NIC per VM with dynamic private IP address
 + **JoinDomain**: Each member VM uses the **JsonADDomainExtension** extension to join the domain.
 + **BGInfo**: The **BGInfo** extension is applied to all VMs.
