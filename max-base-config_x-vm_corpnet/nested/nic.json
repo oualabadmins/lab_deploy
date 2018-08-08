@@ -22,7 +22,8 @@
           "type": "string" 
         },
         "dcIp": {
-          "type": "string" 
+          "type": "string",
+          "defaultValue": "127.0.0.1"
         }
     },
     "variables": {
