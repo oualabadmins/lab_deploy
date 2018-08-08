@@ -15,6 +15,9 @@
         "ipAllocation": {
           "type": "string" 
         },
+        "vnetName": {
+          "type": "string" 
+        },
         "subnetRef": {
           "type": "string" 
         },
@@ -25,7 +28,12 @@
           "type": "string" 
         }
     },
-    "variables": {},
+    "variables": {
+      "subnetName": "Subnet-1",
+      "subnetRef": "[concat(variables('VnetPath'),'/subnets/', variables('subnetName'))]",
+      "VnetResourceGroup": "ERNetwork",
+      "vnetPath": "[resourceId(variables('VnetResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+    },
     "resources": [
         {
             "name": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-',copyIndex(1))]",
@@ -45,7 +53,7 @@
                   "properties": {
                     "privateIPAllocationMethod": "[parameters('ipAllocation')]",
                     "subnet": {
-                      "id": "[parameters('subnetRef')]"
+                      "id": "[variables('subnetRef')]"
                     }
                   }
                 }

@@ -79,7 +79,7 @@
       "metadata": {
         "description": "Auto-generated container in staging storage account to receive post-build staging folder upload."
       },
-      "defaultValue": "https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/max-base-config_x-vm"
+      "defaultValue": "https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/max-base-config_x-vm_corpnet"
     },
     "_artifactsLocationSasToken": {
       "type": "securestring",
@@ -97,26 +97,18 @@
     "assetLocation": "[concat(parameters('_artifactsLocation'),'/DSC')]",
     "templates": "[concat(parameters('_artifactsLocation'),'/nested')]",
     "storageAccountName": "[concat(uniqueString(resourceGroup().id),'storage')]",
-
-    "network": {
-      "vnetName": "[concat(parameters('configName'),'-VNET')]",
-      "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-VNET'), 'subnet-01')]",
-      "subnet": "[parameters('subnetCIDR')]",
-      "nsgName": "[concat(parameters('configName'),'-NSG')]",
-      "dnsServers": {
-        "local": "[variables('VMs').adNicIP]",
-        "internet": "8.8.8.8"
-      }
-    },
+    "nsgName": "[concat(parameters('configName'),'-NSG')]",
 
     "subID": "[subscription().subscriptionId]",
-    "location": "[resourceGroup().location)]",
+    "location": "[resourceGroup().location]",
 
-    "vnetName": "[variables(concat(variables('virtualNetworks').variables('subID).variables('location').variables('vnet'))]",
-    "subnetName": "[variables(concat(variables('virtualNetworks').variables('subID).variables('location').variables('subnet'))]",
+    "vnetName": "[variables('virtualNetworks')[variables('subID')[variables('location')]].vnet]",
+    "subnetName": "[variables('virtualNetworks')[variables('subID')[variables('location')]].subnet]",
+
 
     "virtualNetworks": {
-      "06ce3096-6a26-4cb9-a1fd-f6dfa0663709": {
+      "06ce3096-6a26-4cb9-a1fd-f6dfa0663709": [
+        {
         "subscriptionName": "MAXLAB R&D INT 1",
         "westcentralus": {
           "vnet": "maxlab-CORP-WCUS-VNET-1",
@@ -126,28 +118,35 @@
           "vnet": "MAXLab-CORP-WUS2-VNET-2",
           "subnet": "10.158.21.128/25"
         }
-      },
-      "1166d0b0-8fa1-4250-ac09-d3eb50ea9a6a": {
+      }
+    ],
+      "1166d0b0-8fa1-4250-ac09-d3eb50ea9a6a": [
+        {
         "subscriptionName": "MAXLAB R&D INT 2",
         "westus2": {
           "vnet": "MAXLab-CORP-WUS2-VNET-1",
           "subnet": "10.158.78.128/25"
         }
-      },
-      "5555afd9-779e-4741-97eb-f96bccf2d2e1": {
+      }
+    ],
+      "5555afd9-779e-4741-97eb-f96bccf2d2e1": [
+        {
         "subscriptionName": "MAXLAB R&D Primary",
         "westus": {
           "vnet": "MAXLab-CORP-USW-VNET-1",
           "subnet": "10.138.39.128/25"
         }
-      },
-      "38c5a697-bc6f-48e5-8bfa-2079c444fd25": {
+      }
+    ],
+      "38c5a697-bc6f-48e5-8bfa-2079c444fd25": [
+        {
         "subscriptionName": "MAXLAB R&D Self Service",
         "southcentralus": {
           "vnet": "MAXLab-CORP-SCUS-VNET-1",
           "subnet": "10.139.141.0/25"
         }
       }
+    ]
     },
 
     "VMs": {
@@ -155,7 +154,6 @@
       "adConfigurationFunction": {
         "CreateADPDC": "CreateADPDC.ps1\\CreateADPDC"
       },
-      "adNicIP": "[replace(parameters('subnetCIDR'),'0/24','10')]",
       "appConfigurationFunction": "AppConfig.ps1\\AppConfig"
     },
 
@@ -178,7 +176,7 @@
     {
       "apiVersion": "2018-01-01",
       "type": "Microsoft.Network/networkSecurityGroups",
-      "name": "[variables('network').nsgName]",
+      "name": "[variables('nsgName')]",
       "location": "[resourceGroup().location]",
       "tags": {
         "displayName": "NSG - Front End"
@@ -281,8 +279,8 @@
           "ipAllocation": {
             "value": "Static"
           },
-          "subnetRef": {
-            "value": "[variables('network').subnetRef]"
+          "vnetName": {
+            "value": "[variables('vnetName')]"
           },
           "domainName": {
             "value": "[parameters('domainName')]"
@@ -315,8 +313,8 @@
           "ipAllocation": {
             "value": "Dynamic"
           },
-          "subnetRef": {
-            "value": "[variables('network').subnetRef]"
+          "vnetName": {
+            "value": "[variables('vnetName')]"
           },
           "domainName": {
             "value": "[parameters('domainName')]"
@@ -353,8 +351,8 @@
           "ipAllocation": {
             "value": "Dynamic"
           },
-          "subnetRef": {
-            "value": "[variables('network').subnetRef]"
+          "vnetName": {
+            "value": "[variables('vnetName')]"
           },
           "domainName": {
             "value": "[parameters('domainName')]"
