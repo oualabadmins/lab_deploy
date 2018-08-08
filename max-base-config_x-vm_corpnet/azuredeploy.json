@@ -218,7 +218,7 @@
               "description": "Allow WSMan and PoSH inbound",
               "protocol": "Tcp",
               "sourcePortRange": "*",
-              "destinationPortRange": "5985,5986",
+              "destinationPortRange": "5985-5986",
               "sourceAddressPrefix": "*",
               "destinationAddressPrefix": "*",
               "access": "Allow",
