@@ -102,7 +102,7 @@
     "subID": "[subscription().subscriptionId]",
     "location": "[resourceGroup().location]",
 
-    "regionSettings": "[variables(concat(variables('subID'), '-', variables('location')))]",
+    "regionSettings": "[variables(concat(variables('subID'),'-',variables('location')))]",
 
     "5555afd9-779e-4741-97eb-f96bccf2d2e1-westus": {
       "subscriptionName": "MAXLAB R&D Primary",
@@ -134,42 +134,6 @@
       "vnetName": "MAXLab-CORP-SCUS-VNET-1",
       "vnetSubnet": "10.139.141.0/25"
     },
-
-      "06ce3096-6a26-4cb9-a1fd-f6dfa0663709": [
-        {
-        "subscriptionName": "MAXLAB R&D INT 1",
-        "westcentralus": [
-          "maxlab-CORP-WCUS-VNET-1","10.169.5.0/25"
-        ],
-        "westus2": [
-          "MAXLab-CORP-WUS2-VNET-2","10.158.21.128/25"
-        ]
-      }
-    ],
-      "1166d0b0-8fa1-4250-ac09-d3eb50ea9a6a": [
-        {
-        "subscriptionName": "MAXLAB R&D INT 2",
-        "westus2": [
-          "MAXLab-CORP-WUS2-VNET-1","10.158.78.128/25"
-        ]
-      }
-    ],
-      "5555afd9-779e-4741-97eb-f96bccf2d2e1": [
-        {
-        "subscriptionName": "MAXLAB R&D Primary",
-        "westus": [
-          "MAXLab-CORP-USW-VNET-1","10.138.39.128/25"
-        ]
-      }
-    ],
-      "38c5a697-bc6f-48e5-8bfa-2079c444fd25": [
-        {
-        "subscriptionName": "MAXLAB R&D Self Service",
-        "southcentralus": [
-          "MAXLab-CORP-SCUS-VNET-1","10.139.141.0/25"
-        ]
-      }
-    ],
 
     "VMs": {
       "adVmName": "DC1",
