@@ -263,7 +263,7 @@
             "value": 1
           },
           "ipAllocation": {
-            "value": "Static"
+            "value": "Dynamic"
           },
           "vnetName": {
             "value": "[variables('regionSettings').vnetName]"
