@@ -102,9 +102,8 @@
     "subID": "[subscription().subscriptionId]",
     "location": "[resourceGroup().location]",
 
-    "vnetRegion": "[variables('subID')[resourceGroup().location]]",
-    "vnetName": "[variables('vnetRegion')[variables('location')[0]]]",
-    "subnetName": "[variables('vnetRegion')[variables('location')[1]]]",
+    "vnetName": "[variables('subID')[variables('location')[0]]]",
+    "subnetName": "[variables('subID')[variables('location')[1]]]",
 
       "06ce3096-6a26-4cb9-a1fd-f6dfa0663709": [
         {
