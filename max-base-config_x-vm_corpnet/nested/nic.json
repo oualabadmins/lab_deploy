@@ -72,7 +72,7 @@
     ],
     "outputs": {
       "nicip": {
-        "value": "[reference(concat(variables('nicPrefix'),'1')).ipConfigurations.privateIPAddress]",
+        "value": "[reference(concat(variables('nicPrefix'),'1')).ipConfigurations[0].properties.privateIPAddress]",
         "type": "string"
       }
     }
