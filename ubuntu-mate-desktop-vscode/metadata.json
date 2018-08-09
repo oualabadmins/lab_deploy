@@ -1,0 +1,9 @@
+{
+  "$schema": "https://aka.ms/azure-quickstart-templates-metadata-schema#",    
+    "itemDisplayName": "Ubuntu Mate Desktop VM with ROS",
+    "icon": "ubuntu",
+    "description": "This template deploys a Linux VM with ROS",
+    "summary": "This template deploys a Linux VM with ROS",
+    "githubUsername": "kelleyvice-msft",
+    "dateUpdated": "2018-07-24"   
+}

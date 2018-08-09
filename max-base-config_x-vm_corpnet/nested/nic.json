@@ -1,0 +1,83 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "apiProfile": "2017-03-09-profile",
+    "parameters": {
+        "configName": { 
+          "type": "string" 
+        },
+        "tier": {
+          "type": "string" 
+        },
+        "count": {
+          "type": "int" 
+        },
+        "ipAllocation": {
+          "type": "string" 
+        },
+        "vnetName": {
+          "type": "string" 
+        },
+        "domainName": {
+          "type": "string" 
+        },
+        "dcIp": {
+          "type": "string",
+          "defaultValue": "127.0.0.1"
+        }
+    },
+    "variables": {
+      "subnetName": "Subnet-1",
+      "subnetRef": "[concat(variables('VnetPath'),'/subnets/', variables('subnetName'))]",
+      "VnetResourceGroup": "ERNetwork",
+      "vnetPath": "[resourceId(variables('VnetResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
+      "nicPrefix": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-')]"
+    },
+    "resources": [
+        {
+            "name": "[concat(variables('nicPrefix'),copyIndex(1))]",
+            "copy": {
+              "name": "nics",
+              "count": "[parameters('count')]"
+            },
+            "type": "Microsoft.Network/networkInterfaces",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [],
+            "apiVersion": "2018-01-01",
+            "comments": "NIC",
+            "properties": {
+              "ipConfigurations": [
+                {
+                  "name": "[concat('ipconfig',copyIndex(1))]",
+                  "properties": {
+                    "privateIPAllocationMethod": "[parameters('ipAllocation')]",
+                    "subnet": {
+                      "id": "[variables('subnetRef')]"
+                    }
+                  }
+                }
+              ],
+              "dnsSettings": {
+                "dnsServers": [
+                  "[parameters('dcIp')]",
+                  "10.161.48.39",
+                  "10.161.48.40",
+                  "10.222.120.24",
+                  "10.222.114.67"
+                ],
+                "internalDomainNameSuffix": "[parameters('domainName')]"
+              }
+            }
+          }   
+    ],
+    "outputs": {
+      "nicNames": {
+        "value": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicPrefix'),'1').name]",
+        "type": "string"
+      },
+      "nicIPs": {
+        "value": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicPrefix'),'1').ipConfigurations[0].properties.privateIPAddress]",
+        "type": "string"
+      }
+    }
+}

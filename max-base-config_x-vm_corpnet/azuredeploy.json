@@ -60,7 +60,7 @@
         "description": "The number of client VMs to deploy."
       }
     },
-    "vmSize": {
+    "vmSizeServer": {
       "type": "string",
       "metadata": {
         "description": "Select a VM size for all server VMs in your deployment."
@@ -74,28 +74,12 @@
       },
       "defaultValue": "Standard_DS4_v2"
     },
-    "dnsLabelPrefix": {
-      "type": "string",
-      "metadata": {
-        "description": "DNS label prefix for public IPs. Must be lowercase and match the regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$."
-      }
-    },
-    "subnetCIDR": {
-      "type": "string",
-      "metadata": {
-        "description": "The CIDR subnet for your virtual network, i.e. 10.0.0.0/24."
-      },
-      "defaultValue": "10.0.0.0/24",
-      "allowedValues": [
-        "10.0.0.0/24", "10.10.0.0/24", "10.100.0.0/24", "10.10.10.0/24", "10.10.10.10/24", "10.10.10.100/24", "172.16.0.0/24", "172.16.10.0/24", "172.16.100.0/24", "172.16.10.0/24", "172.16.10.10/24", "172.16.10.100/24"
-      ]
-    },
     "_artifactsLocation": {
       "type": "string",
       "metadata": {
         "description": "Auto-generated container in staging storage account to receive post-build staging folder upload."
       },
-      "defaultValue": "https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/max-base-config_x-vm"
+      "defaultValue": "https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/max-base-config_x-vm_corpnet"
     },
     "_artifactsLocationSasToken": {
       "type": "securestring",
@@ -113,16 +97,42 @@
     "assetLocation": "[concat(parameters('_artifactsLocation'),'/DSC')]",
     "templates": "[concat(parameters('_artifactsLocation'),'/nested')]",
     "storageAccountName": "[concat(uniqueString(resourceGroup().id),'storage')]",
+    "nsgName": "[concat(parameters('configName'),'-NSG')]",
 
-    "network": {
-      "vnetName": "[concat(parameters('configName'),'-VNET')]",
-      "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-VNET'), 'subnet-01')]",
-      "subnet": "[parameters('subnetCIDR')]",
-      "nsgName": "[concat(parameters('configName'),'-NSG')]",
-      "dnsServers": {
-        "local": "[variables('VMs').adNicIP]",
-        "internet": "8.8.8.8"
-      }
+    "subID": "[subscription().subscriptionId]",
+    "location": "[resourceGroup().location]",
+
+    "regionSettings": "[variables(concat(variables('subID'),'-',variables('location')))]",
+
+    "5555afd9-779e-4741-97eb-f96bccf2d2e1-westus": {
+      "subscriptionName": "MAXLAB R&D Primary",
+      "vnetName": "MAXLab-CORP-USW-VNET-1",
+      "vnetSubnet": "10.138.39.128/25"
+    },
+    "06ce3096-6a26-4cb9-a1fd-f6dfa0663709-westus2": {
+      "subscriptionName": "MAXLAB R&D INT 1",
+      "vnetName": "MAXLab-CORP-WUS2-VNET-2",
+      "vnetSubnet": "10.158.21.128/25"
+    },
+    "06ce3096-6a26-4cb9-a1fd-f6dfa0663709-westcentralus": {
+      "subscriptionName": "MAXLAB R&D INT 1",
+      "vnetName": "maxlab-CORP-WCUS-VNET-1",
+      "vnetSubnet": "10.169.5.0/25"
+    },
+    "1166d0b0-8fa1-4250-ac09-d3eb50ea9a6a-westus2": {
+      "subscriptionName": "MAXLAB R&D INT 2",
+      "vnetName": "MAXLab-CORP-WUS2-VNET-1",
+      "vnetSubnet": "10.158.78.128/25"
+    },
+    "38c5a697-bc6f-48e5-8bfa-2079c444fd25-westcentralus": {
+      "subscriptionName": "MAXLAB R&D Self Service",
+      "vnetName": "MAXLab-CORP-WCUS-VNET-1",
+      "vnetSubnet": "10.169.5.128/25"
+    },
+    "38c5a697-bc6f-48e5-8bfa-2079c444fd25-southcentralus": {
+      "subscriptionName": "MAXLAB R&D Self Service",
+      "vnetName": "MAXLab-CORP-SCUS-VNET-1",
+      "vnetSubnet": "10.139.141.0/25"
     },
 
     "VMs": {
@@ -130,15 +140,12 @@
       "adConfigurationFunction": {
         "CreateADPDC": "CreateADPDC.ps1\\CreateADPDC"
       },
-      "adNicIP": "[replace(parameters('subnetCIDR'),'0/24','10')]",
-      "adPublicIpName": "[concat(parameters('configName'),'-AD_IP')]",
-
       "appConfigurationFunction": "AppConfig.ps1\\AppConfig"
     },
 
     "SharedVmConfig": {
       "location": "[resourceGroup().location]",
-      "vmSize": "[parameters('vmSize')]",
+      "vmSize": "[parameters('vmSizeServer')]",
       "vmSizeClient": "[parameters('vmSizeClient')]",
       "serverOS": "[parameters('serverOS')]",
       "domainUsername": "[variables('domainUsername')]",
@@ -155,12 +162,12 @@
     {
       "apiVersion": "2018-01-01",
       "type": "Microsoft.Network/networkSecurityGroups",
-      "name": "[variables('network').nsgName]",
+      "name": "[variables('nsgName')]",
       "location": "[resourceGroup().location]",
       "tags": {
         "displayName": "NSG - Front End"
       },
-      "comments": "This network security group enables RDP on port 3389.",
+      "comments": "This network security group permits common ports.",
       "properties": {
         "securityRules": [
           {
@@ -170,10 +177,24 @@
               "protocol": "Tcp",
               "sourcePortRange": "*",
               "destinationPortRange": "3389",
-              "sourceAddressPrefix": "Internet",
+              "sourceAddressPrefix": "*",
               "destinationAddressPrefix": "*",
               "access": "Allow",
               "priority": 100,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "http",
+            "properties": {
+              "description": "Allow HTTP inbound",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "80",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 101,
               "direction": "Inbound"
             }
           },
@@ -184,45 +205,25 @@
               "protocol": "Tcp",
               "sourcePortRange": "*",
               "destinationPortRange": "443",
-              "sourceAddressPrefix": "Internet",
+              "sourceAddressPrefix": "*",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 101,
+              "priority": 102,
               "direction": "Inbound"
             }
-          }
-        ]
-      }
-    },
-    {
-      "name": "[variables('network').vnetName]",
-      "type": "Microsoft.Network/virtualNetworks",
-      "dependsOn": [
-        "[concat('Microsoft.Network/networkSecurityGroups/',variables('network').nsgName)]"
-      ],
-      "location": "[resourceGroup().location]",
-      "apiVersion": "2018-01-01",
-      "comments": "This is the virtual network for the deployment.",
-      "properties": {
-        "addressSpace": {
-          "addressPrefixes": [
-            "[variables('network').subnet]"
-          ]
-        },
-        "dhcpOptions": {
-          "dnsServers": [
-            "[variables('network').dnsServers.local]",
-            "[variables('network').dnsServers.internet]"
-          ]
-        },
-        "subnets": [
+          },
           {
-            "name": "subnet-01",
+            "name": "remoting",
             "properties": {
-              "addressPrefix": "[variables('network').subnet]",
-              "networkSecurityGroup": {
-                "id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('network').nsgName)]"
-              }
+              "description": "Allow WSMan and PoSH inbound",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "5985-5986",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 103,
+              "direction": "Inbound"
             }
           }
         ]
@@ -240,113 +241,11 @@
       }
     },
     {
-      "name": "[concat(parameters('configName'),'-AD_IP')]",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "comments": "NEW This is the deployment resource for the ADDC public IP.",
-      "dependsOn": [
-        "[variables('network').vnetName]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(variables('templates'),'/publicip.json',parameters('_artifactsLocationSasToken'))]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "configName": { 
-            "value": "[parameters('configName')]" 
-          },
-          "tier": {
-            "value": "AD"
-          },
-          "count": {
-            "value": 1
-          },
-          "ipAllocation": {
-            "value": "Dynamic"
-          },
-          "dnsLabelPrefix": {
-            "value": "[parameters('dnsLabelPrefix')]"
-          }
-        }
-      }
-    },
-    {
-      "name": "[concat(parameters('configName'),'-APP_IP')]",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "comments": "NEW This is the deployment resource for APP public IPs.",
-      "dependsOn": [
-        "[variables('network').vnetName]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(variables('templates'),'/publicip.json',parameters('_artifactsLocationSasToken'))]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "configName": { 
-            "value": "[parameters('configName')]" 
-          },
-          "tier": {
-            "value": "APP"
-          },
-          "count": {
-            "value": "[parameters('numberOfAppVms')]"
-          },
-          "ipAllocation": {
-            "value": "Dynamic"
-          },
-          "dnsLabelPrefix": {
-            "value": "[parameters('dnsLabelPrefix')]"
-          }
-        }
-      }
-    },
-    {
-      "name": "[concat(parameters('configName'),'-CLIENT_IP')]",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "condition": "[equals(parameters('deployClientVm'),'Yes')]",
-      "comments": "NEW This is the deployment resource for CLIENT public IPs.",
-      "dependsOn": [
-        "[variables('network').vnetName]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(variables('templates'),'/publicip.json',parameters('_artifactsLocationSasToken'))]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "configName": { 
-            "value": "[parameters('configName')]" 
-          },
-          "tier": {
-            "value": "CLIENT"
-          },
-          "count": {
-            "value": "[parameters('numberOfClientVms')]"
-          },
-          "ipAllocation": {
-            "value": "Dynamic"
-          },
-          "dnsLabelPrefix": {
-            "value": "[parameters('dnsLabelPrefix')]"
-          }
-        }
-      }
-    },
-    {
       "name": "[concat(parameters('configName'),'-AD_NIC_DEPLOY')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
-      "comments": "NEW This is the deployment resource for the ADDC NIC.",
-      "dependsOn": [
-        "[concat(parameters('configName'),'-AD_IP')]"
-      ],
+      "comments": "This is the deployment resource for the ADDC NIC.",
+      "dependsOn": [],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -364,13 +263,10 @@
             "value": 1
           },
           "ipAllocation": {
-            "value": "Static"
+            "value": "Dynamic"
           },
-          "privateIp": {
-            "value": "[variables('VMs').adNicIP]"
-          },
-          "subnetRef": {
-            "value": "[variables('network').subnetRef]"
+          "vnetName": {
+            "value": "[variables('regionSettings').vnetName]"
           },
           "domainName": {
             "value": "[parameters('domainName')]"
@@ -382,9 +278,9 @@
       "name": "[concat(parameters('configName'),'-APP_NIC_DEPLOY')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
-      "comments": "NEW This is the deployment resource for APP NICs.",
+      "comments": "This is the deployment resource for APP NICs.",
       "dependsOn": [
-        "[concat(parameters('configName'),'-APP_IP')]"
+        "[concat('Microsoft.Resources/deployments/',parameters('configName'),'-AD_NIC_DEPLOY')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -405,14 +301,14 @@
           "ipAllocation": {
             "value": "Dynamic"
           },
-          "privateIp": {
-            "value": ""
-          },
-          "subnetRef": {
-            "value": "[variables('network').subnetRef]"
+          "vnetName": {
+            "value": "[variables('regionSettings').vnetName]"
           },
           "domainName": {
             "value": "[parameters('domainName')]"
+          },
+          "dcIp": {
+            "value": "[reference(concat(parameters('configName'),'-AD_NIC_DEPLOY')).outputs.nicIPs.value]"
           }
         }
       }
@@ -422,9 +318,9 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "condition": "[equals(parameters('deployClientVm'),'Yes')]",
-      "comments": "NEW This is the deployment resource for CLIENT NICs.",
+      "comments": "This is the deployment resource for CLIENT NICs.",
       "dependsOn": [
-        "[concat(parameters('configName'),'-CLIENT_IP')]"
+        "[concat('Microsoft.Resources/deployments/',parameters('configName'),'-AD_NIC_DEPLOY')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -445,14 +341,14 @@
           "ipAllocation": {
             "value": "Dynamic"
           },
-          "privateIp": {
-            "value": ""
-          },
-          "subnetRef": {
-            "value": "[variables('network').subnetRef]"
+          "vnetName": {
+            "value": "[variables('regionSettings').vnetName]"
           },
           "domainName": {
             "value": "[parameters('domainName')]"
+          },
+          "dcIp": {
+            "value": "[reference(concat(parameters('configName'),'-AD_NIC_DEPLOY')).outputs.nicIPs.value]"
           }
         }
       }
