@@ -72,7 +72,7 @@
     ],
     "outputs": {
       "nic": {
-        "value": "[reference(variables('nicPrefix'),'1')]",
+        "value": "[reference(concat(variables('nicPrefix'),'1'))]",
         "type": "object"
       }
     }
