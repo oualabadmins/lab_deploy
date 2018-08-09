@@ -1,7 +1,7 @@
 ﻿{
-  "itemDisplayName": "MAX Skunkworks Lab - X VM Base Configuration with Gallery Client VM Image (v1.2)",
-  "description": "This template deploys the X VM Base Configuration, a Test Lab Guide solution used as a base build for a variety of test labs. This template provisions a Windows Server 2012 R2 or 2016 Active Directory domain controller using the specified domain name, one or more application servers running Windows Server 2012 R2 or 2016, and optionally one or more client VMs running Windows 10.",
+  "itemDisplayName": "MAX Skunkworks Lab - X VM Base Configuration -Public (v1.2)",
+  "description": "This template deploys the X VM Base Configuration - Public, a base environment connected directly to the Internet. This template provisions a Windows Server 2012 R2 or 2016 Active Directory domain controller using the specified domain name, one or more application servers running Windows Server 2012 R2 or 2016, and optionally one or more client VMs running Windows 10.",
   "summary": "Deploys 3 or more VMs: Server 2012 R2 or 2016 AD DC, Server 2012 R2 or 2016 app server(s) and Windows 10 client(s). Provisions an AD domain and joins member VMs.",
   "githubUsername": "kelleyvice-msft",
-  "dateUpdated": "2018-7-31"
+  "dateUpdated": "2018-8-9"
 }
