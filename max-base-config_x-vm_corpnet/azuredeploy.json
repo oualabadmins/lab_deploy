@@ -280,7 +280,7 @@
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for APP NICs.",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/',parameters('configName'),'-AD_NIC_DEPLOY')]"
+        "[concat(parameters('configName'),'-AD_NIC_DEPLOY')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -320,7 +320,7 @@
       "condition": "[equals(parameters('deployClientVm'),'Yes')]",
       "comments": "This is the deployment resource for CLIENT NICs.",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/',parameters('configName'),'-AD_NIC_DEPLOY')]"
+        "[concat(parameters('configName'),'-AD_NIC_DEPLOY')]"
       ],
       "properties": {
         "mode": "Incremental",
