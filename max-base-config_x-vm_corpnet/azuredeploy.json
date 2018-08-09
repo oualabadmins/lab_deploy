@@ -308,7 +308,7 @@
             "value": "[parameters('domainName')]"
           },
           "dcIp": {
-            "value": "[reference(concat(parameters('configName'),'-AD_NIC_DEPLOY')).outputs.nicIPs.ipConfigurations.privateIPAddress]"
+            "value": "[reference(concat(parameters('configName'),'-AD_NIC_DEPLOY')).outputs.nic.ipConfigurations.privateIPAddress]"
           }
         }
       }
@@ -348,7 +348,7 @@
             "value": "[parameters('domainName')]"
           },
           "dcIp": {
-            "value": "[reference(concat(parameters('configName'),'-AD_NIC_DEPLOY')).outputs.nicIPs.ipConfigurations.privateIPAddress]"
+            "value": "[reference(concat(parameters('configName'),'-AD_NIC_DEPLOY')).outputs.nic.ipConfigurations.privateIPAddress]"
           }
         }
       }

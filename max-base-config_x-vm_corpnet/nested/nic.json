@@ -71,12 +71,8 @@
           }   
     ],
     "outputs": {
-      "nicNames": {
-        "value": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicPrefix'),'1')]",
-        "type": "string"
-      },
-      "nicIPs": {
-        "value": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicPrefix'),'1')]",
+      "nic": {
+        "value": "[reference(variables('nicPrefix'),'1')]",
         "type": "object"
       }
     }
