@@ -160,7 +160,7 @@
       "tags": {
         "displayName": "NSG - Front End"
       },
-      "comments": "This network security group enables RDP on port 3389.",
+      "comments": "This network security group permits common ports.",
       "properties": {
         "securityRules": [
           {
@@ -170,10 +170,24 @@
               "protocol": "Tcp",
               "sourcePortRange": "*",
               "destinationPortRange": "3389",
-              "sourceAddressPrefix": "Internet",
+              "sourceAddressPrefix": "*",
               "destinationAddressPrefix": "*",
               "access": "Allow",
               "priority": 100,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "http",
+            "properties": {
+              "description": "Allow HTTP inbound",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "80",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 101,
               "direction": "Inbound"
             }
           },
@@ -184,10 +198,24 @@
               "protocol": "Tcp",
               "sourcePortRange": "*",
               "destinationPortRange": "443",
-              "sourceAddressPrefix": "Internet",
+              "sourceAddressPrefix": "*",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 101,
+              "priority": 102,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "remoting",
+            "properties": {
+              "description": "Allow WSMan and PoSH inbound",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "5985-5986",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 103,
               "direction": "Inbound"
             }
           }
