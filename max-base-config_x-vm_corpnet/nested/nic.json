@@ -77,7 +77,7 @@
       },
       "nicIPs": {
         "value": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicPrefix'),'1')]",
-        "type": "string"
+        "type": "object"
       }
     }
 }
