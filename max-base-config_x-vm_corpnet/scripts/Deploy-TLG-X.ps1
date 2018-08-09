@@ -14,11 +14,11 @@
 
 # Provide parameter values
 $subscription = "MAXLAB R&D INT 1" # Use an ER-connected subscription.
-$resourceGroup = "kv-x-er-01" # Specify a unique resource group name.
+$resourceGroup = "" # Specify a unique resource group name.
 $location = "West US 2" # West US and West US 2 will provide the lowest latency.
 
-$configName = "kv-x-er-01" # The name of the deployment, i.e. BaseConfig01. Do not use spaces or special characters other than _ or -. Used to concatenate resource names for the deployment.
-$domainName = "corp.kelley.com" # The FQDN of the new AD domain.
+$configName = "" # The name of the deployment, i.e. BaseConfig01. Do not use spaces or special characters other than _ or -. Used to concatenate resource names for the deployment.
+$domainName = "corp.arglebarg.com" # The FQDN of the new AD domain.
 $serverOS = "2016-Datacenter" # The OS of application servers in your deployment, i.e. 2016-Datacenter or 2012-R2-Datacenter.
 $adminUserName = "oualabadmin" # The name of the domain administrator account to create, i.e. oualabadmin.
 $adminPassword = "" # The administrator account password.
