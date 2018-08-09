@@ -1,6 +1,6 @@
 ﻿# MAX Skunkworks Lab - X VM Base Configuration for Corpnet (v1.1)
 
-**IMPORTANT**: Only deploy this template into a subscription with an existing ExpressRoute circuit, and to a region with an ER circuit. The template will automatically choose the correct ER virtual network based on subscription and location.
+**IMPORTANT**: Only deploy this template into a subscription with an existing ExpressRoute circuit, and to a region with an ER circuit. The template will automatically choose the correct ER virtual network based on subscription and region.
 
 **Choose one of these subscription/region combinations:**
 
@@ -37,12 +37,12 @@ You can deploy this template in one of two ways:
 
 The following resources are deployed as part of the solution:
 
-+ **AD DC VM**: Windows Server 2012 R2 or 2016 VM configured as a domain controller and DNS with static private IP address
++ **AD DC VM**: Windows Server 2012 R2 or 2016 VM configured as a domain controller and DNS.
 + **App Server VM(s)**: Windows Server 2012 R2 or 2016 VM(s) joined to the domain. IIS is installed, and C:\Files containing example.txt is shared as "Files".
-+ **Client VM(s)**: Windows 10 client(s) joined to the domain
++ **Client VM(s)**: Windows 10 client(s) joined to the domain.
 + **Storage account**: Diagnostics storage account, and client VM storage account if indicated. ADDC and App Server VMs in the deployment use managed disks, so no storage accounts are created for VHDs.
 + **NSG**: Network security group configured to allow inbound traffic on ports 80, 443, 3389, 5985 and 5986.
-+ **Network interfaces**: 1 NIC per VM with dynamic private IP address
++ **Network interfaces**: 1 NIC per VM with dynamic private IP address.
 + **JoinDomain**: Each member VM uses the **JsonADDomainExtension** extension to join the domain.
 + **BGInfo**: The **BGInfo** extension is applied to all VMs.
 + **Antimalware**: The **iaaSAntimalware** extension is applied to all VMs with basic scheduled scan and exclusion settings.
@@ -51,7 +51,6 @@ The following resources are deployed as part of the solution:
 
 * The domain user *User1* is created in the domain and added to the Domain Admins group. User1's password is the one you provide in the *adminPassword* parameter.
 * The *App server* and *Client* VM resources depend on the **ADDC** resource deployment to ensure that the AD domain exists prior to execution of the JoinDomain extensions. The asymmetric VM deployment adds a few minutes to the overall deployment time.
-* You can specify the tenant subnet in the *subnetCIDR* parameter. For most deployments, the default subnet 10.0.0.0/24 will work fine.
 * Remember, when you RDP to your VM, you will use **domain\adminusername** for the custom domain of your environment, _not_ your corpnet credentials.
 
 ## Known issues
