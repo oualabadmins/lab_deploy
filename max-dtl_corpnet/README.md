@@ -6,8 +6,7 @@
 
 | Subscription             | Region(s)
 | :-------------------     | :-------------------
-| MAXLAB R&D Primary       | West US
-| MAXLAB R&D Self Service  | South Central US <br> West Central US
+| MAXLAB R&D Self Service (preferred)  | South Central US <br> West Central US
 | MAXLAB R&D INT 1         | West US 2 <br> West Central US
 | MAXLAB R&D INT 2         | West US 2
 

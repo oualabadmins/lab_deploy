@@ -17,13 +17,6 @@
             "type": "string",
             "defaultValue": "10"
         },
-        "roleAssignmentGUID": {
-            "type": "string",
-            "defaultValue": "Use https://guidgenerator.com/ to create a new unique GUID",
-            "metadata": {
-                "description": "Generate a new unique GUID for the Test Lab Users group role assignment, and enter it here."
-            }
-        },
         "domainUsername": {
             "type": "string"
         },
@@ -41,26 +34,22 @@
         }
     },
     "variables": {
-        "sourceRepoUri": "https://raw.githubusercontent.com/oualabadmins/lab_deploy/max-dtl_corpnet",
+        "sourceRepoUri": "https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/max-dtl_corpnet",
         "artifactRepositoryName": "[concat('Repo-', uniqueString(subscription().subscriptionId))]",
         "VnetResourceGroup": "ERNetwork",
         "subnetName": "Subnet-1",
         "subnetRef": "[concat(variables('VnetPath'),'/subnets/', variables('subnetName'))]",
         "VnetPath": "[resourceId(variables('VnetResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
-        "dtlRoleAssignmentId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/41852a03-90d1-4aaa-89fd-0cbb3b29a8b6')]",
-        "dtlRoleAssignmentPrincipalGuid": "d7117f3b-89d8-43ee-9c9b-cea51916f146",
-        "fullDevTestLabUserRoleName": "[concat(parameters('labName'), '/Microsoft.Authorization/', parameters('roleAssignmentGuid'))]",
-        "roleScope": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.DevTestLab/labs/', parameters('labName'))]",
         "artifactRepositoryDisplayName": "MAX Lab Artifacts Library",
         "artifactRepoUri": "https://raw.githubusercontent.com/oualabadmins/lab_deploy_dev.git/",
         "artifactRepoBranch": "master",
-        "artifactRepoFolder": "/artifacts/",
+        "artifactRepoFolder": "artifacts",
         "artifactRepoType": "GitHub",
         "artifactRepoSecurityToken": "4ceb47b85cd0597f990674c876edcdf1a9da8628"
     },
     "resources": [
         {
-            "apiVersion": "2016-05-15",
+            "apiVersion": "2017-04-26-preview",
             "type": "Microsoft.DevTestLab/labs",
             "name": "[parameters('labName')]",
             "location": "[resourceGroup().location]",
@@ -72,7 +61,7 @@
             "properties": {},
             "resources": [
                 {
-                    "apiVersion": "2016-05-15",
+                    "apiVersion": "2017-04-26-preview",
                     "name": "[variables('artifactRepositoryName')]",
                     "type": "artifactsources",
                     "dependsOn": [
@@ -90,7 +79,7 @@
                     }
                 },
                 {
-                    "apiVersion": "2016-05-15",
+                    "apiVersion": "2017-04-26-preview",
                     "name": "default/MaxVmsAllowedPerUser",
                     "type": "policySets/policies",
                     "dependsOn": [
@@ -105,7 +94,7 @@
                     }
                 },
                 {
-                    "apiVersion": "2016-05-15",
+                    "apiVersion": "2017-04-26-preview",
                     "name": "[parameters('vnetName')]",
                     "type": "virtualnetworks",
                     "dependsOn": [
@@ -127,22 +116,9 @@
             ]
         },
         {
-            "apiVersion": "2016-07-01",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "name": "[variables('fullDevTestLabUserRoleName')]",
-            "properties": {
-                "roleDefinitionId": "[variables('dtlRoleAssignmentId')]",
-                "principalId": "[variables('dtlRoleAssignmentPrincipalGuid')]",
-                "scope": "[variables('roleScope')]"
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.DevTestLab/labs', parameters('labName'))]"
-            ]
-        },
-        {
             "name": "Formulas",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2015-01-01",
+            "apiVersion": "2017-04-26-preview",
             "dependsOn": [
                 "[resourceId('Microsoft.DevTestLab/labs', parameters('labName'))]"
             ],
