@@ -31,6 +31,12 @@
         },
         "ExpiresOn": {
             "type": "string"
+        },
+        "artifactRepoPAT": {
+            "type": "string",
+            "metadata": {
+                "description": "A valid PAT (personal access token) for the GitHub repository."
+            }
         }
     },
     "variables": {
@@ -45,7 +51,7 @@
         "artifactRepoBranch": "master",
         "artifactRepoFolder": "artifacts",
         "artifactRepoType": "GitHub",
-        "artifactRepoSecurityToken": "e59bb0d4b074b03c671df6ef60be33f9e8f36df8"
+        "artifactRepoSecurityToken": "[parameters('artifactRepoPAT')]"
     },
     "resources": [
         {
