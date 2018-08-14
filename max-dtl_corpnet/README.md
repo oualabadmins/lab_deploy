@@ -1,4 +1,4 @@
-﻿# MAXLAB DTL (DevTest Lab) - Corpnet (v0.1)
+﻿# MAXLAB DTL (DevTest Lab) - Corpnet (v1.0)
 
 **IMPORTANT**: Only deploy this template into a subscription with an existing ExpressRoute circuit, and to a region with an ER circuit. The template will automatically choose the correct ER virtual network based on subscription and region.
 
@@ -10,7 +10,7 @@
 | MAXLAB R&D INT 1         | West US 2 <br> West Central US
 | MAXLAB R&D INT 2         | West US 2
 
-**Time to deploy**: 10 minutes
+**Time to deploy**: 1.5 minutes
 
 The **MAXLAB DTL (DevTest Lab) - Corpnet** provisions a DevTest lab with formulas and a connection to the GitHub DTL artifacts repo.
 
@@ -29,7 +29,7 @@ Click the "Deploy to Azure" button to open the deployment UI in the Azure portal
 
 The following resources are deployed as part of the solution:
 
-+ **DevTest Lab**
++ **DevTest Lab** with the essential library of MAX Skunkworks formulas and artifacts.
 
 ## Solution notes
 
@@ -47,4 +47,4 @@ Last update: _8/14/2018_
 
 ## Changelog
 
-+ **8/14/2018**: Original commit
++ **8/14/2018**: Original commit. Updated with access to ARM templates from lab_deploy.

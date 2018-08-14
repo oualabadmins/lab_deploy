@@ -85,6 +85,22 @@
                 },
                 {
                     "apiVersion": "2016-05-15",
+                    "name": "[concat(variables('artifactRepositoryName'),' - ARM Templates')]",
+                    "type": "artifactsources",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.DevTestLab/labs', parameters('labName'))]"
+                    ],
+                    "properties": {
+                        "uri": "https://github.com/oualabadmins/lab_deploy_dev.git",
+                        "armTemplateFolderPath": "/",
+                        "branchRef": "[variables('artifactRepoBranch')]",
+                        "displayName": "[concat(variables('artifactRepositoryName'),' - ARM Templates')]",
+                        "sourceType": "[variables('artifactRepoType')]",
+                        "status": "Enabled"
+                    }
+                },
+                {
+                    "apiVersion": "2016-05-15",
                     "name": "default/MaxVmsAllowedPerUser",
                     "type": "policySets/policies",
                     "dependsOn": [
