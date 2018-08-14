@@ -1,0 +1,1129 @@
+﻿{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "labName": {
+            "type": "string"
+        },
+        "vnetName": {
+            "type": "string"
+        },
+        "repoName": {
+            "type": "string"
+        },
+        "domainUsername": {
+            "type": "string"
+        },
+        "domainPassword": {
+            "type": "securestring"
+        }
+    },
+    "variables": {
+        "repoPathOLD": "[concat(resourceId('microsoft.devtestlab/labs/artifactsources', parameters('labName'), parameters('repoName')))]",
+        "repoPath": "[concat('/artifactsources/', parameters('repoName'))]"
+    },
+    "resources": [
+        {
+            "comments": "Windows 10 in Redmond",
+            "type": "Microsoft.DevTestLab/labs/formulas",
+            "name": "[concat(parameters('labName'), '/', 'Win10-Office-Redmond')]",
+            "apiVersion": "2016-05-15",
+            "properties": {
+                "description": "Windows 10 Pro x64 with choice of Office client for Bug Bash and client testing use cases. Includes Office install script, Charles Proxy, Chrome, Firefox, Notepad++.",
+                "author": "oualabadmins@microsoft.com",
+                "publisher": "MAX CPub Lab",
+                "osType": "Windows",
+                "formulaContent": {
+                  "properties": {
+                    "size": "Standard_DS2_v2",
+                    "userName": "oualabadmin",
+                    "password": "Pr0sthetic=hat",
+                    "labSubnetName": "Subnet-1",
+                    "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
+                    "disallowPublicIpAddress": true,
+                    "artifacts": [
+                      {
+                        "artifactId": "[concat(variables('repoPath'), '/artifacts/ad')]",
+                        "parameters": [
+                          {
+                            "name": "domainName",
+                            "value": "redmond.corp.microsoft.com"
+                          },
+                          {
+                            "name": "domainOU",
+                            "value": "OU=OSSUATLDKM,OU=Resources,DC=redmond,DC=corp,DC=microsoft,DC=com"
+                          },
+                          {
+                            "name": "domainJoinUser",
+                            "value": "[parameters('domainUsername')]"
+                          },
+                          {
+                            "name": "domainJoinUserPassword",
+                            "value": "[parameters('domainPassword')]"
+                          }
+                        ]
+                      },
+                      {
+                        "artifactId": "[concat(variables('repoPath'), '/artifacts/common')]",
+                        "parameters": []
+                      },
+                      {
+                        "artifactId": "[concat(variables('repoPath'), '/artifacts/bugbash')]",
+                        "parameters": []
+                      },
+                      {
+                        "artifactId": "/artifactsources/public repo/artifacts/windows-chrome",
+                        "parameters": []
+                      },
+                      {
+                        "artifactId": "/artifactsources/public repo/artifacts/windows-firefox",
+                        "parameters": []
+                      },
+                      {
+                        "artifactId": "/artifactsources/public repo/artifacts/windows-notepadplusplus",
+                        "parameters": []
+                      }
+                    ],
+                    "galleryImageReference": {
+                      "offer": "Windows-10",
+                      "publisher": "MicrosoftWindowsDesktop",
+                      "sku": "rs4-pro",
+                      "osType": "Windows",
+                      "version": "latest"
+                    }
+                  }
+                }
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Windows 10 in a Workgroup",
+            "type": "Microsoft.DevTestLab/labs/formulas",
+            "name": "[concat(parameters('labName'), '/', 'Win10-Workgroup')]",
+            "apiVersion": "2016-05-15",
+            "properties": {
+                "description": "Windows 10 Pro x64 in a workgroup (not joined to any domain). Includes Chrome, Firefox, Notepad++.",
+                "author": "oualabadmins@microsoft.com",
+                "publisher": "MAX CPub Lab",
+                "osType": "Windows",
+                "formulaContent": {
+                  "properties": {
+                    "size": "Standard_DS2_v2",
+                    "userName": "oualabadmin",
+                    "password": "Pr0sthetic=hat",
+                    "labSubnetName": "Subnet-1",
+                    "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
+                    "disallowPublicIpAddress": true,
+                    "artifacts": [
+                      {
+                        "artifactId": "/artifactsources/public repo/artifacts/windows-chrome",
+                        "parameters": []
+                      },
+                      {
+                        "artifactId": "/artifactsources/public repo/artifacts/windows-firefox",
+                        "parameters": []
+                      },
+                      {
+                        "artifactId": "/artifactsources/public repo/artifacts/windows-notepadplusplus",
+                        "parameters": []
+                      }
+                    ],
+                    "galleryImageReference": {
+                      "offer": "Windows-10",
+                      "publisher": "MicrosoftWindowsDesktop",
+                      "sku": "rs4-pro",
+                      "osType": "Windows",
+                      "version": "latest"
+                    }
+                  }
+                }
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Windows Server 2008 R2 Base in Redmond",
+            "type": "Microsoft.DevTestLab/labs/formulas",
+            "name": "[concat(parameters('labName'), '/', 'Server-2008R2-Redmond')]",
+            "apiVersion": "2016-05-15",
+            "properties": {
+                "description": "Windows Server 2008 R2 Datacenter, joined to Redmond. Default VM size: DS3 (4 cores, 14GB RAM)",
+                "author": "oualabadmins@microsoft.com",
+                "publisher": "MAX CPub Lab",
+                "osType": "Windows",
+                "formulaContent": {
+                    "properties": {
+                        "size": "Standard_DS3_v2",
+                        "userName": "oualabadmin",
+                        "password": "Pr0sthetic=hat",
+                        "labSubnetName": "Subnet-1",
+                        "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
+                        "disallowPublicIpAddress": true,
+                        "artifacts": [
+                            {
+                                "artifactId": "[concat(variables('repoPath'), '/artifacts/ad')]",
+                                "parameters": [
+                                    {
+                                        "name": "domainName",
+                                        "value": "redmond.corp.microsoft.com"
+                                    },
+                                    {
+                                        "name": "domainOU",
+                                        "value": "OU=OSSUATLDKM,OU=Resources,DC=redmond,DC=corp,DC=microsoft,DC=com"
+                                    },
+                                    {
+                                        "name": "domainJoinUser",
+                                        "value": "[parameters('domainUsername')]"
+                                    },
+                                    {
+                                        "name": "domainJoinUserPassword",
+                                        "value": "[parameters('domainPassword')]"
+                                    }
+                                ]
+                            },
+                            {
+                                "artifactId": "[concat(variables('repoPath'), '/artifacts/common')]",
+                                "parameters": []
+                            }
+                        ],
+                        "galleryImageReference": {
+                            "offer": "WindowsServer",
+                            "publisher": "MicrosoftWindowsServer",
+                            "sku": "2008-R2-SP1",
+                            "osType": "Windows",
+                            "version": "latest"
+                        }
+                    }
+                }
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Windows Server 2012 R2 Base in Redmond",
+            "type": "Microsoft.DevTestLab/labs/formulas",
+            "name": "[concat(parameters('labName'), '/', 'Server-2012R2-Redmond')]",
+            "apiVersion": "2016-05-15",
+            "properties": {
+                "description": "Windows Server 2012 R2 Datacenter, joined to Redmond. Default VM size: DS3 (4 cores, 14GB RAM)",
+                "author": "oualabadmins@microsoft.com",
+                "publisher": "MAX CPub Lab",
+                "osType": "Windows",
+                "formulaContent": {
+                    "properties": {
+                        "size": "Standard_DS3_v2",
+                        "userName": "oualabadmin",
+                        "password": "Pr0sthetic=hat",
+                        "labSubnetName": "Subnet-1",
+                        "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
+                        "disallowPublicIpAddress": true,
+                        "artifacts": [
+                            {
+                                "artifactId": "[concat(variables('repoPath'), '/artifacts/ad')]",
+                                "parameters": [
+                                    {
+                                        "name": "domainName",
+                                        "value": "redmond.corp.microsoft.com"
+                                    },
+                                    {
+                                        "name": "domainOU",
+                                        "value": "OU=OSSUATLDKM,OU=Resources,DC=redmond,DC=corp,DC=microsoft,DC=com"
+                                    },
+                                    {
+                                        "name": "domainJoinUser",
+                                        "value": "[parameters('domainUsername')]"
+                                    },
+                                    {
+                                        "name": "domainJoinUserPassword",
+                                        "value": "[parameters('domainPassword')]"
+                                    }
+                                ]
+                            },
+                            {
+                                "artifactId": "[concat(variables('repoPath'), '/artifacts/common')]",
+                                "parameters": []
+                            }
+                        ],
+                        "galleryImageReference": {
+                            "offer": "WindowsServer",
+                            "publisher": "MicrosoftWindowsServer",
+                            "sku": "2012-R2-Datacenter",
+                            "osType": "Windows",
+                            "version": "latest"
+                        }
+                    }
+                }
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Windows Server 2016 Base in Redmond",
+            "type": "Microsoft.DevTestLab/labs/formulas",
+            "name": "[concat(parameters('labName'), '/', 'Server-2016-Redmond')]",
+            "apiVersion": "2016-05-15",
+            "properties": {
+                "description": "Windows Server 2016 Datacenter, joined to Redmond. Default VM size: DS3 (4 cores, 14GB RAM)",
+                "author": "oualabadmins@microsoft.com",
+                "publisher": "MAX CPub Lab",
+                "osType": "Windows",
+                "formulaContent": {
+                    "properties": {
+                        "size": "Standard_DS3_v2",
+                        "userName": "oualabadmin",
+                        "password": "Pr0sthetic=hat",
+                        "labSubnetName": "Subnet-1",
+                        "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
+                        "disallowPublicIpAddress": true,
+                        "artifacts": [
+                            {
+                                "artifactId": "[concat(variables('repoPath'), '/artifacts/ad')]",
+                                "parameters": [
+                                    {
+                                        "name": "domainName",
+                                        "value": "redmond.corp.microsoft.com"
+                                    },
+                                    {
+                                        "name": "domainOU",
+                                        "value": "OU=OSSUATLDKM,OU=Resources,DC=redmond,DC=corp,DC=microsoft,DC=com"
+                                    },
+                                    {
+                                        "name": "domainJoinUser",
+                                        "value": "[parameters('domainUsername')]"
+                                    },
+                                    {
+                                        "name": "domainJoinUserPassword",
+                                        "value": "[parameters('domainPassword')]"
+                                    }
+                                ]
+                            },
+                            {
+                                "artifactId": "[concat(variables('repoPath'), '/artifacts/common')]",
+                                "parameters": []
+                            }
+                        ],
+                        "galleryImageReference": {
+                            "offer": "WindowsServer",
+                            "publisher": "MicrosoftWindowsServer",
+                            "sku": "2016-Datacenter",
+                            "osType": "Windows",
+                            "version": "latest"
+                        }
+                    }
+                }
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "SharePoint 2013 in Redmond",
+            "type": "Microsoft.DevTestLab/labs/formulas",
+            "name": "[concat(parameters('labName'), '/', 'SharePoint-2013-Redmond')]",
+            "apiVersion": "2016-05-15",
+            "properties": {
+                "description": "SharePoint 2013 server, joined to Redmond. Default VM size: DS3 (4 cores, 14GB RAM)",
+                "author": "oualabadmins@microsoft.com",
+                "publisher": "MAX CPub Lab",
+                "osType": "Windows",
+                "formulaContent": {
+                    "properties": {
+                        "size": "Standard_DS3_v2",
+                        "userName": "oualabadmin",
+                        "password": "Pr0sthetic=hat",
+                        "labSubnetName": "Subnet-1",
+                        "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
+                        "disallowPublicIpAddress": true,
+                        "artifacts": [
+                            {
+                                "artifactId": "[concat(variables('repoPath'), '/artifacts/ad')]",
+                                "parameters": [
+                                    {
+                                        "name": "domainName",
+                                        "value": "redmond.corp.microsoft.com"
+                                    },
+                                    {
+                                        "name": "domainOU",
+                                        "value": "OU=OSSUATLDKM,OU=Resources,DC=redmond,DC=corp,DC=microsoft,DC=com"
+                                    },
+                                    {
+                                        "name": "domainJoinUser",
+                                        "value": "[parameters('domainUsername')]"
+                                    },
+                                    {
+                                        "name": "domainJoinUserPassword",
+                                        "value": "[parameters('domainPassword')]"
+                                    }
+                                ]
+                            },
+                            {
+                                "artifactId": "[concat(variables('repoPath'), '/artifacts/common')]",
+                                "parameters": []
+                            }
+                        ],
+                        "galleryImageReference": {
+                            "offer": "MicrosoftSharePointServer",
+                            "publisher": "MicrosoftSharepoint",
+                            "sku": "2013",
+                            "osType": "Windows",
+                            "version": "latest"
+                        }
+                    }
+                }
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "SharePoint 2016 in Redmond",
+            "type": "Microsoft.DevTestLab/labs/formulas",
+            "name": "[concat(parameters('labName'), '/', 'SharePoint-2016-Redmond')]",
+            "apiVersion": "2016-05-15",
+            "properties": {
+                "description": "SharePoint 2016 server, joined to Redmond. Default VM size: DS3 (4 cores, 14GB RAM)",
+                "author": "oualabadmins@microsoft.com",
+                "publisher": "MAX CPub Lab",
+                "osType": "Windows",
+                "formulaContent": {
+                    "properties": {
+                        "size": "Standard_DS3_v2",
+                        "userName": "oualabadmin",
+                        "password": "Pr0sthetic=hat",
+                        "labSubnetName": "Subnet-1",
+                        "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
+                        "disallowPublicIpAddress": true,
+                        "artifacts": [
+                            {
+                                "artifactId": "[concat(variables('repoPath'), '/artifacts/ad')]",
+                                "parameters": [
+                                    {
+                                        "name": "domainName",
+                                        "value": "redmond.corp.microsoft.com"
+                                    },
+                                    {
+                                        "name": "domainOU",
+                                        "value": "OU=OSSUATLDKM,OU=Resources,DC=redmond,DC=corp,DC=microsoft,DC=com"
+                                    },
+                                    {
+                                        "name": "domainJoinUser",
+                                        "value": "[parameters('domainUsername')]"
+                                    },
+                                    {
+                                        "name": "domainJoinUserPassword",
+                                        "value": "[parameters('domainPassword')]"
+                                    }
+                                ]
+                            },
+                            {
+                                "artifactId": "[concat(variables('repoPath'), '/artifacts/common')]",
+                                "parameters": []
+                            }
+                        ],
+                        "galleryImageReference": {
+                            "offer": "MicrosoftSharePointServer",
+                            "publisher": "MicrosoftSharepoint",
+                            "sku": "2016",
+                            "osType": "Windows",
+                            "version": "latest"
+                        }
+                    }
+                }
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Windows Server 2012 R2 with SQL 2012 SP4 in Redmond",
+            "type": "Microsoft.DevTestLab/labs/formulas",
+            "name": "[concat(parameters('labName'), '/', 'SQL-2012-Redmond')]",
+            "apiVersion": "2016-05-15",
+            "properties": {
+                "description": "SQL Server 2012 ENT SP4, joined to Redmond. Default VM size: DS3 (4 cores, 14GB RAM)",
+                "author": "oualabadmins@microsoft.com",
+                "publisher": "MAX CPub Lab",
+                "osType": "Windows",
+                "formulaContent": {
+                    "properties": {
+                        "size": "Standard_DS3_v2",
+                        "userName": "oualabadmin",
+                        "password": "Pr0sthetic=hat",
+                        "labSubnetName": "Subnet-1",
+                        "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
+                        "disallowPublicIpAddress": true,
+                        "artifacts": [
+                            {
+                                "artifactId": "[concat(variables('repoPath'), '/artifacts/ad')]",
+                                "parameters": [
+                                    {
+                                        "name": "domainName",
+                                        "value": "redmond.corp.microsoft.com"
+                                    },
+                                    {
+                                        "name": "domainOU",
+                                        "value": "OU=OSSUATLDKM,OU=Resources,DC=redmond,DC=corp,DC=microsoft,DC=com"
+                                    },
+                                    {
+                                        "name": "domainJoinUser",
+                                        "value": "[parameters('domainUsername')]"
+                                    },
+                                    {
+                                        "name": "domainJoinUserPassword",
+                                        "value": "[parameters('domainPassword')]"
+                                    }
+                                ]
+                            },
+                            {
+                                "artifactId": "[concat(variables('repoPath'), '/artifacts/common')]",
+                                "parameters": []
+                            }
+                        ],
+                        "galleryImageReference": {
+                            "offer": "SQL2012SP4-WS2012R2",
+                            "publisher": "MicrosoftSQLServer",
+                            "sku": "Enterprise",
+                            "osType": "Windows",
+                            "version": "latest"
+                        }
+                    }
+                }
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Windows Server 2012 R2 with SQL 2014 SP2 in Redmond",
+            "type": "Microsoft.DevTestLab/labs/formulas",
+            "name": "[concat(parameters('labName'), '/', 'SQL-2014-Redmond')]",
+            "apiVersion": "2016-05-15",
+            "properties": {
+                "description": "SQL Server 2014 ENT SP1, joined to Redmond. Default VM size: DS3 (4 cores, 14GB RAM)",
+                "author": "oualabadmins@microsoft.com",
+                "publisher": "MAX CPub Lab",
+                "osType": "Windows",
+                "formulaContent": {
+                    "properties": {
+                        "size": "Standard_DS3_v2",
+                        "userName": "oualabadmin",
+                        "password": "Pr0sthetic=hat",
+                        "labSubnetName": "Subnet-1",
+                        "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
+                        "disallowPublicIpAddress": true,
+                        "artifacts": [
+                            {
+                                "artifactId": "[concat(variables('repoPath'), '/artifacts/ad')]",
+                                "parameters": [
+                                    {
+                                        "name": "domainName",
+                                        "value": "redmond.corp.microsoft.com"
+                                    },
+                                    {
+                                        "name": "domainOU",
+                                        "value": "OU=OSSUATLDKM,OU=Resources,DC=redmond,DC=corp,DC=microsoft,DC=com"
+                                    },
+                                    {
+                                        "name": "domainJoinUser",
+                                        "value": "[parameters('domainUsername')]"
+                                    },
+                                    {
+                                        "name": "domainJoinUserPassword",
+                                        "value": "[parameters('domainPassword')]"
+                                    }
+                                ]
+                            },
+                            {
+                                "artifactId": "[concat(variables('repoPath'), '/artifacts/common')]",
+                                "parameters": []
+                            }
+                        ],
+                        "galleryImageReference": {
+                            "offer": "SQL2014SP2-WS2012R2",
+                            "publisher": "MicrosoftSQLServer",
+                            "sku": "Enterprise",
+                            "osType": "Windows",
+                            "version": "latest"
+                        }
+                    }
+                }
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Windows Server 2016 with SQL 2016 in Redmond",
+            "type": "Microsoft.DevTestLab/labs/formulas",
+            "name": "[concat(parameters('labName'), '/', 'SQL-2016-Redmond')]",
+            "apiVersion": "2016-05-15",
+            "properties": {
+                "description": "SQL Server 2016 ENT, joined to Redmond. Default VM size: DS3 (4 cores, 14GB RAM)",
+                "author": "oualabadmins@microsoft.com",
+                "publisher": "MAX CPub Lab",
+                "osType": "Windows",
+                "formulaContent": {
+                    "properties": {
+                        "size": "Standard_DS3_v2",
+                        "userName": "oualabadmin",
+                        "password": "Pr0sthetic=hat",
+                        "labSubnetName": "Subnet-1",
+                        "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
+                        "disallowPublicIpAddress": true,
+                        "artifacts": [
+                            {
+                                "artifactId": "[concat(variables('repoPath'), '/artifacts/ad')]",
+                                "parameters": [
+                                    {
+                                        "name": "domainName",
+                                        "value": "redmond.corp.microsoft.com"
+                                    },
+                                    {
+                                        "name": "domainOU",
+                                        "value": "OU=OSSUATLDKM,OU=Resources,DC=redmond,DC=corp,DC=microsoft,DC=com"
+                                    },
+                                    {
+                                        "name": "domainJoinUser",
+                                        "value": "[parameters('domainUsername')]"
+                                    },
+                                    {
+                                        "name": "domainJoinUserPassword",
+                                        "value": "[parameters('domainPassword')]"
+                                    }
+                                ]
+                            },
+                            {
+                                "artifactId": "[concat(variables('repoPath'), '/artifacts/common')]",
+                                "parameters": []
+                            }
+                        ],
+                        "galleryImageReference": {
+                            "offer": "SQL2016SP2-WS2016",
+                            "publisher": "MicrosoftSQLServer",
+                            "sku": "Enterprise",
+                            "osType": "Windows",
+                            "version": "latest"
+                        }
+                    }
+                }
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Windows Server 2016 Domain Controller in custom domain",
+            "type": "Microsoft.DevTestLab/labs/formulas",
+            "name": "[concat(parameters('labName'), '/', 'DC-2016-CustomDomain')]",
+            "apiVersion": "2016-05-15",
+            "properties": {
+                "description": "Windows Server 2016 Datacenter, promoted to DC of your custom domain. Default VM size: DS2 (2 cores, 7GB RAM)",
+                "author": "oualabadmins@microsoft.com",
+                "publisher": "MAX CPub Lab",
+                "osType": "Windows",
+                "formulaContent": {
+                    "properties": {
+                        "size": "Standard_DS2_v2",
+                        "userName": "oualabadmin",
+                        "password": "Pr0sthetic=hat",
+                        "labSubnetName": "Subnet-1",
+                        "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
+                        "disallowPublicIpAddress": true,
+                        "artifacts": [
+                            {
+                                "artifactId": "[concat(variables('repoPath'), '/artifacts/ad-newforest')]",
+                                "parameters": [
+                                    {
+                                        "name": "domainName",
+                                        "value": "<CustomDomainName>.selfhost.corp.microsoft.com"
+                                    },
+                                    {
+                                        "name": "namespace",
+                                        "value": ""
+                                    }
+                                ]
+                            },
+                            {
+                                "artifactId": "[concat(variables('repoPath'), '/artifacts/ad-newusers')]",
+                                "parameters": []
+                            }
+                        ],
+                        "galleryImageReference": {
+                            "offer": "WindowsServer",
+                            "publisher": "MicrosoftWindowsServer",
+                            "sku": "2016-Datacenter",
+                            "osType": "Windows",
+                            "version": "latest"
+                        }
+                    }
+                }
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Windows Server 2012 R2 Domain Controller in custom domain",
+            "type": "Microsoft.DevTestLab/labs/formulas",
+            "name": "[concat(parameters('labName'), '/', 'DC-2012R2-CustomDomain')]",
+            "apiVersion": "2016-05-15",
+            "properties": {
+                "description": "Windows Server 2012 R2 Datacenter, promoted to DC of your custom domain. Default VM size: DS2 (2 cores, 7GB RAM)",
+                "author": "oualabadmins@microsoft.com",
+                "publisher": "MAX CPub Lab",
+                "osType": "Windows",
+                "formulaContent": {
+                    "properties": {
+                        "size": "Standard_DS2_v2",
+                        "userName": "oualabadmin",
+                        "password": "Pr0sthetic=hat",
+                        "labSubnetName": "Subnet-1",
+                        "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
+                        "disallowPublicIpAddress": true,
+                        "artifacts": [
+                            {
+                                "artifactId": "[concat(variables('repoPath'), '/artifacts/ad-newforest')]",
+                                "parameters": [
+                                    {
+                                        "name": "domainName",
+                                        "value": "<CustomDomainName>.selfhost.corp.microsoft.com"
+                                    },
+                                    {
+                                        "name": "namespace",
+                                        "value": ""
+                                    }
+                                ]
+                            },
+                            {
+                                "artifactId": "[concat(variables('repoPath'), '/artifacts/ad-newusers')]",
+                                "parameters": []
+                            }
+                        ],
+                        "galleryImageReference": {
+                            "offer": "WindowsServer",
+                            "publisher": "MicrosoftWindowsServer",
+                            "sku": "2012-R2-Datacenter",
+                            "osType": "Windows",
+                            "version": "latest"
+                        }
+                    }
+                }
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Windows Server 2008 R2 SP1 Base in custom domain",
+            "type": "Microsoft.DevTestLab/labs/formulas",
+            "name": "[concat(parameters('labName'), '/', 'Server-2008R2-CustomDomain')]",
+            "apiVersion": "2016-05-15",
+            "properties": {
+                "description": "Windows Server 2008 R2 Datacenter, joined to your custom domain. Default VM size: DS3 (4 cores, 14GB RAM)",
+                "author": "oualabadmins@microsoft.com",
+                "publisher": "MAX CPub Lab",
+                "osType": "Windows",
+                "formulaContent": {
+                    "properties": {
+                        "size": "Standard_DS3_v2",
+                        "userName": "oualabadmin",
+                        "password": "Pr0sthetic=hat",
+                        "labSubnetName": "Subnet-1",
+                        "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
+                        "disallowPublicIpAddress": true,
+                        "artifacts": [
+                            {
+                                "artifactId": "[concat(variables('repoPath'), '/artifacts/ad-privatedomain')]",
+                                "parameters": [
+                                    {
+                                        "name": "domain",
+                                        "value": "<CustomDomainName>.selfhost.corp.microsoft.com"
+                                    },
+                                    {
+                                        "name": "DCname",
+                                        "value": ""
+                                    },
+                                    {
+                                        "name": "DCIP",
+                                        "value": ""
+                                    },
+                                    {
+                                        "name": "userName",
+                                        "value": ""
+                                    },
+                                    {
+                                        "name": "password",
+                                        "value": ""
+                                    }
+                                ]
+                            }
+                        ],
+                        "galleryImageReference": {
+                            "offer": "WindowsServer",
+                            "publisher": "MicrosoftWindowsServer",
+                            "sku": "2008-R2-SP1",
+                            "osType": "Windows",
+                            "version": "latest"
+                        }
+                    }
+                }
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Windows Server 2012 R2 Base in custom domain",
+            "type": "Microsoft.DevTestLab/labs/formulas",
+            "name": "[concat(parameters('labName'), '/', 'Server-2012R2-CustomDomain')]",
+            "apiVersion": "2016-05-15",
+            "properties": {
+                "description": "Windows Server 2012 R2 Datacenter, joined to your custom domain. Default VM size: DS3 (4 cores, 14GB RAM)",
+                "author": "oualabadmins@microsoft.com",
+                "publisher": "MAX CPub Lab",
+                "osType": "Windows",
+                "formulaContent": {
+                    "properties": {
+                        "size": "Standard_DS3_v2",
+                        "userName": "oualabadmin",
+                        "password": "Pr0sthetic=hat",
+                        "labSubnetName": "Subnet-1",
+                        "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
+                        "disallowPublicIpAddress": true,
+                        "artifacts": [
+                            {
+                                "artifactId": "[concat(variables('repoPath'), '/artifacts/ad-privatedomain')]",
+                                "parameters": [
+                                    {
+                                        "name": "domain",
+                                        "value": "<CustomDomainName>.selfhost.corp.microsoft.com"
+                                    },
+                                    {
+                                        "name": "DCname",
+                                        "value": ""
+                                    },
+                                    {
+                                        "name": "DCIP",
+                                        "value": ""
+                                    },
+                                    {
+                                        "name": "userName",
+                                        "value": ""
+                                    },
+                                    {
+                                        "name": "password",
+                                        "value": ""
+                                    }
+                                ]
+                            }
+                        ],
+                        "galleryImageReference": {
+                            "offer": "WindowsServer",
+                            "publisher": "MicrosoftWindowsServer",
+                            "sku": "2012-R2-Datacenter",
+                            "osType": "Windows",
+                            "version": "latest"
+                        }
+                    }
+                }
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Windows Server 2016 Base in custom domain",
+            "type": "Microsoft.DevTestLab/labs/formulas",
+            "name": "[concat(parameters('labName'), '/', 'Server-2016-CustomDomain')]",
+            "apiVersion": "2016-05-15",
+            "properties": {
+                "description": "Windows Server 2016 Datacenter, joined to your custom domain. Default VM size: DS3 (4 cores, 14GB RAM)",
+                "author": "oualabadmins@microsoft.com",
+                "publisher": "MAX CPub Lab",
+                "osType": "Windows",
+                "formulaContent": {
+                    "properties": {
+                        "size": "Standard_DS3_v2",
+                        "userName": "oualabadmin",
+                        "password": "Pr0sthetic=hat",
+                        "labSubnetName": "Subnet-1",
+                        "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
+                        "disallowPublicIpAddress": true,
+                        "artifacts": [
+                            {
+                                "artifactId": "[concat(variables('repoPath'), '/artifacts/ad-privatedomain')]",
+                                "parameters": [
+                                    {
+                                        "name": "domain",
+                                        "value": "<CustomDomainName>.selfhost.corp.microsoft.com"
+                                    },
+                                    {
+                                        "name": "DCname",
+                                        "value": ""
+                                    },
+                                    {
+                                        "name": "DCIP",
+                                        "value": ""
+                                    },
+                                    {
+                                        "name": "userName",
+                                        "value": ""
+                                    },
+                                    {
+                                        "name": "password",
+                                        "value": ""
+                                    }
+                                ]
+                            }
+                        ],
+                        "galleryImageReference": {
+                            "offer": "WindowsServer",
+                            "publisher": "MicrosoftWindowsServer",
+                            "sku": "2016-Datacenter",
+                            "osType": "Windows",
+                            "version": "latest"
+                        }
+                    }
+                }
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Windows Server 2012 R2 with SQL 2012 SP4 in custom domain",
+            "type": "Microsoft.DevTestLab/labs/formulas",
+            "name": "[concat(parameters('labName'), '/', 'SQL-2012-CustomDomain')]",
+            "apiVersion": "2016-05-15",
+            "properties": {
+                "description": "SQL Server 2012 ENT SP4, joined to your custom domain. Default VM size: DS3 (4 cores, 14GB RAM)",
+                "author": "oualabadmins@microsoft.com",
+                "publisher": "MAX CPub Lab",
+                "osType": "Windows",
+                "formulaContent": {
+                    "properties": {
+                        "size": "Standard_DS3_v2",
+                        "userName": "oualabadmin",
+                        "password": "Pr0sthetic=hat",
+                        "labSubnetName": "Subnet-1",
+                        "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
+                        "disallowPublicIpAddress": true,
+                        "artifacts": [
+                            {
+                                "artifactId": "[concat(variables('repoPath'), '/artifacts/ad-privatedomain')]",
+                                "parameters": [
+                                    {
+                                        "name": "domain",
+                                        "value": "<CustomDomainName>.selfhost.corp.microsoft.com"
+                                    },
+                                    {
+                                        "name": "DCname",
+                                        "value": ""
+                                    },
+                                    {
+                                        "name": "DCIP",
+                                        "value": ""
+                                    },
+                                    {
+                                        "name": "userName",
+                                        "value": ""
+                                    },
+                                    {
+                                        "name": "password",
+                                        "value": ""
+                                    }
+                                ]
+                            }
+                        ],
+                        "galleryImageReference": {
+                            "offer": "SQL2012SP4-WS2012R2",
+                            "publisher": "MicrosoftSQLServer",
+                            "sku": "Enterprise",
+                            "osType": "Windows",
+                            "version": "latest"
+                        }
+                    }
+                }
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Windows Server 2012 R2 with SQL 2014 SP2 in custom domain",
+            "type": "Microsoft.DevTestLab/labs/formulas",
+            "name": "[concat(parameters('labName'), '/', 'SQL-2014-CustomDomain')]",
+            "apiVersion": "2016-05-15",
+            "properties": {
+                "description": "SQL Server 2014 ENT SP2, joined to your custom domain. Default VM size: DS3 (4 cores, 14GB RAM)",
+                "author": "oualabadmins@microsoft.com",
+                "publisher": "MAX CPub Lab",
+                "osType": "Windows",
+                "formulaContent": {
+                    "properties": {
+                        "size": "Standard_DS3_v2",
+                        "userName": "oualabadmin",
+                        "password": "Pr0sthetic=hat",
+                        "labSubnetName": "Subnet-1",
+                        "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
+                        "disallowPublicIpAddress": true,
+                        "artifacts": [
+                            {
+                                "artifactId": "[concat(variables('repoPath'), '/artifacts/ad-privatedomain')]",
+                                "parameters": [
+                                    {
+                                        "name": "domain",
+                                        "value": "<CustomDomainName>.selfhost.corp.microsoft.com"
+                                    },
+                                    {
+                                        "name": "DCname",
+                                        "value": ""
+                                    },
+                                    {
+                                        "name": "DCIP",
+                                        "value": ""
+                                    },
+                                    {
+                                        "name": "userName",
+                                        "value": ""
+                                    },
+                                    {
+                                        "name": "password",
+                                        "value": ""
+                                    }
+                                ]
+                            }
+                        ],
+                        "galleryImageReference": {
+                            "offer": "SQL2014SP2-WS2012R2",
+                            "publisher": "MicrosoftSQLServer",
+                            "sku": "Enterprise",
+                            "osType": "Windows",
+                            "version": "latest"
+                        }
+                    }
+                }
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Windows Server 2016 with SQL 2016 SP2 in custom domain",
+            "type": "Microsoft.DevTestLab/labs/formulas",
+            "name": "[concat(parameters('labName'), '/', 'SQL-2016-CustomDomain')]",
+            "apiVersion": "2016-05-15",
+            "properties": {
+                "description": "SQL Server 2016 ENT SP2, joined to your custom domain. Default VM size: DS3 (4 cores, 14GB RAM)",
+                "author": "oualabadmins@microsoft.com",
+                "publisher": "MAX CPub Lab",
+                "osType": "Windows",
+                "formulaContent": {
+                    "properties": {
+                        "size": "Standard_DS3_v2",
+                        "userName": "oualabadmin",
+                        "password": "Pr0sthetic=hat",
+                        "labSubnetName": "Subnet-1",
+                        "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
+                        "disallowPublicIpAddress": true,
+                        "artifacts": [
+                            {
+                                "artifactId": "[concat(variables('repoPath'), '/artifacts/ad-privatedomain')]",
+                                "parameters": [
+                                    {
+                                        "name": "domain",
+                                        "value": "<CustomDomainName>.selfhost.corp.microsoft.com"
+                                    },
+                                    {
+                                        "name": "DCname",
+                                        "value": ""
+                                    },
+                                    {
+                                        "name": "DCIP",
+                                        "value": ""
+                                    },
+                                    {
+                                        "name": "userName",
+                                        "value": ""
+                                    },
+                                    {
+                                        "name": "password",
+                                        "value": ""
+                                    }
+                                ]
+                            }
+                        ],
+                        "galleryImageReference": {
+                            "offer": "SQL2016SP2-WS2016",
+                            "publisher": "MicrosoftSQLServer",
+                            "sku": "Enterprise",
+                            "osType": "Windows",
+                            "version": "latest"
+                        }
+                    }
+                }
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Windows 10 in custom domain",
+            "type": "Microsoft.DevTestLab/labs/formulas",
+            "name": "[concat(parameters('labName'), '/', 'Win10-CustomDomain')]",
+            "apiVersion": "2016-05-15",
+            "properties": {
+                "description": "Windows 10 Pro x64, joined to your custom domain. Includes Chrome, Firefox, Notepad++.",
+                "author": "oualabadmins@microsoft.com",
+                "publisher": "MAX CPub Lab",
+                "osType": "Windows",
+                "formulaContent": {
+                  "properties": {
+                    "size": "Standard_DS2_v2",
+                    "userName": "oualabadmin",
+                    "password": "Pr0sthetic=hat",
+                    "labSubnetName": "Subnet-1",
+                    "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
+                    "disallowPublicIpAddress": true,
+                    "artifacts": [
+                      {
+                        "artifactId": "[concat(variables('repoPath'), '/artifacts/ad-privatedomain')]",
+                        "parameters": [
+                          {
+                            "name": "domain",
+                            "value": "<CustomDomainName>.selfhost.corp.microsoft.com"
+                          },
+                          {
+                            "name": "DCname",
+                            "value": ""
+                          },
+                          {
+                            "name": "DCIP",
+                            "value": ""
+                          },
+                          {
+                            "name": "userName",
+                            "value": ""
+                          },
+                          {
+                            "name": "password",
+                            "value": ""
+                          }
+                        ]
+                      },
+                      {
+                        "artifactId": "/artifactsources/public repo/artifacts/windows-chrome",
+                        "parameters": []
+                      },
+                      {
+                        "artifactId": "/artifactsources/public repo/artifacts/windows-firefox",
+                        "parameters": []
+                      },
+                      {
+                        "artifactId": "/artifactsources/public repo/artifacts/windows-notepadplusplus",
+                        "parameters": []
+                      }
+                    ],
+                    "galleryImageReference": {
+                      "offer": "Windows-10",
+                      "publisher": "MicrosoftWindowsDesktop",
+                      "sku": "rs4-pro",
+                      "osType": "Windows",
+                      "version": "latest"
+                    }
+                  }
+                }
+            },
+            "resources": [],
+            "dependsOn": []
+        }
+    ],
+    "outputs": {}
+}

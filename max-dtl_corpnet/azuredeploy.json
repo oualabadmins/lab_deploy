@@ -1,0 +1,185 @@
+﻿{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "labName": {
+            "type": "string"
+        },
+        "vnetName": {
+            "type": "string",
+            "allowedValues": [
+                "MAXLab-CORP-WCUS-VNET-1",
+                "MAXLab-CORP-SCUS-VNET-1",
+                "MAXLab-CORP-SCUS-VNET-2"
+            ]
+        },
+        "maxAllowedVmsPerUser": {
+            "type": "string",
+            "defaultValue": "10"
+        },
+        "roleAssignmentGUID": {
+            "type": "string",
+            "defaultValue": "Use https://guidgenerator.com/ to create a new unique GUID",
+            "metadata": {
+                "description": "Generate a new unique GUID for the Test Lab Users group role assignment, and enter it here."
+            }
+        },
+        "domainUsername": {
+            "type": "string"
+        },
+        "domainPassword": {
+            "type": "securestring"
+        },
+        "CreatedBy": {
+            "type": "string"
+        },
+        "deploymentReason": {
+            "type": "string"
+        },
+        "ExpiresOn": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "sourceRepoUri": "https://raw.githubusercontent.com/oualabadmins/lab_deploy/max-dtl_corpnet",
+        "artifactRepositoryName": "[concat('Repo-', uniqueString(subscription().subscriptionId))]",
+        "VnetResourceGroup": "ERNetwork",
+        "subnetName": "Subnet-1",
+        "subnetRef": "[concat(variables('VnetPath'),'/subnets/', variables('subnetName'))]",
+        "VnetPath": "[resourceId(variables('VnetResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
+        "dtlRoleAssignmentId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/41852a03-90d1-4aaa-89fd-0cbb3b29a8b6')]",
+        "dtlRoleAssignmentPrincipalGuid": "d7117f3b-89d8-43ee-9c9b-cea51916f146",
+        "fullDevTestLabUserRoleName": "[concat(parameters('labName'), '/Microsoft.Authorization/', parameters('roleAssignmentGuid'))]",
+        "roleScope": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.DevTestLab/labs/', parameters('labName'))]",
+        "artifactRepositoryDisplayName": "MAX Lab Artifacts Library",
+        "artifactRepoUri": "https://raw.githubusercontent.com/oualabadmins/lab_deploy_dev.git/",
+        "artifactRepoBranch": "master",
+        "artifactRepoFolder": "/artifacts/",
+        "artifactRepoType": "GitHub",
+        "artifactRepoSecurityToken": "4ceb47b85cd0597f990674c876edcdf1a9da8628"
+    },
+    "resources": [
+        {
+            "apiVersion": "2016-05-15",
+            "type": "Microsoft.DevTestLab/labs",
+            "name": "[parameters('labName')]",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "CreatedBy": "[parameters('CreatedBy')]",
+                "deploymentReason": "[parameters('deploymentReason')]",
+                "ExpiresOn": "[parameters('ExpiresOn')]"
+            },
+            "properties": {},
+            "resources": [
+                {
+                    "apiVersion": "2016-05-15",
+                    "name": "[variables('artifactRepositoryName')]",
+                    "type": "artifactsources",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.DevTestLab/labs', parameters('labName'))]"
+                    ],
+                    "properties": {
+                        "uri": "[variables('artifactRepoUri')]",
+                        "folderPath": "[variables('artifactRepoFolder')]",
+                        "branchRef": "[variables('artifactRepoBranch')]",
+                        "displayName": "[variables('artifactRepositoryDisplayName')]",
+                        "securityToken": "[variables('artifactRepoSecurityToken')]",
+                        "sourceType": "[variables('artifactRepoType')]",
+                        "status": "Enabled",
+                        "labStorageType": "Premium"
+                    }
+                },
+                {
+                    "apiVersion": "2016-05-15",
+                    "name": "default/MaxVmsAllowedPerUser",
+                    "type": "policySets/policies",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.DevTestLab/labs', parameters('LabName'))]"
+                    ],
+                    "properties": {
+                        "description": "",
+                        "factName": "UserOwnedLabVmCount",
+                        "threshold": "[string(parameters('maxAllowedVmsPerUser'))]",
+                        "evaluatorType": "MaxValuePolicy",
+                        "status": "Enabled"
+                    }
+                },
+                {
+                    "apiVersion": "2016-05-15",
+                    "name": "[parameters('vnetName')]",
+                    "type": "virtualnetworks",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.DevTestLab/labs', parameters('labName'))]"
+                    ],
+                    "properties": {
+                        "description": "Existing ER virtual network",
+                        "externalProviderResourceId": "[variables('VnetPath')]",
+                        "subnetOverrides": [
+                            {
+                                "name": "Subnet-1",
+                                "resourceId": "[variables('subnetRef')]",
+                                "useInVmCreationPermission": "Allow",
+                                "usePublicIpAddressPermission": "Deny"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "apiVersion": "2016-07-01",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "name": "[variables('fullDevTestLabUserRoleName')]",
+            "properties": {
+                "roleDefinitionId": "[variables('dtlRoleAssignmentId')]",
+                "principalId": "[variables('dtlRoleAssignmentPrincipalGuid')]",
+                "scope": "[variables('roleScope')]"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.DevTestLab/labs', parameters('labName'))]"
+            ]
+        },
+        {
+            "name": "Formulas",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2015-01-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.DevTestLab/labs', parameters('labName'))]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('sourceRepoUri'),'/','Formulas','/','formulas.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "labName": {
+                        "value": "[parameters('labName')]"
+                    },
+                    "vnetName": {
+                        "value": "[parameters('vnetName')]"
+                    },
+                    "repoName": {
+                        "value": "[variables('artifactRepositoryName')]"
+                    },
+                    "domainUsername": {
+                        "value": "[parameters('domainUsername')]"
+                    },
+                    "domainPassword": {
+                        "value": "[parameters('domainPassword')]"
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "labId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.DevTestLab/labs', parameters('labName'))]"
+        },
+        "artifactSourceId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.DevTestLab/labs/artifactSources', parameters('labName'), variables('artifactRepositoryName'))]"
+        }
+    }
+}
