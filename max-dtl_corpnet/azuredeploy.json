@@ -41,11 +41,11 @@
         "subnetRef": "[concat(variables('VnetPath'),'/subnets/', variables('subnetName'))]",
         "VnetPath": "[resourceId(variables('VnetResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
         "artifactRepositoryDisplayName": "MAX Lab Artifacts Library",
-        "artifactRepoUri": "https://raw.githubusercontent.com/oualabadmins/lab_deploy_dev.git/",
+        "artifactRepoUri": "https://github.com/oualabadmins/lab_deploy_dev.git",
         "artifactRepoBranch": "master",
         "artifactRepoFolder": "artifacts",
         "artifactRepoType": "GitHub",
-        "artifactRepoSecurityToken": "4ceb47b85cd0597f990674c876edcdf1a9da8628"
+        "artifactRepoSecurityToken": "e59bb0d4b074b03c671df6ef60be33f9e8f36df8"
     },
     "resources": [
         {
@@ -74,8 +74,7 @@
                         "displayName": "[variables('artifactRepositoryDisplayName')]",
                         "securityToken": "[variables('artifactRepoSecurityToken')]",
                         "sourceType": "[variables('artifactRepoType')]",
-                        "status": "Enabled",
-                        "labStorageType": "Premium"
+                        "status": "Enabled"
                     }
                 },
                 {
