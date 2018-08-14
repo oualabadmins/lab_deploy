@@ -1,7 +1,6 @@
 ﻿{
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "apiProfile": "2017-03-09-profile",
     "parameters": {
         "labName": {
             "type": "string"
@@ -35,7 +34,6 @@
         }
     },
     "variables": {
-        "apiVersion": "2018-07-01",
         "sourceRepoUri": "https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/max-dtl_corpnet",
         "artifactRepositoryName": "[concat('Repo-', uniqueString(subscription().subscriptionId))]",
         "VnetResourceGroup": "ERNetwork",
@@ -51,6 +49,7 @@
     },
     "resources": [
         {
+            "apiVersion": "2016-05-15",
             "type": "Microsoft.DevTestLab/labs",
             "name": "[parameters('labName')]",
             "location": "[resourceGroup().location]",
@@ -62,6 +61,7 @@
             "properties": {},
             "resources": [
                 {
+                    "apiVersion": "2016-05-15",
                     "name": "[variables('artifactRepositoryName')]",
                     "type": "artifactsources",
                     "dependsOn": [
@@ -79,6 +79,7 @@
                     }
                 },
                 {
+                    "apiVersion": "2016-05-15",
                     "name": "default/MaxVmsAllowedPerUser",
                     "type": "policySets/policies",
                     "dependsOn": [
@@ -93,6 +94,7 @@
                     }
                 },
                 {
+                    "apiVersion": "2016-05-15",
                     "name": "[parameters('vnetName')]",
                     "type": "virtualnetworks",
                     "dependsOn": [
@@ -116,6 +118,7 @@
         {
             "name": "Formulas",
             "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2015-01-01",
             "dependsOn": [
                 "[resourceId('Microsoft.DevTestLab/labs', parameters('labName'))]"
             ],
