@@ -11,26 +11,44 @@
                 "MAXLab-CORP-WCUS-VNET-1",
                 "MAXLab-CORP-SCUS-VNET-1",
                 "MAXLab-CORP-SCUS-VNET-2"
-            ]
+            ],
+            "metadata": {
+                "description": "Make sure the VNET exists in the subscription/region of the deployment."
+            }
         },
         "maxAllowedVmsPerUser": {
             "type": "string",
             "defaultValue": "10"
         },
         "domainUsername": {
-            "type": "string"
+            "type": "string",
+            "metadata": {
+                "description": "Corpnet username with rights to join machines to the domain."
+            }
         },
         "domainPassword": {
             "type": "securestring"
+        },
+        "RbacUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "User to add to the resource group Owner role, i.e. alias@microsoft.com."
+            }
         },
         "CreatedBy": {
             "type": "string"
         },
         "deploymentReason": {
-            "type": "string"
+            "type": "string",
+            "metadata": {
+                "description": "Test or Production."
+            }
         },
         "ExpiresOn": {
-            "type": "string"
+            "type": "string",
+            "metadata": {
+                "description": "Expiration date."
+            }
         },
         "artifactRepoPAT": {
             "type": "string",
@@ -95,6 +113,7 @@
                         "armTemplateFolderPath": "/",
                         "branchRef": "[variables('artifactRepoBranch')]",
                         "displayName": "[concat(variables('artifactRepositoryName'),' - ARM Templates')]",
+                        "securityToken": "[variables('artifactRepoSecurityToken')]",
                         "sourceType": "[variables('artifactRepoType')]",
                         "status": "Enabled"
                     }
