@@ -69,7 +69,8 @@
         "artifactRepoBranch": "master",
         "artifactRepoFolder": "artifacts",
         "artifactRepoType": "GitHub",
-        "artifactRepoSecurityToken": "[parameters('artifactRepoPAT')]"
+        "artifactRepoSecurityToken": "[parameters('artifactRepoPAT')]",
+        "UniqueStringForGuid": "[uniqueString(deployment().name)]"
     },
     "resources": [
         {
@@ -185,6 +186,16 @@
                         "value": "[parameters('domainPassword')]"
                     }
                 }
+            }
+        },
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2014-10-01-preview",
+            "name": "[guid(parameters('labName'),variables('UniqueStringForGuid'))]",
+            "properties": {
+              "roleDefinitionId": "Owner",
+              "principalId": "[parameters('RbacUsername')]",
+              "scope": "[resourceGroup().id]"
             }
         }
     ],
