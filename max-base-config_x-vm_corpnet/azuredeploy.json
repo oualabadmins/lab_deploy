@@ -9,6 +9,13 @@
       },
       "defaultValue": ""
     },
+    "sharepointFarmName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the Sharepoint farm"
+      },
+      "defaultValue": "spfarm"
+    },
     "domainName": {
       "type": "string",
       "metadata": {
@@ -65,11 +72,77 @@
         "2016","2013"
       ],
       "defaultValue": "2016"
-    },
-    "vmSizeServer": {
+    },    
+    "sqlServerServiceAccountUserName": {
       "type": "string",
       "metadata": {
-        "description": "Select a VM size for all server VMs in your deployment."
+        "description": "The SQL Server Service account name"
+      },
+      "defaultValue": "sqlservice"
+    },
+    "sqlServerServiceAccountPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The SQL Server Service account password"
+      }
+    },
+    "sharePointSetupUserAccountUserName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Sharepoint Setup account name"
+      },
+      "defaultValue": "sp_setup"
+    },
+    "sharePointSetupUserAccountPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The Sharepoint Setup account password"
+      }
+    },
+    "sharePointFarmAccountUserName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Sharepoint Farm account name"
+      },
+      "defaultValue": "sp_farm"
+    },
+    "sharePointFarmAccountPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The Sharepoint Farm account password"
+      }
+    },
+    "sharePointFarmPassphrasePassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The Sharepoint Farm Passphrase"
+      }
+    },
+    "spSiteTemplateName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Sharepoint Content Site Template Name"
+      },
+      "defaultValue": "STS#0"
+    },
+    "vmSizeSharePointServer": {
+      "type": "string",
+      "metadata": {
+        "description": "Select a VM size for all SharePoint Server VMs in your deployment."
+      },
+      "defaultValue": "Standard_DS4_v2"
+    },
+    "vmSizeSqlServer": {
+      "type": "string",
+      "metadata": {
+        "description": "Select a VM size for all SQL Server VMs in your deployment."
+      },
+      "defaultValue": "Standard_DS4_v2"
+    },
+    "vmSizeAppServer": {
+      "type": "string",
+      "metadata": {
+        "description": "Select a VM size for all app server VMs in your deployment."
       },
       "defaultValue": "Standard_DS4_v2"
     },
@@ -153,7 +226,9 @@
 
     "SharedVmConfig": {
       "location": "[resourceGroup().location]",
-      "vmSize": "[parameters('vmSizeServer')]",
+      "vmSizeSp": "[parameters('vmSizeSharePointServer')]",
+      "vmSizeSql": "[parameters('vmSizeSqlServer')]",
+      "vmSizeApp": "[parameters('vmSizeAppServer')]",
       "vmSizeClient": "[parameters('vmSizeClient')]",
       "serverOS": "[parameters('serverOS')]",
       "domainUsername": "[variables('domainUsername')]",
@@ -270,10 +345,49 @@
             "value": "[parameters('configName')]" 
           },
           "tier": {
-            "value": "APP"
+            "value": "SP"
           },
           "count": {
             "value": "[parameters('numberOfSharePointVms')]"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "vnetName": {
+            "value": "[variables('regionSettings').vnetName]"
+          },
+          "domainName": {
+            "value": "[parameters('domainName')]"
+          },
+          "dcIp": {
+            "value": "[reference(concat(parameters('configName'),'-AD_NIC_DEPLOY')).outputs.nicip.value]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('configName'),'-SQL_NIC_DEPLOY')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "This is the deployment resource for SQL NICs.",
+      "dependsOn": [
+        "[concat(parameters('configName'),'-AD_NIC_DEPLOY')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/nic.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "SQL"
+          },
+          "count": {
+            "value": "1"
           },
           "ipAllocation": {
             "value": "Dynamic"
@@ -387,6 +501,36 @@
           },
           "configurationFunction": {
             "value": "[variables('VMs').appConfigurationFunction]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('configName'),'-SQL_DEPLOY')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "This is the deployment resource for the SQL VM.",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/',parameters('configName'),'-ADDC_DEPLOY')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/sql.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "SharedVmConfig": { 
+            "value": "[variables('SharedVmConfig')]" 
+          },
+          "count": {
+            "value": "1"
+          },
+          "modulesURL": {
+            "value": "[variables('assetLocation')]"
+          },
+          "configurationFunction": {
+            "value": "[variables('VMs').sqlConfigurationFunction]"
           }
         }
       }
