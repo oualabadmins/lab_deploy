@@ -25,6 +25,12 @@ The **MAXLAB DTL (DevTest Lab) - Corpnet** provisions a DevTest lab with formula
 
 Click the "Deploy to Azure" button to open the deployment UI in the Azure portal.
 
+To get the User ID for the _RbacUser_ field, run the following cmdlet in an elevated PowerShell console:
+
+```powershell
+Get-AzureRmADUser -UserPrincipalName <alias>@microsoft.com | select Id
+```
+
 ## Solution overview and deployed resources
 
 The following resources are deployed as part of the solution:

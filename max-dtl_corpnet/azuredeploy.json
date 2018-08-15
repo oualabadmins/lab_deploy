@@ -32,7 +32,7 @@
         "RbacUsername": {
             "type": "string",
             "metadata": {
-                "description": "User to add to the resource group Owner role, i.e. alias@microsoft.com."
+                "description": "User ID to add to the resource group Owner role. See README for information."
             }
         },
         "CreatedBy": {
