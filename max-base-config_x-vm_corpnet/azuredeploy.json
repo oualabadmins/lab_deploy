@@ -38,15 +38,11 @@
         "description": "The administrator account password."
       }
     },
-    "deployClientVm": {
-      "type": "string",
-      "allowedValues": [
-        "No", "Yes"
-      ],
+    "numberOfClientVms": {
+      "type": "int",
       "metadata": {
-        "description": "Choose 'No' to deploy no client VM, or 'Yes' if you want to deploy a client VM from a custom generalized VHD that you have uploaded to an accessible storage account."
-      },
-      "defaultValue": "Yes"
+        "description": "The number of client VMs to deploy."
+      }
     },
     "numberOfAppVms": {
       "type": "int",
@@ -54,11 +50,21 @@
         "description": "The number of app server VMs to deploy."
       }
     },
-    "numberOfClientVms": {
+    "numberOfSharePointVms": {
       "type": "int",
       "metadata": {
-        "description": "The number of client VMs to deploy."
+        "description": "The number of SharePoint Server VMs to deploy."
       }
+    },    
+    "SharePointVersion": {
+      "type": "int",
+      "metadata": {
+        "description": "The SharePoint Server version."
+      },
+      "allowedValues": [
+        "2016","2013"
+      ],
+      "defaultValue": "2016"
     },
     "vmSizeServer": {
       "type": "string",
@@ -97,10 +103,11 @@
     "assetLocation": "[concat(parameters('_artifactsLocation'),'/DSC')]",
     "templates": "[concat(parameters('_artifactsLocation'),'/nested')]",
     "storageAccountName": "[concat(uniqueString(resourceGroup().id),'storage')]",
-    "nsgName": "[concat(parameters('configName'),'-NSG')]",
 
     "subID": "[subscription().subscriptionId]",
     "location": "[resourceGroup().location]",
+
+    "deployClientVM": "Yes",
 
     "regionSettings": "[variables(concat(variables('subID'),'-',variables('location')))]",
 
@@ -140,7 +147,8 @@
       "adConfigurationFunction": {
         "CreateADPDC": "CreateADPDC.ps1\\CreateADPDC"
       },
-      "appConfigurationFunction": "AppConfig.ps1\\AppConfig"
+      "appConfigurationFunction": "AppConfig.ps1\\AppConfig",
+      "spConfigurationFunction": "SpConfig.ps1\\SpConfig"
     },
 
     "SharedVmConfig": {
@@ -244,10 +252,49 @@
       }
     },
     {
+      "name": "[concat(parameters('configName'),'-SP_NIC_DEPLOY')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "This is the deployment resource for SP NICs.",
+      "dependsOn": [
+        "[concat(parameters('configName'),'-AD_NIC_DEPLOY')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/nic.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "APP"
+          },
+          "count": {
+            "value": "[parameters('numberOfSharePointVms')]"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "vnetName": {
+            "value": "[variables('regionSettings').vnetName]"
+          },
+          "domainName": {
+            "value": "[parameters('domainName')]"
+          },
+          "dcIp": {
+            "value": "[reference(concat(parameters('configName'),'-AD_NIC_DEPLOY')).outputs.nicip.value]"
+          }
+        }
+      }
+    },
+    {
       "name": "[concat(parameters('configName'),'-CLIENT_NIC_DEPLOY')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
-      "condition": "[equals(parameters('deployClientVm'),'Yes')]",
+      "condition": "[equals(variables('deployClientVm'),'Yes')]",
       "comments": "This is the deployment resource for CLIENT NICs.",
       "dependsOn": [
         "[concat(parameters('configName'),'-AD_NIC_DEPLOY')]"
@@ -345,8 +392,41 @@
       }
     },
     {
+      "name": "[concat(parameters('configName'),'-SP_DEPLOY')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "This is the deployment resource for the SharePoint Server VM.",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/',parameters('configName'),'-ADDC_DEPLOY')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/sharepoint.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "SharedVmConfig": { 
+            "value": "[variables('SharedVmConfig')]" 
+          },
+          "count": {
+            "value": "[parameters('numberOfSharePointVms')]"
+          },
+          "modulesURL": {
+            "value": "[variables('assetLocation')]"
+          },
+          "configurationFunction": {
+            "value": "[variables('VMs').spConfigurationFunction]"
+          },
+          "spVersion": {
+            "value": "[parameters('SharePointVersion')]"
+          }
+        }
+      }
+    },
+    {
       "name": "[concat(parameters('configName'),'-CLIENT_DEPLOY')]",
-      "condition": "[equals(parameters('deployClientVm'),'Yes')]",
+      "condition": "[equals(variables('deployClientVm'),'Yes')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for client VMs.",
