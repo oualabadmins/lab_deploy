@@ -29,7 +29,7 @@
         "domainPassword": {
             "type": "securestring"
         },
-        "RbacUsername": {
+        "RbacUserID": {
             "type": "string",
             "metadata": {
                 "description": "User ID to add to the resource group Owner role. See README for information."
@@ -70,7 +70,8 @@
         "artifactRepoFolder": "artifacts",
         "artifactRepoType": "GitHub",
         "artifactRepoSecurityToken": "[parameters('artifactRepoPAT')]",
-        "UniqueStringForGuid": "[uniqueString(deployment().name)]"
+        "UniqueStringForGuid": "[uniqueString(deployment().name)]",
+        "Owner": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '8e3af657-a8ff-443c-a75c-2fe8c4bcb635')]"
     },
     "resources": [
         {
@@ -111,7 +112,7 @@
                     ],
                     "properties": {
                         "uri": "https://github.com/oualabadmins/lab_deploy_dev.git",
-                        "armTemplateFolderPath": "/",
+                        "armTemplateFolderPath": "//",
                         "branchRef": "[variables('artifactRepoBranch')]",
                         "displayName": "[concat(variables('artifactRepositoryName'),' - ARM Templates')]",
                         "securityToken": "[variables('artifactRepoSecurityToken')]",
@@ -193,8 +194,8 @@
             "apiVersion": "2014-10-01-preview",
             "name": "[guid(parameters('labName'),variables('UniqueStringForGuid'))]",
             "properties": {
-              "roleDefinitionId": "Owner",
-              "principalId": "[parameters('RbacUsername')]",
+              "roleDefinitionId": "[variables('Owner')]",
+              "principalId": "[parameters('RbacUserID')]",
               "scope": "[resourceGroup().id]"
             }
         }
