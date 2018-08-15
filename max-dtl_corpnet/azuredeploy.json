@@ -64,8 +64,9 @@
         "subnetName": "Subnet-1",
         "subnetRef": "[concat(variables('VnetPath'),'/subnets/', variables('subnetName'))]",
         "VnetPath": "[resourceId(variables('VnetResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
-        "artifactRepositoryDisplayName": "MAX Lab Artifacts Library",
+        "artifactRepositoryDisplayName": "MAX Skunkworks - ",
         "artifactRepoUri": "https://github.com/oualabadmins/lab_deploy_dev.git",
+
         "artifactRepoBranch": "master",
         "artifactRepoFolder": "artifacts",
         "artifactRepoType": "GitHub",
@@ -88,7 +89,7 @@
             "resources": [
                 {
                     "apiVersion": "2016-05-15",
-                    "name": "[variables('artifactRepositoryName')]",
+                    "name": "[concat(variables('artifactRepositoryName'),'-Artifacts')]",
                     "type": "artifactsources",
                     "dependsOn": [
                         "[resourceId('Microsoft.DevTestLab/labs', parameters('labName'))]"
@@ -97,7 +98,7 @@
                         "uri": "[variables('artifactRepoUri')]",
                         "folderPath": "[variables('artifactRepoFolder')]",
                         "branchRef": "[variables('artifactRepoBranch')]",
-                        "displayName": "[variables('artifactRepositoryDisplayName')]",
+                        "displayName": "[concat(variables('artifactRepositoryDisplayName'),'Artifacts')]",
                         "securityToken": "[variables('artifactRepoSecurityToken')]",
                         "sourceType": "[variables('artifactRepoType')]",
                         "status": "Enabled"
@@ -105,7 +106,7 @@
                 },
                 {
                     "apiVersion": "2016-05-15",
-                    "name": "[concat(variables('artifactRepositoryName'),' - ARM Templates')]",
+                    "name": "[concat(variables('artifactRepositoryName'),'-Templates')]",
                     "type": "artifactsources",
                     "dependsOn": [
                         "[resourceId('Microsoft.DevTestLab/labs', parameters('labName'))]"
@@ -114,7 +115,7 @@
                         "uri": "https://github.com/oualabadmins/lab_deploy.git",
                         "armTemplateFolderPath": "/",
                         "branchRef": "[variables('artifactRepoBranch')]",
-                        "displayName": "[concat(variables('artifactRepositoryDisplayName'),' - ARM Templates')]",
+                        "displayName": "[concat(variables('artifactRepositoryDisplayName'),'ARM Templates')]",
                         "securityToken": "[variables('artifactRepoSecurityToken')]",
                         "sourceType": "[variables('artifactRepoType')]",
                         "status": "Enabled"
