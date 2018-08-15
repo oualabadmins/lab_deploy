@@ -114,7 +114,7 @@
                         "uri": "https://github.com/oualabadmins/lab_deploy.git",
                         "armTemplateFolderPath": "/",
                         "branchRef": "[variables('artifactRepoBranch')]",
-                        "displayName": "[concat(variables('artifactRepositoryName'),' - ARM Templates')]",
+                        "displayName": "[concat(variables('artifactRepositoryDisplayName'),' - ARM Templates')]",
                         "securityToken": "[variables('artifactRepoSecurityToken')]",
                         "sourceType": "[variables('artifactRepoType')]",
                         "status": "Enabled"
