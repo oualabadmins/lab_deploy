@@ -29,7 +29,10 @@ Click the "Deploy to Azure" button to open the deployment UI in the Azure portal
 
 The following resources are deployed as part of the solution:
 
-+ **DevTest Lab** with the essential library of MAX Skunkworks formulas and artifacts.
++ **DevTest lab** with the essential library of MAX Skunkworks formulas and artifacts.
++ **Key vault**
++ **Storage account**
++ **User role assignment** that adds the user you specify in the **RbacUsername** parameter to the _Owners_ role of the resource group.
 
 ## Solution notes
 
