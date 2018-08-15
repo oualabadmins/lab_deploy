@@ -111,8 +111,8 @@
                         "[resourceId('Microsoft.DevTestLab/labs', parameters('labName'))]"
                     ],
                     "properties": {
-                        "uri": "https://github.com/oualabadmins/lab_deploy_dev.git",
-                        "armTemplateFolderPath": "//",
+                        "uri": "https://github.com/oualabadmins/lab_deploy.git",
+                        "armTemplateFolderPath": "/",
                         "branchRef": "[variables('artifactRepoBranch')]",
                         "displayName": "[concat(variables('artifactRepositoryName'),' - ARM Templates')]",
                         "securityToken": "[variables('artifactRepoSecurityToken')]",
