@@ -85,7 +85,9 @@
                 "deploymentReason": "[parameters('deploymentReason')]",
                 "ExpiresOn": "[parameters('ExpiresOn')]"
             },
-            "properties": {},
+            "properties": {
+                "labStorageType": "Premium"
+            },
             "resources": [
                 {
                     "apiVersion": "2016-05-15",
