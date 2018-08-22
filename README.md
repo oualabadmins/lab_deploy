@@ -20,4 +20,4 @@ https://github.com/maxskunkworks
 
 ![alt text](https://github.com/oualabadmins/lab_deploy/blob/master/common/images/maxskunkworkslogo-small.jpg "MAX Skunkworks")
 
-Last update: _8/9/2018_
+Last update: _8/22/2018_
