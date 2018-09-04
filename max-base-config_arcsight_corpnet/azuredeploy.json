@@ -9,13 +9,6 @@
       },
       "defaultValue": ""
     },
-    "domainName": {
-      "type": "string",
-      "metadata": {
-        "description": "The FQDN of the new AD domain."
-      },
-      "defaultValue": "corp.contoso.com"
-    },
     "serverOS": {
       "type": "string",
       "allowedValues": [
@@ -77,14 +70,14 @@
     "_artifactsLocation": {
       "type": "string",
       "metadata": {
-        "description": "Auto-generated container in staging storage account to receive post-build staging folder upload."
+        "description": "Container where template files and resources are stored."
       },
-      "defaultValue": "https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/max-base-config_x-vm_corpnet"
+      "defaultValue": "https://raw.githubusercontent.com/oualabadmins/lab_deploy/base-config-arcsight-siem/max-base-config_arcsight_corpnet"
     },
     "_artifactsLocationSasToken": {
       "type": "securestring",
       "metadata": {
-        "description": "Auto-generated token to access _artifactsLocation."
+        "description": "Token to access _artifactsLocation, if necessary."
       },
       "defaultValue": ""
     }
@@ -92,8 +85,6 @@
 
   "variables": {
 
-    "shortDomainName": "[first(split(parameters('domainName'),'.'))]",
-    "domainUserName": "[concat(variables('shortDomainName'),'\\',parameters('adminUsername'))]",
     "assetLocation": "[concat(parameters('_artifactsLocation'),'/DSC')]",
     "templates": "[concat(parameters('_artifactsLocation'),'/nested')]",
     "storageAccountName": "[concat(uniqueString(resourceGroup().id),'storage')]",
@@ -143,12 +134,10 @@
       "vmSize": "[parameters('vmSizeServer')]",
       "vmSizeClient": "[parameters('vmSizeClient')]",
       "serverOS": "[parameters('serverOS')]",
-      "domainUsername": "[variables('domainUsername')]",
       "adminUsername": "[parameters('adminUsername')]",
       "adminPassword": "[parameters('adminPassword')]",
       "storageAccountNamePrefix": "[variables('storageAccountName')]",
       "sasToken": "[parameters('_artifactsLocationSasToken')]",
-      "domainName": "[parameters('domainName')]",
       "configName": "[parameters('configName')]",
       "backendSubnet": "[concat(variables('regionSettings').vnetName, '/Subnet-',parameters('configName'))]"
     }
