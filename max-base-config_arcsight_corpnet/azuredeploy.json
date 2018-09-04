@@ -320,12 +320,6 @@
           },
           "count": {
             "value": "[parameters('numberOfSIEMVms')]"
-          },
-          "modulesURL": {
-            "value": "[variables('assetLocation')]"
-          },
-          "configurationFunction": {
-            "value": "[variables('VMs').SIEMConfigurationFunction]"
           }
         }
       }
