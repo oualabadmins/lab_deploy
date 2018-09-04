@@ -182,7 +182,7 @@
             "value": "[parameters('configName')]" 
           },
           "tier": {
-            "value": "APP"
+            "value": "SIEM"
           },
           "count": {
             "value": "[parameters('numberOfSIEMVms')]"
@@ -214,7 +214,7 @@
             "value": "[parameters('configName')]" 
           },
           "tier": {
-            "value": "APP"
+            "value": "SIEM"
           },
           "count": {
             "value": "[parameters('numberOfSIEMVms')]"
