@@ -1,0 +1,372 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "configName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the deployment, i.e. BaseConfig01. Do not use spaces or special characters other than _ or -. Used to concatenate resource names for the deployment."
+      },
+      "defaultValue": ""
+    },
+    "domainName": {
+      "type": "string",
+      "metadata": {
+        "description": "The FQDN of the new AD domain."
+      },
+      "defaultValue": "corp.contoso.com"
+    },
+    "serverOS": {
+      "type": "string",
+      "allowedValues": [
+        "CentOS"
+      ],
+      "metadata": {
+        "description": "CentOS only for this template."
+      },
+      "defaultValue": "CentOS"
+    },
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the domain administrator account to create, i.e. globaladmin. This will also be used to create a local admin account on each VMs."
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The administrator account password."
+      }
+    },
+    "deployClientVm": {
+      "type": "string",
+      "allowedValues": [
+        "No", "Yes"
+      ],
+      "metadata": {
+        "description": "Choose 'No' to deploy no client VM, or 'Yes' if you want to deploy a client VM from a custom generalized VHD that you have uploaded to an accessible storage account."
+      },
+      "defaultValue": "Yes"
+    },
+    "numberOfSIEMVms": {
+      "type": "int",
+      "metadata": {
+        "description": "The number of SIEM VMs to deploy."
+      }
+    },
+    "numberOfClientVms": {
+      "type": "int",
+      "metadata": {
+        "description": "The number of client VMs to deploy."
+      }
+    },
+    "vmSizeServer": {
+      "type": "string",
+      "metadata": {
+        "description": "Select a VM size for all server VMs in your deployment."
+      },
+      "defaultValue": "Standard_DS4_v2"
+    },
+    "vmSizeClient": {
+      "type": "string",
+      "metadata": {
+        "description": "Select a VM size for all Windows 10 client VMs in your deployment."
+      },
+      "defaultValue": "Standard_DS4_v2"
+    },
+    "_artifactsLocation": {
+      "type": "string",
+      "metadata": {
+        "description": "Auto-generated container in staging storage account to receive post-build staging folder upload."
+      },
+      "defaultValue": "https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/max-base-config_x-vm_corpnet"
+    },
+    "_artifactsLocationSasToken": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Auto-generated token to access _artifactsLocation."
+      },
+      "defaultValue": ""
+    }
+  },
+
+  "variables": {
+
+    "shortDomainName": "[first(split(parameters('domainName'),'.'))]",
+    "domainUserName": "[concat(variables('shortDomainName'),'\\',parameters('adminUsername'))]",
+    "assetLocation": "[concat(parameters('_artifactsLocation'),'/DSC')]",
+    "templates": "[concat(parameters('_artifactsLocation'),'/nested')]",
+    "storageAccountName": "[concat(uniqueString(resourceGroup().id),'storage')]",
+
+    "subID": "[subscription().subscriptionId]",
+    "location": "[resourceGroup().location]",
+
+    "regionSettings": "[variables(concat(variables('subID'),'-',variables('location')))]",
+
+    "5555afd9-779e-4741-97eb-f96bccf2d2e1-westus": {
+      "subscriptionName": "MAXLAB R&D Primary",
+      "vnetName": "MAXLab-CORP-USW-VNET-1",
+      "vnetSubnet": "10.138.39.128/25"
+    },
+    "06ce3096-6a26-4cb9-a1fd-f6dfa0663709-westus2": {
+      "subscriptionName": "MAXLAB R&D INT 1",
+      "vnetName": "MAXLab-CORP-WUS2-VNET-2",
+      "vnetSubnet": "10.158.21.128/25"
+    },
+    "06ce3096-6a26-4cb9-a1fd-f6dfa0663709-westcentralus": {
+      "subscriptionName": "MAXLAB R&D INT 1",
+      "vnetName": "maxlab-CORP-WCUS-VNET-1",
+      "vnetSubnet": "10.169.5.0/25"
+    },
+    "1166d0b0-8fa1-4250-ac09-d3eb50ea9a6a-westus2": {
+      "subscriptionName": "MAXLAB R&D INT 2",
+      "vnetName": "MAXLab-CORP-WUS2-VNET-1",
+      "vnetSubnet": "10.158.78.128/25"
+    },
+    "38c5a697-bc6f-48e5-8bfa-2079c444fd25-westcentralus": {
+      "subscriptionName": "MAXLAB R&D Self Service",
+      "vnetName": "MAXLab-CORP-WCUS-VNET-1",
+      "vnetSubnet": "10.169.5.128/25"
+    },
+    "38c5a697-bc6f-48e5-8bfa-2079c444fd25-southcentralus": {
+      "subscriptionName": "MAXLAB R&D Self Service",
+      "vnetName": "MAXLab-CORP-SCUS-VNET-1",
+      "vnetSubnet": "10.139.141.0/25"
+    },
+
+    "VMs": {
+      "SIEMConfigurationFunction": "SIEMConfig.ps1\\SIEMConfig"
+    },
+
+    "SharedVmConfig": {
+      "location": "[resourceGroup().location]",
+      "vmSize": "[parameters('vmSizeServer')]",
+      "vmSizeClient": "[parameters('vmSizeClient')]",
+      "serverOS": "[parameters('serverOS')]",
+      "domainUsername": "[variables('domainUsername')]",
+      "adminUsername": "[parameters('adminUsername')]",
+      "adminPassword": "[parameters('adminPassword')]",
+      "storageAccountNamePrefix": "[variables('storageAccountName')]",
+      "sasToken": "[parameters('_artifactsLocationSasToken')]",
+      "domainName": "[parameters('domainName')]",
+      "configName": "[parameters('configName')]",
+      "backendSubnet": "[concat(variables('regionSettings').vnetName, '/Subnet-',parameters('configName'))]"
+    }
+  },
+
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[variables('storageAccountName')]",
+      "apiVersion": "2017-06-01",
+      "location": "[resourceGroup().location]",
+      "kind": "Storage",
+      "comments": "This storage account contains VHDs for client VMs in the deployment.",
+      "sku": {
+        "name": "Standard_LRS"
+      }
+    },
+    {
+      "apiVersion": "2016-06-01",
+      "type": "Microsoft.Network/virtualNetworks/subnets",
+      "name": "[concat(variables('regionSettings').vnetName, '/Subnet-',parameters('configName'))]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "addressPrefix": "10.100.170.0/28"
+      }
+    },
+    {
+      "name": "[concat(parameters('configName'),'-SIEM_NIC_DEPLOY')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "This is the deployment resource for SIEM NICs.",
+      "dependsOn": [
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/nic.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "APP"
+          },
+          "count": {
+            "value": "[parameters('numberOfSIEMVms')]"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "vnetName": {
+            "value": "[variables('regionSettings').vnetName]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('configName'),'-SIEM_NIC-2_DEPLOY')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "This is the deployment resource for backend SIEM NICs.",
+      "dependsOn": [
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/nic.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "APP"
+          },
+          "count": {
+            "value": "[parameters('numberOfSIEMVms')]"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "vnetName": {
+            "value": "[variables('regionSettings').vnetName]"
+          },
+          "subnetBackend": {
+            "value": "[variables('SharedVmConfig').backendSubnet]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('configName'),'-CLIENT_NIC_DEPLOY')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "condition": "[equals(parameters('deployClientVm'),'Yes')]",
+      "comments": "This is the deployment resource for CLIENT NICs.",
+      "dependsOn": [
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/nic.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "CLIENT"
+          },
+          "count": {
+            "value": "[parameters('numberOfClientVms')]"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "vnetName": {
+            "value": "[variables('regionSettings').vnetName]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('configName'),'-CLIENT_NIC2_DEPLOY')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "condition": "[equals(parameters('deployClientVm'),'Yes')]",
+      "comments": "This is the deployment resource for CLIENT backend NICs.",
+      "dependsOn": [
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/nic.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "CLIENT"
+          },
+          "count": {
+            "value": "[parameters('numberOfClientVms')]"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "vnetName": {
+            "value": "[variables('regionSettings').vnetName]"
+          },
+
+          "subnetBackend": {
+            "value": "[variables('SharedVmConfig').backendSubnet]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('configName'),'-SIEM_DEPLOY')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "This is the deployment resource for the SIEM server VM.",
+      "dependsOn": [
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/siem.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "SharedVmConfig": { 
+            "value": "[variables('SharedVmConfig')]" 
+          },
+          "count": {
+            "value": "[parameters('numberOfSIEMVms')]"
+          },
+          "modulesURL": {
+            "value": "[variables('assetLocation')]"
+          },
+          "configurationFunction": {
+            "value": "[variables('VMs').SIEMConfigurationFunction]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('configName'),'-CLIENT_DEPLOY')]",
+      "condition": "[equals(parameters('deployClientVm'),'Yes')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "This is the deployment resource for client VMs.",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/',parameters('configName'),'-SIEM_DEPLOY')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/client.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "SharedVmConfig": { 
+            "value": "[variables('SharedVmConfig')]" 
+          },
+          "count": {
+            "value": "[parameters('numberOfClientVms')]"
+          }
+        }
+      }
+    }
+  ],
+
+  "outputs": {}
+}
