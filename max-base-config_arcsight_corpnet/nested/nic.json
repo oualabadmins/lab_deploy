@@ -19,7 +19,9 @@
           "type": "string" 
         },
         "subnetBackend": {
-          "type": "string"
+          "type": "string",
+          "defaultValue": "",
+          "minLength": 0
         }
     },
     "variables": {
