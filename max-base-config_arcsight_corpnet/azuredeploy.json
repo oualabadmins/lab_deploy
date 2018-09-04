@@ -139,7 +139,7 @@
       "storageAccountNamePrefix": "[variables('storageAccountName')]",
       "sasToken": "[parameters('_artifactsLocationSasToken')]",
       "configName": "[parameters('configName')]",
-      "backendSubnet": "[concat(variables('regionSettings').vnetName, '/Subnet-',parameters('configName'))]"
+      "backendSubnet": "[concat('Subnet-',parameters('configName'))]"
     }
   },
 
@@ -158,7 +158,7 @@
     {
       "apiVersion": "2016-06-01",
       "type": "Microsoft.Network/virtualNetworks/subnets",
-      "name": "[concat(variables('regionSettings').vnetName, '/Subnet-',parameters('configName'))]",
+      "name": "[concat(variables('regionSettings').vnetName, '/',variables('sharedVMConfig').backendSubnet)]",
       "location": "[resourceGroup().location]",
       "properties": {
         "addressPrefix": "10.100.170.0/28"

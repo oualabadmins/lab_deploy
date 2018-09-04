@@ -31,7 +31,7 @@
       "vnetPath": "[resourceId(variables('VnetResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
       "nicPrefix": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-')]",
 
-      "subnetRefBackend": "[parameters('subnetBackend')]",
+      "subnetRefBackend": "[concat(variables('VnetPath'),'/subnets/', parameters('subnetBackend'))]",
       "nicPrefixBackend": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-2-')]"
     },
     "resources": [
