@@ -104,7 +104,7 @@
 
     "network": {
       "vnetName": "[concat(parameters('configName'),'-BACKEND-VNET')]",
-      "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-BACKEND-VNET'), 'subnet-01')]",
+      "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-BACKEND-VNET'), 'subnet-1')]",
       "subnet": "[parameters('subnetCIDR')]"
     },
 
@@ -186,7 +186,7 @@
         "dhcpOptions": {},
         "subnets": [
           {
-            "name": "subnet-01",
+            "name": "subnet-1",
             "properties": {
               "addressPrefix": "[variables('network').subnet]"
             }
@@ -256,7 +256,7 @@
             "value": "[variables('network').vnetName]"
           },
           "subnetBackend": {
-            "value": "subnet-01"
+            "value": "subnet-1"
           }
         }
       }
@@ -325,7 +325,7 @@
             "value": "[variables('network').vnetName]"
           },
           "subnetBackend": {
-            "value": "subnet-01"
+            "value": "subnet-1"
           }
         }
       }
