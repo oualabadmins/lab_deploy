@@ -222,6 +222,12 @@
           },
           "vnetName": {
             "value": "[variables('regionSettings').vnetName]"
+          },
+          "vnetNameBackend": {
+            "value": "[variables('network').vnetName]"
+          },
+          "subnetBackend": {
+            "value": ""
           }
         }
       }
@@ -293,6 +299,12 @@
           },
           "vnetName": {
             "value": "[variables('regionSettings').vnetName]"
+          },
+          "vnetNameBackend": {
+            "value": "[variables('network').vnetName]"
+          },
+          "subnetBackend": {
+            "value": ""
           }
         }
       }
