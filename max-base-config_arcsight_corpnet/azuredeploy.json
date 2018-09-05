@@ -67,6 +67,16 @@
       },
       "defaultValue": "Standard_DS4_v2"
     },
+    "subnetCIDR": {
+      "type": "string",
+      "metadata": {
+        "description": "The CIDR subnet for your backend network, i.e. 10.0.0.0/24."
+      },
+      "defaultValue": "10.0.0.0/24",
+      "allowedValues": [
+        "10.0.0.0/24", "10.10.0.0/24", "10.100.0.0/24", "10.10.10.0/24", "10.10.10.10/24", "10.10.10.100/24", "172.16.0.0/24", "172.16.10.0/24", "172.16.100.0/24", "172.16.10.0/24", "172.16.10.10/24", "172.16.10.100/24"
+      ]
+    },
     "_artifactsLocation": {
       "type": "string",
       "metadata": {
@@ -91,6 +101,12 @@
 
     "subID": "[subscription().subscriptionId]",
     "location": "[resourceGroup().location]",
+
+    "network": {
+      "vnetName": "[concat(parameters('configName'),'-BACKEND-VNET')]",
+      "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-BACKEND-VNET'), 'subnet-01')]",
+      "subnet": "[parameters('subnetCIDR')]"
+    },
 
     "regionSettings": "[variables(concat(variables('subID'),'-',variables('location')))]",
 
@@ -138,8 +154,7 @@
       "adminPassword": "[parameters('adminPassword')]",
       "storageAccountNamePrefix": "[variables('storageAccountName')]",
       "sasToken": "[parameters('_artifactsLocationSasToken')]",
-      "configName": "[parameters('configName')]",
-      "backendSubnet": "[concat('Subnet-',parameters('configName'))]"
+      "configName": "[parameters('configName')]"
     }
   },
 
@@ -156,12 +171,27 @@
       }
     },
     {
-      "apiVersion": "2016-06-01",
-      "type": "Microsoft.Network/virtualNetworks/subnets",
-      "name": "[concat(variables('regionSettings').vnetName, '/',variables('sharedVMConfig').backendSubnet)]",
+      "name": "[variables('network').vnetName]",
+      "type": "Microsoft.Network/virtualNetworks",
+      "dependsOn": [],
       "location": "[resourceGroup().location]",
+      "apiVersion": "2018-01-01",
+      "comments": "This is the backend virtual network for the deployment.",
       "properties": {
-        "addressPrefix": "10.100.170.0/28"
+        "addressSpace": {
+          "addressPrefixes": [
+            "[variables('network').subnet]"
+          ]
+        },
+        "dhcpOptions": {},
+        "subnets": [
+          {
+            "name": "subnet-01",
+            "properties": {
+              "addressPrefix": "[variables('network').subnet]"
+            }
+          }
+        ]
       }
     },
     {
@@ -223,10 +253,10 @@
             "value": "Dynamic"
           },
           "vnetName": {
-            "value": "[variables('regionSettings').vnetName]"
+            "value": "[variables('network').vnetName]"
           },
           "subnetBackend": {
-            "value": "[variables('SharedVmConfig').backendSubnet]"
+            "value": "subnet-01"
           }
         }
       }
@@ -292,11 +322,10 @@
             "value": "Dynamic"
           },
           "vnetName": {
-            "value": "[variables('regionSettings').vnetName]"
+            "value": "[variables('network').vnetName]"
           },
-
           "subnetBackend": {
-            "value": "[variables('SharedVmConfig').backendSubnet]"
+            "value": "subnet-01"
           }
         }
       }
