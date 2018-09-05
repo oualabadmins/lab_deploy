@@ -45,13 +45,15 @@
       "type": "int",
       "metadata": {
         "description": "The number of SIEM VMs to deploy."
-      }
+      },
+      "defaultValue": "1"
     },
     "numberOfClientVms": {
       "type": "int",
       "metadata": {
         "description": "The number of client VMs to deploy."
-      }
+      },
+      "defaultValue": "1"
     },
     "vmSizeServer": {
       "type": "string",
