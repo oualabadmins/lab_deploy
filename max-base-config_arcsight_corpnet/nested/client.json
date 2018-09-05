@@ -11,7 +11,7 @@
   },
   "variables": {
     "nicName": "[concat(parameters('sharedVmConfig').configName,'-CLIENT_NIC-')]",
-    "nic2Name": "[concat(parameters('sharedVmConfig').configName,'-CLIENT_NIC-2-')]",
+    "nic2Name": "[concat(parameters('sharedVmConfig').configName,'-CLIENT_NIC-BACKEND-')]",
     "nicID": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]",
     "nic2ID": "[resourceId('Microsoft.Network/networkInterfaces',variables('nic2Name'))]"
   },
