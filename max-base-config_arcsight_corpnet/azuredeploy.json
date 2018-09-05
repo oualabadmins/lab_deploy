@@ -253,6 +253,9 @@
             "value": "Dynamic"
           },
           "vnetName": {
+            "value": "[variables('regionSettings').vnetName]"
+          },
+          "vnetNameBackend": {
             "value": "[variables('network').vnetName]"
           },
           "subnetBackend": {
@@ -322,6 +325,9 @@
             "value": "Dynamic"
           },
           "vnetName": {
+            "value": "[variables('regionSettings').vnetName]"
+          },
+          "vnetNameBackend": {
             "value": "[variables('network').vnetName]"
           },
           "subnetBackend": {

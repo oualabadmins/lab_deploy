@@ -18,6 +18,9 @@
         "vnetName": {
           "type": "string" 
         },
+        "vnetNameBackend": {
+          "type": "string" 
+        },
         "subnetBackend": {
           "type": "string",
           "defaultValue": "",
@@ -31,8 +34,9 @@
       "vnetPath": "[resourceId(variables('VnetResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
       "nicPrefix": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-')]",
 
-      "subnetRefBackend": "[resourceId(subscription().id,'/',resourceGroup().name,'/','Microsoft.Network/virtualNetworks/subnets','/',concat(parameters('configName'),'-BACKEND-VNET'),'/','subnet-1')]",
-      "nicPrefixBackend": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-2-')]"
+      "subnetRefBackend": "[concat(variables('VnetPathBackend'),'/subnets/', variables('subnetName'))]",
+      "vnetPathBackend": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', parameters('vnetNameBackend'))]",
+      "nicPrefixBackend": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-BACKEND-')]",
     },
     "resources": [
         {
