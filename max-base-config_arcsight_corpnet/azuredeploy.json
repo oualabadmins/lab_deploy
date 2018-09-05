@@ -199,8 +199,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for SIEM NICs.",
-      "dependsOn": [
-      ],
+      "dependsOn": ["[variables('network').vnetName]"],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -237,8 +236,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for backend SIEM NICs.",
-      "dependsOn": [
-      ],
+      "dependsOn": ["[variables('network').vnetName]"],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -276,8 +274,7 @@
       "apiVersion": "2015-01-01",
       "condition": "[equals(parameters('deployClientVm'),'Yes')]",
       "comments": "This is the deployment resource for CLIENT NICs.",
-      "dependsOn": [
-      ],
+      "dependsOn": ["[variables('network').vnetName]"],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -315,8 +312,7 @@
       "apiVersion": "2015-01-01",
       "condition": "[equals(parameters('deployClientVm'),'Yes')]",
       "comments": "This is the deployment resource for CLIENT backend NICs.",
-      "dependsOn": [
-      ],
+      "dependsOn": ["[variables('network').vnetName]"],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
