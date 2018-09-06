@@ -31,29 +31,19 @@
         "description": "The administrator account password."
       }
     },
-    "deployClientVm": {
-      "type": "string",
-      "allowedValues": [
-        "No", "Yes"
-      ],
-      "metadata": {
-        "description": "Choose 'No' to deploy no client VM, or 'Yes' if you want to deploy a client VM from a custom generalized VHD that you have uploaded to an accessible storage account."
-      },
-      "defaultValue": "Yes"
-    },
     "numberOfSIEMVms": {
       "type": "int",
       "metadata": {
         "description": "The number of SIEM VMs to deploy."
       },
-      "defaultValue": "1"
+      "defaultValue": 1
     },
     "numberOfClientVms": {
       "type": "int",
       "metadata": {
         "description": "The number of client VMs to deploy."
       },
-      "defaultValue": "1"
+      "defaultValue": 1
     },
     "vmSizeServer": {
       "type": "string",
@@ -274,7 +264,6 @@
       "name": "[concat(parameters('configName'),'-CLIENT_NIC_DEPLOY')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
-      "condition": "[equals(parameters('deployClientVm'),'Yes')]",
       "comments": "This is the deployment resource for CLIENT NICs.",
       "dependsOn": ["[variables('network').vnetName]"],
       "properties": {
@@ -309,10 +298,9 @@
       }
     },
     {
-      "name": "[concat(parameters('configName'),'-CLIENT_NIC2_DEPLOY')]",
+      "name": "[concat(parameters('configName'),'-CLIENT_NIC-2_DEPLOY')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
-      "condition": "[equals(parameters('deployClientVm'),'Yes')]",
       "comments": "This is the deployment resource for CLIENT backend NICs.",
       "dependsOn": ["[variables('network').vnetName]"],
       "properties": {
@@ -351,8 +339,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for the SIEM server VM.",
-      "dependsOn": [
-      ],
+      "dependsOn": [],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -371,13 +358,10 @@
     },
     {
       "name": "[concat(parameters('configName'),'-CLIENT_DEPLOY')]",
-      "condition": "[equals(parameters('deployClientVm'),'Yes')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for client VMs.",
-      "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/',parameters('configName'),'-SIEM_DEPLOY')]"
-      ],
+      "dependsOn": [],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
