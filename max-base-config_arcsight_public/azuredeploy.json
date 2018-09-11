@@ -294,7 +294,8 @@
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for the SIEM server VM.",
       "dependsOn": [
-        "[reference(concat(variables('templates'),'/nic.json')).outputs.frontendNicSIEM.value]"
+        "[concat(parameters('configName'),'-SIEM_NIC_DEPLOY')]",
+        "[concat(parameters('configName'),'-SIEM_NIC-2_DEPLOY')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -318,7 +319,8 @@
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for client VMs.",
       "dependsOn": [
-        "[reference(concat(variables('templates'),'/nic.json')).outputs.frontendNicCLIENT.value]"
+        "[concat(parameters('configName'),'-CLIENT_NIC_DEPLOY')]",
+        "[concat(parameters('configName'),'-CLIENT_NIC-2_DEPLOY')]"
       ],
       "properties": {
         "mode": "Incremental",
