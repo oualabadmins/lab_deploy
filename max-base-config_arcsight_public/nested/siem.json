@@ -68,7 +68,33 @@
           }
         }
       },
-      "resources": []
+      "resources": [
+        {
+          "name": "config-siem",
+          "type": "extensions",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2017-03-30",
+          "dependsOn": [
+            "[concat('SIEM',copyindex(1))]"
+          ],
+          "tags": {
+            "displayName": "config-siem"
+          },
+          "properties": {
+            "publisher": "Microsoft.Azure.Extensions",
+            "type": "CustomScript",
+            "typeHandlerVersion": "2.0",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              },
+            "protectedSettings": {
+              "commandToExecute": "sh siemconfig.sh",
+              "fileUris": ["https://raw.githubusercontent.com/oualabadmins/lab_deploy/base-config-arcsight-siem/max-base-config_arcsight_public/scripts/siemconfig.sh"
+              ]  
+            }
+          }
+        }
+      ]
     }
   ],
   "outputs": {}

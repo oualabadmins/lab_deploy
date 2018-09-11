@@ -97,10 +97,6 @@
       "backendNicNameCLIENT": "[concat(parameters('configName'),'-CLIENT_NIC-2_DEPLOY')]"
     },
 
-    "VMs": {
-      "SIEMConfigurationFunction": "SIEMConfig.ps1\\SIEMConfig"
-    },
-
     "SharedVmConfig": {
       "location": "[resourceGroup().location]",
       "vmSize": "[parameters('vmSizeServer')]",
