@@ -27,7 +27,7 @@
       "subnetRefBackend": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-VNET'), 'backend')]",
 
 
-      "nicPrefixFrontend": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-')]",
+      "nicPrefixFrontend": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-FRONTEND-')]",
       "nicPrefixBackend": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-BACKEND-')]"
     },
     "resources": [
@@ -90,14 +90,5 @@
             }
           }  
     ],
-    "outputs": {
-      "frontendNicip": {
-        "value": "[reference(concat(variables('nicPrefixFrontend'),'1')).ipConfigurations[0].properties.privateIPAddress]",
-        "type": "string"
-      },
-      "backendNicip": {
-        "value": "[reference(concat(variables('nicPrefixBackend'),'1')).ipConfigurations[0].properties.privateIPAddress]",
-        "type": "string"
-      }
-    }
+    "outputs": {}
 }

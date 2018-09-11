@@ -10,8 +10,8 @@
     }
   },
   "variables": {
-    "nicName": "[concat(parameters('sharedVmConfig').configName,'-SIEM_NIC-')]",
-    "nic2Name": "[concat(parameters('sharedVmConfig').configName,'-SIEM_NIC-BACKEND-')]",
+    "nicName": "[concat(parameters('sharedVmConfig').configName,'-SIEM_NIC-FRONTEND-',copyIndex(1))]",
+    "nic2Name": "[concat(parameters('sharedVmConfig').configName,'-SIEM_NIC-BACKEND-',copyIndex(1))]",
     "nicID": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]",
     "nic2ID": "[resourceId('Microsoft.Network/networkInterfaces',variables('nic2Name'))]"
   },
