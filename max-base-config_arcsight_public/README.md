@@ -42,6 +42,7 @@ The following resources are deployed as part of the solution:
 + **Virtual network**: 1 Vnet with two subnets, frontend and backend. Frontend subnet is 172.16.0.0/25, backend is 172.16.0.128/25.
 + **Network security group**: The NSG permits ports 22 and 3389 to frontend NICs.
 + **Network interfaces**: 2 NICs per VM with dynamic private IP addresses. Frontend NICs also have a public IP.
++ **Public IPs**: 1 public IP per frontend NIC for both SIEM and CLIENT VMs.
 + **BGInfo**: The **BGInfo** extension is applied to all VMs.
 + **Antimalware**: The **iaaSAntimalware** extension is applied to all VMs with basic scheduled scan and exclusion settings.
 
