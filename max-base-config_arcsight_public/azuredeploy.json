@@ -293,7 +293,10 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for the SIEM server VM.",
-      "dependsOn": [],
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('configName'),'-SIEM_NIC-FRONTEND-1'))]",
+        "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('configName'),'-SIEM_NIC-BACKEND-1'))]"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -315,7 +318,10 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for client VMs.",
-      "dependsOn": [],
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('configName'),'-CLIENT_NIC-FRONTEND-1'))]",
+        "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('configName'),'-CLIENT_NIC-BACKEND-1'))]"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
