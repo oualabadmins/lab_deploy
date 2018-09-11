@@ -123,9 +123,49 @@
       }
     },
     {
+      "apiVersion": "2017-10-01",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "nsg",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "ssh-rule",
+            "properties": {
+              "description": "Allow SSH",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "22",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "rdp-rule",
+            "properties": {
+              "description": "Allow RDP",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "3389",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 102,
+              "direction": "Inbound"
+            }
+          }
+        ]
+      }
+    },
+    {
       "name": "[variables('network').vnetName]",
       "type": "Microsoft.Network/virtualNetworks",
-      "dependsOn": [],
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkSecurityGroups/', 'nsg')]"
+      ],
       "location": "[resourceGroup().location]",
       "apiVersion": "2018-01-01",
       "comments": "This is the backend virtual network for the deployment.",
@@ -139,6 +179,9 @@
           {
             "name": "frontend",
             "properties": {
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'nsg')]"
+              },
               "addressPrefix": "[variables('network').subnetFrontend]"
             }
           },
