@@ -73,7 +73,7 @@
           "name": "config-siem",
           "type": "extensions",
           "location": "[resourceGroup().location]",
-          "apiVersion": "2015-06-15",
+          "apiVersion": "2017-03-30",
           "dependsOn": [
             "[concat('SIEM',copyindex(1))]"
           ],
