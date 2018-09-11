@@ -23,6 +23,8 @@
         }
     },
     "variables": {
+      "publicIp": "[concat(parameters('configName'),'-',parameters('tier'),'_IP-')]",
+      "publicIpID": "[resourceId ('Microsoft.Network/publicIPAddresses/',variables('publicIp'))]",
       "subnetRefFrontend": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-VNET'), 'frontend')]",
       "subnetRefBackend": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-VNET'), 'backend')]",
       "nicPrefixFrontend": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-FRONTEND-')]",
@@ -47,6 +49,9 @@
                   "name": "[concat('ipconfig',copyIndex(1))]",
                   "properties": {
                     "privateIPAllocationMethod": "[parameters('ipAllocation')]",
+                    "publicIPAddress": {
+                      "id": "[concat(variables('publicIpID'),copyIndex(1))]"
+                    },
                     "subnet": {
                       "id": "[variables('subnetRefFrontend')]"
                     }

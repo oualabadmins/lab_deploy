@@ -1,0 +1,46 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "apiProfile": "2017-03-09-profile",
+    "parameters": {
+        "configName": { 
+            "type": "string" 
+          },
+          "tier": {
+            "type": "string" 
+          },
+          "count": {
+            "type": "int" 
+          },
+          "ipAllocation": {
+            "type": "string" 
+          },
+          "dnsLabelPrefix": {
+            "type": "string" 
+          }
+    },
+    "variables": {
+        "ipName": "[concat(parameters('configName'),'-',parameters('tier'),'_IP-')]",
+        "dynamicDnsPrefix": "[toLower(concat(parameters('dnsLabelPrefix'),'-',parameters('tier'),'-'))]"
+    },
+    "resources": [
+        {
+            "apiVersion": "2017-06-01",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[concat(variables('ipName'),copyIndex(1))]",
+            "location": "[resourceGroup().location]",
+            "copy": {
+                "name": "ips",
+                "count": "[parameters('count')]"
+              },
+            "comments": "Public IP address",
+            "properties": {
+              "publicIPAllocationMethod": "[parameters('ipAllocation')]",
+              "dnsSettings": {
+                "domainNameLabel": "[concat(variables('dynamicDnsPrefix'),copyIndex(1))]"
+              }
+            }
+          }        
+    ],
+    "outputs": {}
+}
