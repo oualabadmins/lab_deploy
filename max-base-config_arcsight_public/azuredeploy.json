@@ -90,7 +90,11 @@
       "subnetRefBackend": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-VNET'), 'backend')]",
       "addressSpace": "172.16.100.0/24",
       "subnetFrontend": "172.16.100.0/25",
-      "subnetBackend": "172.16.100.128/25"
+      "subnetBackend": "172.16.100.128/25",
+      "frontendNicNameSIEM": "[concat(parameters('configName'),'-SIEM_NIC_DEPLOY')]",
+      "frontendNicNameCLIENT": "[concat(parameters('configName'),'-CLIENT_NIC_DEPLOY')]",
+      "backendNicNameSIEM": "[concat(parameters('configName'),'-SIEM_NIC-2_DEPLOY')]",
+      "backendNicNameCLIENT": "[concat(parameters('configName'),'-CLIENT_NIC-2_DEPLOY')]"
     },
 
     "VMs": {
@@ -152,7 +156,7 @@
       }
     },
     {
-      "name": "[concat(parameters('configName'),'-SIEM_NIC_DEPLOY')]",
+      "name": "[variables('network').frontendNicNameSIEM]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for SIEM NICs.",
@@ -187,7 +191,7 @@
       }
     },
     {
-      "name": "[concat(parameters('configName'),'-SIEM_NIC-2_DEPLOY')]",
+      "name": "[variables('network').backendNicNameSIEM]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for backend SIEM NICs.",
@@ -221,7 +225,7 @@
       }
     },
     {
-      "name": "[concat(parameters('configName'),'-CLIENT_NIC_DEPLOY')]",
+      "name": "[variables('network').frontendNicNameCLIENT]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for CLIENT NICs.",
@@ -255,7 +259,7 @@
       }
     },
     {
-      "name": "[concat(parameters('configName'),'-CLIENT_NIC-2_DEPLOY')]",
+      "name": "[variables('network').backendNicNameCLIENT]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for CLIENT backend NICs.",
@@ -294,7 +298,7 @@
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for the SIEM server VM.",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('configName'),'-SIEM_NIC-FRONTEND-1'))]"
+        "[variables('network').frontendNicNameSIEM]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -318,7 +322,7 @@
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for client VMs.",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('configName'),'-CLIENT_NIC-FRONTEND-1'))]"
+        "[variables('network').frontendNicNameCLIENT]"
       ],
       "properties": {
         "mode": "Incremental",
