@@ -39,8 +39,9 @@ The following resources are deployed as part of the solution:
 + **ArcSight CentOS Server VM**: CentOS VM with ArcSight SIEM.
 + **Client VM(s)**: Windows 10 client(s) joined to the domain.
 + **Storage account**: Diagnostics storage account, and client VM storage account if indicated. ADDC and App Server VMs in the deployment use managed disks, so no storage accounts are created for VHDs.
-+ **Network interfaces**: 1 NIC per VM with dynamic private IP address.
-+ **Backend subnet**: A private subnet for backend network connections.
++ **Virtual network**: 1 Vnet with two subnets, frontend and backend. Frontend subnet is 172.16.0.0/25, backend is 172.16.0.128/25.
++ **Network security group**: The NSG permits ports 22 and 3389 to frontend NICs.
++ **Network interfaces**: 2 NICs per VM with dynamic private IP addresses. Frontend NICs also have a public IP.
 + **BGInfo**: The **BGInfo** extension is applied to all VMs.
 + **Antimalware**: The **iaaSAntimalware** extension is applied to all VMs with basic scheduled scan and exclusion settings.
 

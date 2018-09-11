@@ -267,7 +267,10 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for SIEM NICs.",
-      "dependsOn": ["[variables('network').vnetName]"],
+      "dependsOn": [
+        "[variables('network').vnetName]",
+        "[concat(parameters('configName'),'-SIEM_IP')]"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -336,7 +339,10 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for CLIENT NICs.",
-      "dependsOn": ["[variables('network').vnetName]"],
+      "dependsOn": [
+        "[variables('network').vnetName]",
+        "[concat(parameters('configName'),'-CLIENT_IP')]"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
