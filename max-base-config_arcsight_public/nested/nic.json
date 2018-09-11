@@ -1,0 +1,103 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "apiProfile": "2017-03-09-profile",
+    "parameters": {
+        "configName": { 
+          "type": "string" 
+        },
+        "tier": {
+          "type": "string" 
+        },
+        "count": {
+          "type": "int" 
+        },
+        "ipAllocation": {
+          "type": "string" 
+        },
+        "vnetName": {
+          "type": "string" 
+        },
+        "subnet": {
+          "type": "string"
+        }
+    },
+    "variables": {
+      "subnetRefFrontend": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-VNET'), 'frontend')]",
+      "subnetRefBackend": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-VNET'), 'backend')]",
+
+
+      "nicPrefixFrontend": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-')]",
+      "nicPrefixBackend": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-BACKEND-')]"
+    },
+    "resources": [
+        {
+            "name": "[concat(variables('nicPrefixFrontend'),copyIndex(1))]",
+            "condition": "[equals(parameters('subnet'),'frontend')]",
+            "copy": {
+              "name": "frontendNics",
+              "count": "[parameters('count')]"
+            },
+            "type": "Microsoft.Network/networkInterfaces",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [],
+            "apiVersion": "2018-01-01",
+            "comments": "NIC",
+            "properties": {
+              "ipConfigurations": [
+                {
+                  "name": "[concat('ipconfig',copyIndex(1))]",
+                  "properties": {
+                    "privateIPAllocationMethod": "[parameters('ipAllocation')]",
+                    "subnet": {
+                      "id": "[variables('subnetRefFrontend')]"
+                    }
+                  }
+                }
+              ],
+              "dnsSettings": {
+                "dnsServers": []
+              }
+            }
+          },
+          {
+            "name": "[concat(variables('nicPrefixBackend'),copyIndex(1))]",
+            "condition": "[equals(parameters('subnet'),'backend')]",            
+            "copy": {
+              "name": "backendNics",
+              "count": "[parameters('count')]"
+            },
+            "type": "Microsoft.Network/networkInterfaces",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [],
+            "apiVersion": "2018-01-01",
+            "comments": "Backend NIC",
+            "properties": {
+              "ipConfigurations": [
+                {
+                  "name": "[concat('ipconfigBackend',copyIndex(1))]",
+                  "properties": {
+                    "privateIPAllocationMethod": "[parameters('ipAllocation')]",
+                    "subnet": {
+                      "id": "[variables('subnetRefBackend')]"
+                    }
+                  }
+                }
+              ],
+              "dnsSettings": {
+                "dnsServers": []
+              }
+            }
+          }  
+    ],
+    "outputs": {
+      "frontendNicip": {
+        "value": "[reference(concat(variables('nicPrefixFrontend'),'1')).ipConfigurations[0].properties.privateIPAddress]",
+        "type": "string"
+      },
+      "backendNicip": {
+        "value": "[reference(concat(variables('nicPrefixBackend'),'1')).ipConfigurations[0].properties.privateIPAddress]",
+        "type": "string"
+      }
+    }
+}
