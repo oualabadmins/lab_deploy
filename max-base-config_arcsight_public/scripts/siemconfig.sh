@@ -1,30 +1,45 @@
 #!/bin/bash
 
+## Install and configure xrdp
+
+# Set enforcement to permissive
+setenforce 0
+
 # Install xfce4
-echo “Going to run 1st RPM package”
-echo “*****************************”
-rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-echo “Going to run 2nd RPM package”
-echo “******************************”
-rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-1.el7.nux.noarch.rpm
-printf “[xrdp]\nname=xrdp\nbaseurl=http://li.nux.ro/download/nux/dextop/el7/x86_64/\nenabled=1\ngpgcheck=0” >> /etc/yum.repos.d/xrdp.repo
-echo “Installing tigervnc server”
-echo “******************************”
-yum -y install xrdp tigervnc-server
-echo “Starting up xrdp service”
-echo “******************************”
+#rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+# rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-1.el7.nux.noarch.rpm
+
+# Install xrdp
+#yum -y --enablerepo epel install xrdp tigervnc
+#yum -y --enablerepo epel install xrdp tigervnc-server
+
+# Set firewall permit rules (remmed: firewalld not running by default)
+#firewall-cmd -–add-port=3350/tcp -–permanent 
+#firewall-cmd -–permanent -–add-port=3389/tcp
+#firewall-cmd -–permanent -–add-port=5900/tcp
+#firewall-cmd -–permanent -–add-port=5910/tcp
+#firewall-cmd –reload
+
+## NEW - Install X foundation
+yum -y install epel-release
+yum -y groupinstall "X Window system"
+yum -y groupinstall "MATE Desktop"
+# Set autostart
+systemctl set-default graphical.target
+# Set up Mate desktop for all users
+echo "exec mate-session" > /etc/skel/.Xclients
+chmod 700 /etc/skel/.Xclients
+
+# Apply updates
+yum -y update
+
+# Configure SELinux
+chcon --type=bin_t /usr/sbin/xrdp
+chcon --type=bin_t /usr/sbin/xrdp-sesman
+
+# Start and enable xrdp
 systemctl start xrdp.service
-echo “Enabling xrdp service”
-echo “******************************”
 systemctl enable xrdp.service
-firewall-cmd –permanent –zone=public –add-port=3389/tcp
-firewall-cmd –reload
-netstat -antup | grep xrdp
-echo “******************************”
-echo “Everything is ok”
-
-## kvice additions
-
-# Basic updates
 
 ## Install ArcSight EMS
+
