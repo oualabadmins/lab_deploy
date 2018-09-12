@@ -5,25 +5,11 @@
 # Set enforcement to permissive
 setenforce 0
 
-# Install xfce4
-#rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-# rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-1.el7.nux.noarch.rpm
-
-# Install xrdp
-#yum -y --enablerepo epel install xrdp tigervnc
-#yum -y --enablerepo epel install xrdp tigervnc-server
-
-# Set firewall permit rules (remmed: firewalld not running by default)
-#firewall-cmd -–add-port=3350/tcp -–permanent 
-#firewall-cmd -–permanent -–add-port=3389/tcp
-#firewall-cmd -–permanent -–add-port=5900/tcp
-#firewall-cmd -–permanent -–add-port=5910/tcp
-#firewall-cmd –reload
-
-## NEW - Install X foundation
+# Install foundation packages
 yum -y install epel-release
 yum -y groupinstall "X Window system"
 yum -y groupinstall "MATE Desktop"
+yum -y install mailx tcpdump
 
 # Set autostart
 systemctl set-default graphical.target
@@ -70,16 +56,18 @@ pass=$(perl -e 'print crypt($ARGV[0], "password")' $password)
 useradd -c “arcsight_software_owner” -g arcsight -d -p $pass $username
 /home/arcsight -m -s /bin/bash arcsight
 
+##### FOLLOWING REMMED OUT UNTIL ARCSIGHT INSTALL SCRIPTS ARE AVAILABLE #####
+
 # Create install folder, chown to arcsight
-mkdir -m777 arcsight_install
-cd arcsight_install
-tar xvf ArcSightESMSuite-7.0.0.xxxx.1.tar
-chown -R arcsight:arcsight .
+#mkdir -m777 arcsight_install
+#cd arcsight_install
+#tar xvf ArcSightESMSuite-7.0.0.xxxx.1.tar
+#chown -R arcsight:arcsight .
 
 # Run prepare_system.sh
-sh prepare_system.sh
+#cd Tools
+#./prepare_system.sh
 
-# Login as arcsight user
-
-# Install ESM
-
+# Install ESM as arcsight user
+#su arcsight
+#./ArcSightESMSuite.bin -i console
