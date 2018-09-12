@@ -47,6 +47,10 @@ chcon --type=bin_t /usr/sbin/xrdp-sesman
 systemctl start xrdp.service
 systemctl enable xrdp.service
 
+# Update time zone
+yum -y update tzdata
+timedatectl set-timezone America/Los_Angeles
+
 ## Install ArcSight EMS
 # From https://www.slideshare.net/Protect724/esm-install-guide60c
 
@@ -66,9 +70,16 @@ pass=$(perl -e 'print crypt($ARGV[0], "password")' $password)
 useradd -c “arcsight_software_owner” -g arcsight -d -p $pass $username
 /home/arcsight -m -s /bin/bash arcsight
 
+# Create install folder, chown to arcsight
+mkdir -m777 arcsight_install
+cd arcsight_install
+tar xvf ArcSightESMSuite-7.0.0.xxxx.1.tar
+chown -R arcsight:arcsight .
+
 # Run prepare_system.sh
+sh prepare_system.sh
 
 # Login as arcsight user
 
-# Verify settings
-ulimit -a
+# Install ESM
+
