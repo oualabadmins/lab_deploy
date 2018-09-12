@@ -36,7 +36,7 @@ You can deploy this template in one of two ways:
 
 The following resources are deployed as part of the solution:
 
-+ **ArcSight CentOS Server VM**: CentOS VM with ArcSight SIEM.
++ **ArcSight CentOS Server VM**: CentOS VM with ArcSight SIEM. 30GB system disk, 1TB data disk. Arcsight installation script is in progress.
 + **Client VM(s)**: Windows 10 client(s) joined to the domain.
 + **Storage account**: Diagnostics storage account, and client VM storage account if indicated. ADDC and App Server VMs in the deployment use managed disks, so no storage accounts are created for VHDs.
 + **Virtual network**: 1 Vnet with two subnets, frontend and backend. Frontend subnet is 172.16.0.0/25, backend is 172.16.0.128/25.
@@ -48,6 +48,10 @@ The following resources are deployed as part of the solution:
 
 ## Solution notes
 
++ **Minimum requirements**: The SIEM server should be a DS4_V2 at minimum. Server requirements:
+    + 8 cores
+    + 36GB RAM
+    + 250GB disk capacity
 + Remember, when you RDP to your VM, you will use **domain\adminusername** for the custom domain of your environment, _not_ your corpnet credentials.
 
 ## Known issues
@@ -62,8 +66,9 @@ https://github.com/maxskunkworks
 
 ![alt text](images/maxskunkworkslogo-small.jpg "MAX Skunkworks")
 
-Last update: _9/4/2018_
+Last update: _9/12/2018_
 
 ## Changelog
 
 + **9/4/2018**: Original commit, derived from https://github.com/oualabadmins/lab_deploy/tree/master/max-base-config_x-vm_corpnet.
++ **9/12/2018**: Deployment of Azure resources working, ./scripts/siemconfig.sh is being developed. XRDP with Mate desktop is deployed automatically.
