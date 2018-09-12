@@ -1,8 +1,8 @@
-﻿# MAX Skunkworks Lab - ArcSight SIEM Base Configuration - Public (v1.0)
+﻿# MAX Skunkworks Lab - ArcSight SIEM Base Configuration - Public (v0.3)
 
 **IMPORTANT**: Only deploy this template into a PUBLIC subscription.
 
-**Choose one of these subscriptions:**
+**Choose one of these MAX Skunkworks Lab subscriptions:**
 
 | Subscription
 | :-------------------
@@ -12,7 +12,7 @@
 
 **Time to deploy**: 40+ minutes
 
-The **ArcSight SIEM Base Configuration - Public** template provisions a test environment on a public virtual network consisting of a CentOS Linux VM with ArcSight SIEM installed, and one or more Windows 10 VMs.
+The **ArcSight SIEM Base Configuration - Public** template provisions a test environment on a public virtual network consisting of a CentOS 7.3 Linux VM with ArcSight ESM installed, and one or more Windows 10 VMs.
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Foualabadmins%2Flab_deploy%2Fbase-config-arcsight-siem%2Fmax-base-config_arcsight_public%2Fazuredeploy.json" target="_blank">
 <img src="http://azuredeploy.net/deploybutton.png"/>
@@ -36,9 +36,9 @@ You can deploy this template in one of two ways:
 
 The following resources are deployed as part of the solution:
 
-+ **ArcSight CentOS Server VM**: CentOS VM with ArcSight SIEM. 30GB system disk, 1TB data disk. Arcsight installation script is in progress.
-+ **Client VM(s)**: Windows 10 client(s) joined to the domain.
-+ **Storage account**: Diagnostics storage account, and client VM storage account if indicated. ADDC and App Server VMs in the deployment use managed disks, so no storage accounts are created for VHDs.
++ **ArcSight CentOS Server VM(s)**: CentOS 7.3 with ArcSight ESM 7.1. 30GB system disk, 1TB data disk, all managed. Arcsight installation script is in progress, not yet working.
++ **Client VM(s)**: Windows 10 client(s) with ArcSight software. Managed 127GB system disk.
++ **Storage account**: Diagnostics storage account, and client VM storage account if indicated.
 + **Virtual network**: 1 Vnet with two subnets, frontend and backend. Frontend subnet is 172.16.0.0/25, backend is 172.16.0.128/25.
 + **Network security group**: The NSG permits ports 22 and 3389 to frontend NICs.
 + **Network interfaces**: 2 NICs per VM with dynamic private IP addresses. Frontend NICs also have a public IP.
@@ -48,17 +48,17 @@ The following resources are deployed as part of the solution:
 
 ## Solution notes
 
-+ **Minimum requirements**: The SIEM server should be a DS4_V2 at minimum. Server requirements:
++ **Minimum requirements**: The SIEM server should be a DS4_V2 at minimum. Minimum server requirements:
     + 8 cores
     + 36GB RAM
     + 250GB disk capacity
-+ Remember, when you RDP to your VM, you will use **domain\adminusername** for the custom domain of your environment, _not_ your corpnet credentials.
++ Remember, when you RDP to your VM, you will use the admin username and password you specified at deploy time, _not_ your corpnet credentials.
 
 ## Known issues
 
 + The client VM deployment may take longer than expected, and then appear to fail. The client VMs and extensions may or may not deploy successfully. This is due to an ongoing Azure client deployment bug, and only happens when the client VM size is smaller than DS4_v2.
 
-`Tags: SIEM, ArcSight, Base Configuration`
+`Tags: SIEM, ArcSight, ESM`
 ___
 Developed by the **MAX Skunkworks Lab**  
 Author: Kelley Vice (kvice@microsoft.com)  
