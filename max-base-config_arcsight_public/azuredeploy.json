@@ -127,7 +127,7 @@
     {
       "apiVersion": "2017-10-01",
       "type": "Microsoft.Network/networkSecurityGroups",
-      "name": "nsg",
+      "name": "[concat(parameters('configName'),'-NSG')]",
       "location": "[resourceGroup().location]",
       "properties": {
         "securityRules": [
