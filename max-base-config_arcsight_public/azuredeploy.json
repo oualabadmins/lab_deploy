@@ -108,7 +108,8 @@
       "adminPassword": "[parameters('adminPassword')]",
       "storageAccountNamePrefix": "[variables('storageAccountName')]",
       "sasToken": "[parameters('_artifactsLocationSasToken')]",
-      "configName": "[parameters('configName')]"
+      "configName": "[parameters('configName')]",
+      "templateURI": "[parameters('_artifactsLocation')]"
     }
   },
 

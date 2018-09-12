@@ -77,7 +77,7 @@
       },
       "resources": [
         {
-          "name": "config-siem",
+          "name": "[concat('siemconfig',copyIndex(1))]",
           "type": "extensions",
           "location": "[resourceGroup().location]",
           "apiVersion": "2017-03-30",
@@ -96,7 +96,7 @@
               },
             "protectedSettings": {
               "commandToExecute": "bash siemconfig.sh",
-              "fileUris": ["https://raw.githubusercontent.com/oualabadmins/lab_deploy/base-config-arcsight-siem/max-base-config_arcsight_public/scripts/siemconfig.sh"
+              "fileUris": ["[concat(parameters('SharedVmConfig').templateURI,'/scripts/siemconfig.sh')]"
               ]  
             }
           }
