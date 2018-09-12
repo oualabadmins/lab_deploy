@@ -24,8 +24,14 @@ setenforce 0
 yum -y install epel-release
 yum -y groupinstall "X Window system"
 yum -y groupinstall "MATE Desktop"
+
 # Set autostart
 systemctl set-default graphical.target
+
+# Set up Mate desktop for builtin admin user
+echo "exec mate-session" > ~/.Xclients
+chmod 700 ~/.Xclients
+
 # Set up Mate desktop for all users
 echo "exec mate-session" > /etc/skel/.Xclients
 chmod 700 /etc/skel/.Xclients
