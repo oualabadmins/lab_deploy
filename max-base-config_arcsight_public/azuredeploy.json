@@ -88,6 +88,7 @@
 
     "network": {
       "vnetName": "[concat(parameters('configName'),'-VNET')]",
+      "nsgName": "[concat(parameters('configName'),'-NSG')]",
       "subnetRefFrontend": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-VNET'), 'frontend')]",
       "subnetRefBackend": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-VNET'), 'backend')]",
       "addressSpace": "172.16.100.0/24",
@@ -128,7 +129,7 @@
     {
       "apiVersion": "2017-10-01",
       "type": "Microsoft.Network/networkSecurityGroups",
-      "name": "[concat(parameters('configName'),'-NSG')]",
+      "name": "[variables('network').nsgName]",
       "location": "[resourceGroup().location]",
       "properties": {
         "securityRules": [
@@ -247,7 +248,7 @@
       "name": "[variables('network').vnetName]",
       "type": "Microsoft.Network/virtualNetworks",
       "dependsOn": [
-        "[concat(parameters('configName'),'-NSG')]"
+        "[variables('network').nsgName]"
       ],
       "location": "[resourceGroup().location]",
       "apiVersion": "2018-01-01",
@@ -263,7 +264,7 @@
             "name": "frontend",
             "properties": {
               "networkSecurityGroup": {
-                "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('configName'),'-NSG')]"
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('network').nsgName)]"
               },
               "addressPrefix": "[variables('network').subnetFrontend]"
             }
