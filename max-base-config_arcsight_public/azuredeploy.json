@@ -247,7 +247,7 @@
       "name": "[variables('network').vnetName]",
       "type": "Microsoft.Network/virtualNetworks",
       "dependsOn": [
-        "[concat('Microsoft.Network/networkSecurityGroups/', 'nsg')]"
+        "[concat(parameters('configName'),'-NSG')]"
       ],
       "location": "[resourceGroup().location]",
       "apiVersion": "2018-01-01",
@@ -263,7 +263,7 @@
             "name": "frontend",
             "properties": {
               "networkSecurityGroup": {
-                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'nsg')]"
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('configName'),'-NSG')]"
               },
               "addressPrefix": "[variables('network').subnetFrontend]"
             }
