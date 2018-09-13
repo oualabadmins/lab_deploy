@@ -6,12 +6,15 @@
 setenforce 0
 
 # Install foundation packages
+wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+rpm -ivh epel-release-latest-7.noarch.rpm
 yum -y install epel-release
-yum -y groupinstall "X Window system"
-yum -y groupinstall "MATE Desktop"
+yum -y --enablerepo epel install xrdp tigervnc-server
+sudo yum -y --enablerepo epel install mate-desktop
 yum -y install mailx tcpdump
 
 # Set autostart
+systemctl isolate graphical.target
 systemctl set-default graphical.target
 
 # Set up Mate desktop for builtin admin user
@@ -29,9 +32,10 @@ yum -y update
 chcon --type=bin_t /usr/sbin/xrdp
 chcon --type=bin_t /usr/sbin/xrdp-sesman
 
-# Start and enable xrdp
-systemctl start xrdp.service
-systemctl enable xrdp.service
+# Start and enable xrdp ##### REMMED TO SEE IF NEEDED
+#service xrdp start
+#systemctl enable xrdp.service
+#systemctl start graphical.target
 
 # Update time zone
 yum -y update tzdata
