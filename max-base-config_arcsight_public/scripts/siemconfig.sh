@@ -10,7 +10,7 @@ setenforce 0
 #rpm -ivh epel-release-latest-7.noarch.rpm
 yum -y install epel-release
 yum -y --enablerepo epel install xrdp tigervnc-server
-sudo yum -y --enablerepo epel install mate-desktop
+yum -y --enablerepo epel install mate-desktop
 yum -y install mailx tcpdump
 
 # Set autostart
