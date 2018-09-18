@@ -25,8 +25,8 @@ chmod 700 ~/.Xclients
 echo "exec mate-session" > /etc/skel/.Xclients
 chmod 700 /etc/skel/.Xclients
 
-# Apply updates
-yum -y update
+# Apply updates, omit Azure agent to prevent script failure
+yum update -y --exclude=WALinuxAgent
 
 # Configure SELinux
 chcon --type=bin_t /usr/sbin/xrdp
