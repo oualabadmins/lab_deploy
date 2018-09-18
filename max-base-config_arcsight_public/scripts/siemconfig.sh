@@ -6,8 +6,8 @@
 setenforce 0
 
 # Install foundation packages
-wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-rpm -ivh epel-release-latest-7.noarch.rpm
+#wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+#rpm -ivh epel-release-latest-7.noarch.rpm
 yum -y install epel-release
 yum -y --enablerepo epel install xrdp tigervnc-server
 sudo yum -y --enablerepo epel install mate-desktop
