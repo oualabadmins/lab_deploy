@@ -25,17 +25,17 @@ chmod 700 ~/.Xclients
 echo "exec mate-session" > /etc/skel/.Xclients
 chmod 700 /etc/skel/.Xclients
 
-# Apply updates, omit Azure agent to prevent script failure
-yum update -y --exclude=WALinuxAgent
-
 # Configure SELinux
 chcon --type=bin_t /usr/sbin/xrdp
 chcon --type=bin_t /usr/sbin/xrdp-sesman
 
-# Start and enable xrdp ##### REMMED TO SEE IF NEEDED
-#service xrdp start
-#systemctl enable xrdp.service
-#systemctl start graphical.target
+# Start and enable xrdp 
+service xrdp start
+systemctl enable xrdp.service
+systemctl start graphical.target
+
+# Apply updates, omit Azure agent to prevent script failure
+yum update -y --exclude=WALinuxAgent
 
 # Update time zone
 yum -y update tzdata
