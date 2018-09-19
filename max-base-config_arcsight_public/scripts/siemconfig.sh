@@ -3,17 +3,21 @@
 ## siemconfig.sh
 ## kvice 9/12/2018
 ## Configures a CentOS Linux host with xrdp, Mate, and ArcSight EMS
-## Takes admin password as param $1
+## Takes params: admin username $1, password $2
 
 # Set enforcement to permissive
 setenforce 0
 
 ## Install and configure xrdp
 
+# Apply all available updates, omit Azure agent to prevent script failure
+yum update -y --exclude=WALinuxAgent
+
 # Install foundation packages
-yum -y install epel-release
-yum groupinstall "X Window system" -y
-yum groupinstall "MATE Desktop" -y
+yum install epel-release -y
+yum install byobu -y
+yum groups install "Server with GUI" -y
+yum groups install "MATE Desktop" -y
 #yum -y --enablerepo epel install xrdp tigervnc-server
 #yum -y --enablerepo epel install mate-desktop
 #yum -y install mailx tcpdump
@@ -42,9 +46,6 @@ chmod 700 /etc/skel/.Xclients
 # Restart xrdp
 service xrdp restart
 
-# Apply all available updates, omit Azure agent to prevent script failure
-yum update -y --exclude=WALinuxAgent
-
 # Update time zone
 yum -y update tzdata
 timedatectl set-timezone America/Los_Angeles
@@ -57,7 +58,7 @@ timedatectl set-timezone America/Los_Angeles
 # Create arcsight user, use passed param $1 for raw password (NOT WORKING)
 #groupadd arcsight
 #username="arcsight"
-#pass=$(perl -e 'print crypt($ARGV[0], "password")' $1)
+#pass=$(perl -e 'print crypt($ARGV[0], "password")' $2)
 #useradd -c “arcsight_software_owner” -g arcsight -d -p $pass $username
 #/home/arcsight -m -s /bin/bash arcsight
 
@@ -96,3 +97,6 @@ echo -e "/dev/sdc1 /arcsight xfs defaults 0 0" >> /etc/fstab
 
 # Start services
 # /opt/arcsight/manager/bin/setup_services.sh
+
+
+# FINAL
