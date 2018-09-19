@@ -77,12 +77,37 @@
       },
       "resources": [
         {
-          "name": "[concat('siemconfig',copyIndex(1))]",
+          "name": "[concat('initialconfig',copyIndex(1))]",
           "type": "extensions",
           "location": "[resourceGroup().location]",
           "apiVersion": "2017-03-30",
           "dependsOn": [
             "[concat('SIEM',copyindex(1))]"
+          ],
+          "tags": {
+            "displayName": "config-initial"
+          },
+          "properties": {
+            "publisher": "Microsoft.Azure.Extensions",
+            "type": "CustomScript",
+            "typeHandlerVersion": "2.0",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              },
+            "protectedSettings": {
+              "commandToExecute": "[concat('bash initialconfig.sh ',parameters('SharedVmConfig').adminUsername,parameters('SharedVmConfig').adminPassword)]",
+              "fileUris": ["[concat(parameters('SharedVmConfig').templateURI,'/scripts/initialconfig.sh')]"
+              ]  
+            }
+          }
+        },
+        {
+          "name": "[concat('siemconfig',copyIndex(1))]",
+          "type": "extensions",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2017-03-30",
+          "dependsOn": [
+            "[concat('initialconfig',copyIndex(1))]"
           ],
           "tags": {
             "displayName": "config-siem"
@@ -95,7 +120,7 @@
             "settings": {
               },
             "protectedSettings": {
-              "commandToExecute": "[concat('bash siemconfig.sh ',parameters('SharedVmConfig').adminPassword)]",
+              "commandToExecute": "[concat('bash siemconfig.sh ',parameters('SharedVmConfig').adminUsername,parameters('SharedVmConfig').adminPassword)]",
               "fileUris": ["[concat(parameters('SharedVmConfig').templateURI,'/scripts/siemconfig.sh')]"
               ]  
             }
