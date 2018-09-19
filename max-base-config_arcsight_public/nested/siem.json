@@ -95,7 +95,7 @@
             "settings": {
               },
             "protectedSettings": {
-              "commandToExecute": "bash siemconfig.sh",
+              "commandToExecute": "[concat('bash siemconfig.sh ',parameters('SharedVmConfig').adminPassword)]",
               "fileUris": ["[concat(parameters('SharedVmConfig').templateURI,'/scripts/siemconfig.sh')]"
               ]  
             }
