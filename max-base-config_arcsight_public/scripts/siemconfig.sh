@@ -5,10 +5,8 @@
 ## Configures a CentOS Linux host with xrdp, Mate, and ArcSight EMS
 ## Takes params: admin username $1, password $2
 
-# Set enforcement to permissive
+# Set SELinux enforcement to permissive
 setenforce 0
-
-## Install and configure xrdp
 
 # Apply all available updates, omit Azure agent to prevent script failure
 yum update -y --exclude=WALinuxAgent
@@ -16,35 +14,37 @@ yum update -y --exclude=WALinuxAgent
 # Install foundation packages
 yum install epel-release -y
 yum install byobu -y
-yum groups install "Server with GUI" -y
-yum groups install "MATE Desktop" -y
-#yum -y --enablerepo epel install xrdp tigervnc-server
-#yum -y --enablerepo epel install mate-desktop
+#yum groups install "Server with GUI" -y
+#yum groups install "MATE Desktop" -y
+yum -y --enablerepo epel install xrdp tigervnc-server
+yum -y --enablerepo epel install mate-desktop
 #yum -y install mailx tcpdump
 
-# Set autostart
+# Set GUI autostart
 systemctl isolate graphical.target
 systemctl set-default graphical.target
 
-# Configure SELinux
+# Configure SELinux for xrdp
 chcon --type=bin_t /usr/sbin/xrdp
 chcon --type=bin_t /usr/sbin/xrdp-sesman
 
-# Start and enable xrdp 
+# Start and enable xrdp
 service xrdp start
 systemctl enable xrdp.service
-systemctl start graphical.target
 
 # Set up Mate desktop for builtin admin user
-echo "exec mate-session" > ~/.Xclients
-chmod 700 ~/.Xclients
+#echo "exec mate-session" > ~/.Xclients
+#chmod 700 ~/.Xclients
 
 # Set up Mate desktop for all users
-echo "exec mate-session" > /etc/skel/.Xclients
-chmod 700 /etc/skel/.Xclients
+#echo "exec mate-session" > /etc/skel/.Xclients
+#chmod 700 /etc/skel/.Xclients
 
 # Restart xrdp
 service xrdp restart
+
+# Start GUI
+systemctl start graphical.target
 
 # Update time zone
 yum -y update tzdata
