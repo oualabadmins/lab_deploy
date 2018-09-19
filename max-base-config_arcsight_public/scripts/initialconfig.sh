@@ -29,13 +29,14 @@ chcon --type=bin_t /usr/sbin/xrdp-sesman
 service xrdp start
 systemctl enable xrdp.service
 
-# Set up Mate desktop for builtin admin user
-echo "exec mate-session" > /home/$1/.Xclients
-chmod 700 /home/$1/.Xclients
+# Set up Mate desktop for builtin admin user (TRYING NEW METHOD OF SETTING MATE AS DEFAULT)
+#echo "exec mate-session" > /home/$1/.Xclients
+#chmod 700 /home/$1/.Xclients
+echo "PREFERRED=/usr/bin/mate-session" > /etc/sysconfig/desktop
 
 # Set up Mate desktop for all users
-echo "exec mate-session" > /etc/skel/.Xclients
-chmod 700 /etc/skel/.Xclients
+#echo "exec mate-session" > /etc/skel/.Xclients
+#chmod 700 /etc/skel/.Xclients
 
 # Update time zone
 yum -y update tzdata
@@ -51,5 +52,5 @@ cp /etc/fstab /etc/fstab.old
 echo -e "/dev/sdc1 /arcsight xfs defaults 0 0" >> /etc/fstab
 
 # Restart
-reboot -f
+#reboot -f
 #shutdown -r now

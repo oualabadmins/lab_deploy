@@ -52,7 +52,7 @@ The following resources are deployed as part of the solution:
     + 8 cores
     + 36GB RAM
     + 250GB disk capacity
-+ Current template successfully deploys SIEM VM with xrdp and Mate Desktop. No ArcSight deployment will be done until we get install bits and license.
++ Current template successfully deploys SIEM VM with xrdp and Mate Desktop, and mounts 1TB data disk at _/arcsight_. No ArcSight deployment will be done until we get install bits and license.
 + Remember, when you RDP to your VM, you will use the admin username and password you specified at deploy time, _not_ your corpnet credentials.
 
 ## Known issues
