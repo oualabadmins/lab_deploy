@@ -107,6 +107,7 @@
           "location": "[resourceGroup().location]",
           "apiVersion": "2017-03-30",
           "dependsOn": [
+            "[concat('SIEM',copyindex(1))]",
             "[concat('initialconfig',copyIndex(1))]"
           ],
           "tags": {
