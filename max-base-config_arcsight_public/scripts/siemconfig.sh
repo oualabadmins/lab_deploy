@@ -54,12 +54,21 @@ timedatectl set-timezone America/Los_Angeles
 ## Install ArcSight EMS
 # From https://www.slideshare.net/Protect724/esm-install-guide60c
 
-# Create arcsight user, use passed param $1 for raw password
-groupadd arcsight
-username="arcsight"
-pass=$(perl -e 'print crypt($ARGV[0], "password")' $1)
-useradd -c “arcsight_software_owner” -g arcsight -d -p $pass $username
-/home/arcsight -m -s /bin/bash arcsight
+# Create arcsight user, use passed param $1 for raw password (NOT WORKING)
+#groupadd arcsight
+#username="arcsight"
+#pass=$(perl -e 'print crypt($ARGV[0], "password")' $1)
+#useradd -c “arcsight_software_owner” -g arcsight -d -p $pass $username
+#/home/arcsight -m -s /bin/bash arcsight
+
+# Mount data disk /dev/sdc1 as /arcsight
+parted /dev/sdc mklabel msdos
+parted -s -a optimal /dev/sdc mkpart primary xfs 1MiB 1000MiB
+mkfs.xfs -L /arcsight -q /dev/sdc1
+mkdir /arcsight
+mount /dev/sdc1 /arcsight
+cp /etc/fstab /etc/fstab.old
+echo -e "/dev/sdc1 /arcsight xfs defaults 0 0" >> /etc/fstab
 
 # Install dependencies
 #yum -y groupinstall "Web Server", "Compatibility Libraries", "Development Tools"
