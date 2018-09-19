@@ -1,4 +1,4 @@
-﻿# MAX Skunkworks Lab - ArcSight SIEM Base Configuration - Public (v0.3)
+﻿# MAX Skunkworks Lab - ArcSight SIEM Base Configuration - Public (v0.4)
 
 **IMPORTANT**: Only deploy this template into a PUBLIC subscription.
 
@@ -10,7 +10,7 @@
 | MAXLAB R&D EXT 1
 | MAXLAB R&D EXT 2
 
-**Time to deploy**: 40+ minutes
+**Time to deploy**: 25+ minutes
 
 The **ArcSight SIEM Base Configuration - Public** template provisions a test environment on a public virtual network consisting of a CentOS 7.3 Linux VM with ArcSight ESM installed, and one or more Windows 10 VMs.
 
@@ -52,6 +52,7 @@ The following resources are deployed as part of the solution:
     + 8 cores
     + 36GB RAM
     + 250GB disk capacity
++ Current template successfully deploys SIEM VM with xrdp and Mate Desktop. No ArcSight deployment will be done until we get install bits and license.
 + Remember, when you RDP to your VM, you will use the admin username and password you specified at deploy time, _not_ your corpnet credentials.
 
 ## Known issues
@@ -66,9 +67,10 @@ https://github.com/maxskunkworks
 
 ![alt text](images/maxskunkworkslogo-small.jpg "MAX Skunkworks")
 
-Last update: _9/12/2018_
+Last update: _9/19/2018_
 
 ## Changelog
 
 + **9/4/2018**: Original commit, derived from https://github.com/oualabadmins/lab_deploy/tree/master/max-base-config_x-vm_corpnet.
 + **9/12/2018**: Deployment of Azure resources working, ./scripts/siemconfig.sh is being developed. XRDP with Mate desktop is deployed automatically.
++ **9/19/2018**: Split script: initialconfig.sh installs xrdp, MATE, and configures user desktop. Also mounts the 1TB data disk at /arcsight. siemconfig.sh will run after, and will provision ArcSight.
