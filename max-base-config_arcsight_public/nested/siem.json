@@ -100,32 +100,6 @@
               ]  
             }
           }
-        },
-        {
-          "name": "[concat('siemconfig',copyIndex(1))]",
-          "type": "extensions",
-          "location": "[resourceGroup().location]",
-          "apiVersion": "2017-03-30",
-          "dependsOn": [
-            "[concat('SIEM',copyindex(1))]",
-            "[concat('initialconfig',copyIndex(1))]"
-          ],
-          "tags": {
-            "displayName": "config-siem"
-          },
-          "properties": {
-            "publisher": "Microsoft.Azure.Extensions",
-            "type": "CustomScript",
-            "typeHandlerVersion": "2.0",
-            "autoUpgradeMinorVersion": true,
-            "settings": {
-              },
-            "protectedSettings": {
-              "commandToExecute": "[concat('bash siemconfig.sh ',parameters('SharedVmConfig').adminUsername,parameters('SharedVmConfig').adminPassword)]",
-              "fileUris": ["[concat(parameters('SharedVmConfig').templateURI,'/scripts/siemconfig.sh')]"
-              ]  
-            }
-          }
         }
       ]
     }
