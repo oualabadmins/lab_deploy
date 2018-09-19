@@ -13,13 +13,9 @@ yum update -y --exclude=WALinuxAgent
 
 # Install foundation packages
 yum install epel-release -y
-yum install byobu -y
 yum -y --enablerepo epel install xrdp tigervnc-server
 yum -y groupinstall "MATE Desktop"
-#yum groups install "Server with GUI" -y
-#yum groups install "MATE Desktop" -y
-#yum -y --enablerepo epel install mate-desktop
-#yum -y install mailx tcpdump
+yum install byobu -y
 
 # Set GUI autostart
 systemctl isolate graphical.target
@@ -34,18 +30,12 @@ service xrdp start
 systemctl enable xrdp.service
 
 # Set up Mate desktop for builtin admin user
-echo "exec mate-session" > /etc/$1/.Xclients
-chmod 700 /etc/$1/.Xclients
+echo "exec mate-session" > /home/$1/.Xclients
+chmod 700 /home/$1/.Xclients
 
 # Set up Mate desktop for all users
 echo "exec mate-session" > /etc/skel/.Xclients
 chmod 700 /etc/skel/.Xclients
-
-# Restart xrdp
-service xrdp restart
-
-# Start GUI
-systemctl start graphical.target
 
 # Update time zone
 yum -y update tzdata
@@ -61,4 +51,5 @@ cp /etc/fstab /etc/fstab.old
 echo -e "/dev/sdc1 /arcsight xfs defaults 0 0" >> /etc/fstab
 
 # Restart
-reboot
+reboot -f
+#shutdown -r now
