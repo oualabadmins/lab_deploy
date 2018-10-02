@@ -14,6 +14,8 @@ libpeas libpeas-devel vlc vlc-devel
 # Flag for duilding:
 export CFLAGS="-O3 -ffast-math -march=native"
 
+yum install -y eeze ecore eina
+
 wget -c "https://download.enlightenment.org/rel/libs/efl/efl-1.20.7.tar.xz" && tar -xf efl-1.20.7.tar.xz
 cd efl-1.20.7/
  ./configure --prefix=/usr --enable-systemd
