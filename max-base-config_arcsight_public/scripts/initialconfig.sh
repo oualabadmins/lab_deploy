@@ -3,7 +3,6 @@
 ## initialconfig.sh
 ## kvice 9/12/2018
 ## Configures a CentOS Linux host with xrdp, Mate, and other basic config tasks
-## Takes params: admin username $1, password $2
 
 # Set SELinux enforcement to permissive
 setenforce 0
