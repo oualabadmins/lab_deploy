@@ -34,15 +34,29 @@ You can deploy this template in one of two ways:
 
 ## Solution overview and deployed resources
 
+>**NOTE:** As of 10/3/2018, the template successfully deploys all VMs with xrdp running on the CentOS VMs. No ArcSight installation or config is being done yet.
+
 The following resources are deployed as part of the solution:
+
+### VMs
 
 + **ArcSight CentOS Server VM(s)**: CentOS 7.3 with ArcSight ESM 7.1. 30GB system disk, 1TB data disk, all managed. Arcsight installation script is in progress, not yet working.
 + **Client VM(s)**: Windows 10 client(s) with ArcSight software. Managed 127GB system disk.
+
+### Storage
+
 + **Storage account**: Diagnostics storage account, and client VM storage account if indicated.
+
+### Network
+
 + **Virtual network**: 1 Vnet with two subnets, frontend and backend. Frontend subnet is 172.16.0.0/25, backend is 172.16.0.128/25.
 + **Network security group**: The NSG permits ports 22 and 3389 to frontend NICs.
 + **Network interfaces**: 2 NICs per VM with dynamic private IP addresses. Frontend NICs also have a public IP.
 + **Public IPs**: 1 public IP per frontend NIC for both SIEM and CLIENT VMs.
+
+### Extensions
+
++ **siemconfig**: The bash script /scripts/initialconfig.sh is exectuted on the SIEM VM with the Linux custom script extension. This script creates a cron job to run /scripts/siemconfig.sh after reboot (NOT YET IMPLEMENTED). Staggering the scripts this way avoids CSE extension timeouts.
 + **BGInfo**: The **BGInfo** extension is applied to all VMs.
 + **Antimalware**: The **iaaSAntimalware** extension is applied to all VMs with basic scheduled scan and exclusion settings.
 
