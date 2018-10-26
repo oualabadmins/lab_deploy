@@ -56,7 +56,7 @@ The following resources are deployed as part of the solution:
 
 ### Extensions
 
-+ **siemconfig**: The bash script /scripts/initialconfig.sh is exectuted on the SIEM VM with the Linux custom script extension. This script creates a cron job to run /scripts/siemconfig.sh after reboot (NOT YET IMPLEMENTED). Staggering the scripts this way avoids CSE extension timeouts.
++ **siemconfig**: The bash script /scripts/initialconfig.sh is executed on the SIEM VM with the Linux custom script extension. This script creates a cron job to run /scripts/siemconfig.sh after reboot (NOT YET IMPLEMENTED). Staggering the scripts this way avoids CSE extension timeouts.
 + **BGInfo**: The **BGInfo** extension is applied to all VMs.
 + **Antimalware**: The **iaaSAntimalware** extension is applied to all VMs with basic scheduled scan and exclusion settings.
 
