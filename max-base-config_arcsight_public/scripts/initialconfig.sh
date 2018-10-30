@@ -3,6 +3,7 @@
 ## initialconfig.sh
 ## kvice 9/12/2018
 ## Configures a CentOS Linux host with xrdp, Mate, and other basic config tasks
+## Updated dev\sdc1 size from 1000MiB to 1000000MiB (1TB)
 
 # Set SELinux enforcement to permissive
 setenforce 0
@@ -43,7 +44,7 @@ timedatectl set-timezone America/Los_Angeles
 
 # Mount data disk /dev/sdc1 as /arcsight
 parted /dev/sdc mklabel msdos
-parted -s -a optimal /dev/sdc mkpart primary xfs 1MiB 1000MiB
+parted -s -a optimal /dev/sdc mkpart primary xfs 1MiB 1000000MiB
 mkfs.xfs -L /arcsight -q /dev/sdc1
 mkdir /arcsight
 mount /dev/sdc1 /arcsight
