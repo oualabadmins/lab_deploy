@@ -15,7 +15,8 @@ yum update -y --exclude=WALinuxAgent
 yum install epel-release -y
 yum -y --enablerepo epel install xrdp tigervnc-server
 yum -y groupinstall "MATE Desktop"
-yum install byobu -y
+yum -y install byobu
+yum -y install gedit
 
 # Set GUI autostart
 systemctl isolate graphical.target
@@ -50,6 +51,9 @@ mkdir /arcsight
 mount /dev/sdc1 /arcsight
 cp /etc/fstab /etc/fstab.old
 echo -e "/dev/sdc1 /arcsight xfs defaults 0 0" >> /etc/fstab
+
+# Allow root to open GUI apps as sudo
+xhost +local:
 
 # Restart
 #reboot -f

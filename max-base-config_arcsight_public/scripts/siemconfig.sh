@@ -17,7 +17,7 @@ groupadd arcsight
 username="arcsight"
 password=""
 pass=$(perl -e 'print crypt($ARGV[0], "password")' $password)
-useradd -c “arcsight_software_owner” -g arcsight -d "/home/arcsight" -p $pass $username
+useradd -c “arcsight_software_owner” -g arcsight -d /home/arcsight -p $pass $username -m -s /bin/bash arcsight
 /home/arcsight -m -s /bin/bash arcsight
 
 # Install dependencies
@@ -27,15 +27,32 @@ yum -y groupinstall "Web Server", "Compatibility Libraries", "Development Tools"
 sysctl -w net.ipv6.conf.default.disable_ipv6=1
 sysctl -w net.ipv6.conf.all.disable_ipv6=1
 
+# Mount SMB file share //maxfilesext2.file.core.windows.net/arcsight
+mkdir -p /mnt/maxfilesext2
+mount -t cifs //maxfilesext2.file.core.windows.net/arcsight /mnt/maxfilesext2 -o vers=3.0,username=maxfilesext2,password=yqIHW9FzyyMGCN+CDeHFzsITUFdC0k4xq/Wa0G7bqIxVOJyQtFoA1BM/9V0C6k+P3U9KaI98sDeeh8G4vSNa4A==,dir_mode=0777,file_mode=0777,sec=ntlmssp
+echo -e "//maxfilesext2.file.core.windows.net/arcsight /mnt/maxfilesext2 cifs vers=3.0,username=maxfilesext2,password=yqIHW9FzyyMGCN+CDeHFzsITUFdC0k4xq/Wa0G7bqIxVOJyQtFoA1BM/9V0C6k+P3U9KaI98sDeeh8G4vSNa4A==,dir_mode=0777,file_mode=0777" >> /etc/fstab
+
 # Create install folder, chown to arcsight
-mkdir -m777 arcsight_install
-cd arcsight_install
-tar xvf ArcSightESMSuite-7.0.0.xxxx.1.tar
+mkdir -m777 /arcsight/arcsight_install
+cd /arcsight/arcsight_install
+
+# Copy install bits from CIFS share to /arcsight/arcsight_install
+cp /mnt/maxfilesext2/linux/* /arcsight/arcsight_install/
+tar xvf ArcSightESMSuite-7.0.0.2234.1.tar
 chown -R arcsight:arcsight .
 
 # Run prepare_system.sh
 cd Tools
 ./prepare_system.sh
+
+#### REBOOT SYSTEM NOW
+
+# Confirm setup
+sudo ulimit -a
+# Check for the following two lines:
+#open files 65536
+#max user processes 10240
+
 
 # Install ESM as arcsight user
 su arcsight
