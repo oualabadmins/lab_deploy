@@ -12,16 +12,16 @@ setenforce 0
 # From https://www.slideshare.net/Protect724/esm-install-guide60c
 
 # Create arcsight user
+mkdir /home/arcsight
 groupadd arcsight
 username="arcsight"
 password=""
 pass=$(perl -e 'print crypt($ARGV[0], "password")' $password)
-useradd -c “arcsight_software_owner” -g arcsight -d -p $pass $username
+useradd -c “arcsight_software_owner” -g arcsight -d "/home/arcsight" -p $pass $username
 /home/arcsight -m -s /bin/bash arcsight
 
 # Install dependencies
 yum -y groupinstall "Web Server", "Compatibility Libraries", "Development Tools"
-yum -y install pam
 
 # Disable IPv6 per https://community.softwaregrp.com/t5/ArcSight-User-Discussions/Fresh-ESM-Installation-stops-at-quot-Set-up-ArcSight-Storage/td-p/1519539
 sysctl -w net.ipv6.conf.default.disable_ipv6=1
