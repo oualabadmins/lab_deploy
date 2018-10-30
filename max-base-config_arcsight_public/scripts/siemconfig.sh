@@ -18,7 +18,11 @@ username="arcsight"
 password=""
 pass=$(perl -e 'print crypt($ARGV[0], "password")' $password)
 useradd -c “arcsight_software_owner” -g arcsight -d /home/arcsight -p $pass $username -m -s /bin/bash arcsight
-/home/arcsight -m -s /bin/bash arcsight
+cd /home/arcsight/
+cp -r /etc/skel/. .
+chown -R arcsight.arcsight .
+chmod -R go=u,go-w .
+chmod go= .
 
 # Install dependencies
 yum -y groupinstall "Web Server", "Compatibility Libraries", "Development Tools"
