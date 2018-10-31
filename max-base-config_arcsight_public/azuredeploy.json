@@ -48,9 +48,9 @@
     "vmSizeServer": {
       "type": "string",
       "metadata": {
-        "description": "Select a VM size for all server VMs in your deployment."
+        "description": "Minimum size for the SIEM VM is Standard_DS5_v2."
       },
-      "defaultValue": "Standard_DS4_v2"
+      "defaultValue": "Standard_DS5_v2"
     },
     "vmSizeClient": {
       "type": "string",
