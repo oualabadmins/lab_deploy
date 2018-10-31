@@ -4,25 +4,33 @@
 ## kvice 9/12/2018
 ## Configures a CentOS Linux host with ArcSight EMS
 ## Currently configured to run manually on SIEM server
+## Install ArcSight EMS
+# From https://www.slideshare.net/Protect724/esm-install-guide60c
 
 # Set SELinux enforcement to permissive
 setenforce 0
 
-## Install ArcSight EMS
-# From https://www.slideshare.net/Protect724/esm-install-guide60c
+# Allow root to open GUI apps as sudo (run from non-root console): xhost +local:
+# sudo persistent (if running manually): sudo -s
+
+# Add .vnc to /etc/skel
+mkdir /etc/skel/.vnc
 
 # Create arcsight user
 mkdir /home/arcsight
 groupadd arcsight
 username="arcsight"
-password=""
+password="arcsight"
 pass=$(perl -e 'print crypt($ARGV[0], "password")' $password)
-useradd -c “arcsight_software_owner” -g arcsight -d /home/arcsight -p $pass $username -m -s /bin/bash arcsight
+useradd -c “arcsight_software_owner” -g arcsight -d /home/arcsight -p $pass -m -s /bin/bash arcsight
 cd /home/arcsight/
 cp -r /etc/skel/. .
 chown -R arcsight.arcsight .
 chmod -R go=u,go-w .
 chmod go= .
+
+# Restart xrdp to allow arcsight to login
+service xrdp restart
 
 # Install dependencies
 yum -y groupinstall "Web Server", "Compatibility Libraries", "Development Tools"
@@ -52,14 +60,19 @@ cd Tools
 #### REBOOT SYSTEM NOW
 
 # Confirm setup
-sudo ulimit -a
+ulimit -a
 # Check for the following two lines:
 #open files 65536
 #max user processes 10240
 
+# Expand /dev/sda2 to max (use gparted to do this manually)
+fdisk /dev/sda p d 2 n p 2 w q
+reboot
+# post reboot
+xfs_growfs /dev/sda2
 
 # Install ESM
-# NOTE: login as arcsight user
+## NOTE: login as arcsight user
 cd /arcsight/arcsight_install/
 chmod +x ArcSightESMSuite.bin
 ./ArcSightESMSuite.bin

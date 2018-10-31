@@ -3,7 +3,8 @@
 ## initialconfig.sh
 ## kvice 9/12/2018
 ## Configures a CentOS Linux host with xrdp, Mate, and other basic config tasks
-## Updated dev\sdc1 size from 1000MiB to 1000000MiB (1TB)
+## 10/30/2018 - Updated dev\sdc1 size from 1000MiB to 1000000MiB (1TB)
+## 10/31/2018 - Cleaned up unused lines, remmed yum update
 
 # Set SELinux enforcement to permissive
 setenforce 0
@@ -12,7 +13,7 @@ setenforce 0
 #yum update -y --exclude=WALinuxAgent
 
 # Install foundation packages
-yum install epel-release -y
+yum -y install epel-release
 yum -y --enablerepo epel install xrdp tigervnc-server
 yum -y groupinstall "MATE Desktop"
 yum -y install byobu
@@ -30,14 +31,8 @@ chcon --type=bin_t /usr/sbin/xrdp-sesman
 service xrdp start
 systemctl enable xrdp.service
 
-# Set up Mate desktop for builtin admin user (TRYING NEW METHOD OF SETTING MATE AS DEFAULT)
-#echo "exec mate-session" > /home/$1/.Xclients
-#chmod 700 /home/$1/.Xclients
+# Set up Mate desktop
 echo "PREFERRED=/usr/bin/mate-session" > /etc/sysconfig/desktop
-
-# Set up Mate desktop for all users
-#echo "exec mate-session" > /etc/skel/.Xclients
-#chmod 700 /etc/skel/.Xclients
 
 # Update time zone
 yum -y update tzdata
@@ -51,10 +46,3 @@ mkdir /arcsight
 mount /dev/sdc1 /arcsight
 cp /etc/fstab /etc/fstab.old
 echo -e "/dev/sdc1 /arcsight xfs defaults 0 0" >> /etc/fstab
-
-# Allow root to open GUI apps as sudo
-xhost +local:
-
-# Restart
-#reboot -f
-#shutdown -r now
