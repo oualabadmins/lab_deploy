@@ -58,9 +58,11 @@ sudo ulimit -a
 #max user processes 10240
 
 
-# Install ESM as arcsight user
-su arcsight
-./ArcSightESMSuite.bin -i console
+# Install ESM
+# NOTE: login as arcsight user
+cd /arcsight/arcsight_install/
+chmod +x ArcSightESMSuite.bin
+./ArcSightESMSuite.bin
 
 
 
