@@ -9,7 +9,7 @@
 setenforce 0
 
 # Apply all available updates, omit Azure agent to prevent script failure
-yum update -y --exclude=WALinuxAgent
+#yum update -y --exclude=WALinuxAgent
 
 # Install foundation packages
 yum install epel-release -y
