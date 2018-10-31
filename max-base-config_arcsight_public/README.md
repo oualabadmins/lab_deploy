@@ -24,6 +24,8 @@ The **ArcSight SIEM Base Configuration - Public** template provisions a test env
 ## Usage
 
 + Click the "Deploy to Azure" button to open the deployment UI in the Azure portal
++ Log into SIEM VM as admin user and manually run /scripts/siemconfig.sh as root (sudo -s)
++ Log into client VM as admin user and install ArcSight console and connectors as needed
 
 ## Solution overview and deployed resources
 
