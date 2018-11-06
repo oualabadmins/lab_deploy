@@ -1,4 +1,4 @@
-﻿# MAX Skunkworks Lab - ArcSight SIEM Base Configuration - Public (v0.9)
+﻿# MAX Skunkworks Lab - ArcSight SIEM Base Configuration - Public (v1.0)
 
 **IMPORTANT**: Only deploy this template into a PUBLIC subscription.
 
@@ -22,15 +22,19 @@ The **ArcSight SIEM Base Configuration - Public** template provisions a test env
 <img src="http://armviz.io/visualizebutton.png"/>
 </a>
 
-## Usage
+## Prerequisites
 
-Prior to deployment of ArcSight software, you must download the following binaries and acquire licenses:
+Prior to deployment of ArcSight software, you must download the following binaries from the [MicroFocus website]() and acquire licenses. You can inquire about 180-day trial licenses by contacting Micro Focus at software.partner@microfocus.com. 
 
 | Package | Binaries | Documentation
 | :------------------- | :------------------- | :-------------------
-| Micro Focus Security ArcSight Enterprise Security Manager Software v7.0 (TH001H) | ArcSightESMSuite-7.0.0.2234.1.tar <br> ArcSight-7.0.0.2436.1-Console-Win.exe | ESM_InstallGuide_7.0P1.pdf <br> ESM_ArcSightConsole_UserGuide_7.0P1.pdf |
-| Micro Focus Security ArcSight SmartConnectors Framework 7.10.0 (TH016AAE) | ArcSight-7.10.0.8114.0-Connector-Win64.exe | MicrosoftOffice365Config.pdf |
+| Micro Focus Security ArcSight Enterprise Security Manager Software 7.0 (TH001H) | ArcSightESMSuite-7.0.0.2234.1.tar <br> ArcSight-7.0.0.2436.1-Console-Win.exe | ESM_InstallGuide_7.0P1.pdf <br> ESM_ArcSightConsole_UserGuide_7.0P1.pdf |
+| Micro Focus Security ArcSight SmartConnectors Framework 7.10.0 (TH016AAE) | ArcSight-7.10.0.8114.0-Connector-Win64.exe | [MicrosoftOffice365Config.pdf](https://community.softwaregrp.com/t5/ArcSight-Connectors/SmartConnector-for-Microsoft-Office-365/ta-p/1583309?attachment-id=68456) |
 |
+
+You must also provision an Office 365 E5 tenant and configure an AAD Enterprise App for connector authentication.
+
+## Usage
 
 To deploy the template:
 
@@ -38,6 +42,7 @@ To deploy the template:
 + Log into SIEM VM as **admin** user and manually run /scripts/prep-arcsight.sh | reboot
 + Log into SIEM VM as **arcsight** user and manually run /scripts/install-arcsight.sh
 + Log into SIEM VM as **admin** user and manually run /scripts/start-arcsight.sh
++ If you haven't done so already, provision an Office 365 E5 tenant and follow the procedures in **MicrosoftOffice365Config.pdf** to configure an AAD Enterprise App to enable connector authentication. See the **Known Issues** section of this README for important information.
 + Log into CLIENT VM as **admin** user and install ArcSight console and connectors as needed
 
 ## Solution overview and deployed resources
@@ -81,6 +86,7 @@ The following resources are deployed as part of the solution:
 
 + After updating the template to deploy CentOS 7.4, some lines of the initialconfig.sh script appear to fail in the SIEM deployment. However, everything works as expected.
 + The client VM deployment may take longer than expected, and then appear to fail. The client VMs and extensions may or may not deploy successfully. This is due to an ongoing Azure client deployment bug, and only happens when the client VM size is smaller than DS4_v2.
++ When configuring the AAD App for the Office 365 Connector, you must add READ permissions for all Office Management APIs, both Application and Delegated permissions, contrary to the guidance in **Step 3** of the _Specifying Permissions in Microsoft Management Activity API_ section of the SmartConnector for Microsoft Office 365 Configuration Guide.
 
 `Tags: SIEM, ArcSight, ESM`
 ___
