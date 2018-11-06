@@ -1,0 +1,475 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "configName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the deployment, i.e. BaseConfig01. Do not use spaces or special characters other than _ or -. Used to concatenate resource names for the deployment."
+      },
+      "defaultValue": ""
+    },
+    "serverOS": {
+      "type": "string",
+      "allowedValues": [
+        "CentOS"
+      ],
+      "metadata": {
+        "description": "CentOS only for this template."
+      },
+      "defaultValue": "CentOS"
+    },
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the domain administrator account to create, i.e. globaladmin. This will also be used to create a local admin account on each VMs."
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The administrator account password."
+      }
+    },
+    "numberOfSIEMVms": {
+      "type": "int",
+      "metadata": {
+        "description": "The number of SIEM VMs to deploy."
+      },
+      "defaultValue": 1
+    },
+    "numberOfClientVms": {
+      "type": "int",
+      "metadata": {
+        "description": "The number of client VMs to deploy."
+      },
+      "defaultValue": 1
+    },
+    "vmSizeServer": {
+      "type": "string",
+      "metadata": {
+        "description": "Minimum size for the SIEM VM is Standard_DS5_v2."
+      },
+      "defaultValue": "Standard_DS5_v2"
+    },
+    "vmSizeClient": {
+      "type": "string",
+      "metadata": {
+        "description": "Select a VM size for all Windows 10 client VMs in your deployment."
+      },
+      "defaultValue": "Standard_DS4_v2"
+    },
+    "dnsLabelPrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "DNS label prefix for public IPs. Must be lowercase and match the regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$."
+      }
+    },
+    "_artifactsLocation": {
+      "type": "string",
+      "metadata": {
+        "description": "Container where template files and resources are stored."
+      },
+      "defaultValue": "https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/max-base-config_arcsight_public"
+    },
+    "_artifactsLocationSasToken": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Token to access _artifactsLocation, if necessary."
+      },
+      "defaultValue": ""
+    }
+  },
+
+  "variables": {
+
+    "templates": "[concat(parameters('_artifactsLocation'),'/nested')]",
+    "storageAccountName": "[concat(uniqueString(resourceGroup().id),'storage')]",
+
+    "network": {
+      "vnetName": "[concat(parameters('configName'),'-VNET')]",
+      "nsgName": "[concat(parameters('configName'),'-NSG')]",
+      "subnetRefFrontend": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-VNET'), 'frontend')]",
+      "subnetRefBackend": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-VNET'), 'backend')]",
+      "addressSpace": "172.16.100.0/24",
+      "subnetFrontend": "172.16.100.0/25",
+      "subnetBackend": "172.16.100.128/25",
+      "frontendNicNameSIEM": "[concat(parameters('configName'),'-SIEM_NIC_DEPLOY')]",
+      "frontendNicNameCLIENT": "[concat(parameters('configName'),'-CLIENT_NIC_DEPLOY')]",
+      "backendNicNameSIEM": "[concat(parameters('configName'),'-SIEM_NIC-2_DEPLOY')]",
+      "backendNicNameCLIENT": "[concat(parameters('configName'),'-CLIENT_NIC-2_DEPLOY')]"
+    },
+
+    "SharedVmConfig": {
+      "location": "[resourceGroup().location]",
+      "vmSize": "[parameters('vmSizeServer')]",
+      "vmSizeClient": "[parameters('vmSizeClient')]",
+      "serverOS": "[parameters('serverOS')]",
+      "adminUsername": "[parameters('adminUsername')]",
+      "adminPassword": "[parameters('adminPassword')]",
+      "storageAccountNamePrefix": "[variables('storageAccountName')]",
+      "sasToken": "[parameters('_artifactsLocationSasToken')]",
+      "configName": "[parameters('configName')]",
+      "templateURI": "[parameters('_artifactsLocation')]"
+    }
+  },
+
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[variables('storageAccountName')]",
+      "apiVersion": "2017-06-01",
+      "location": "[resourceGroup().location]",
+      "kind": "Storage",
+      "comments": "This storage account contains VHDs for client VMs in the deployment.",
+      "sku": {
+        "name": "Standard_LRS"
+      }
+    },
+    {
+      "apiVersion": "2017-10-01",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[variables('network').nsgName]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "ssh-rule",
+            "properties": {
+              "description": "Allow SSH",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "22",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "rdp-rule",
+            "properties": {
+              "description": "Allow RDP",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "3389",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 102,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "siem",
+            "properties": {
+              "description": "Allow SIEM ports",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "8443-9443",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 103,
+              "direction": "Inbound"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[concat(parameters('configName'),'-SIEM_IP')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "NEW This is the deployment resource for APP public IPs.",
+      "dependsOn": [
+        "[variables('network').vnetName]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/publicip.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "SIEM"
+          },
+          "count": {
+            "value": "[parameters('numberOfSIEMVms')]"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "dnsLabelPrefix": {
+            "value": "[parameters('dnsLabelPrefix')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('configName'),'-CLIENT_IP')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "NEW This is the deployment resource for CLIENT public IPs.",
+      "dependsOn": [
+        "[variables('network').vnetName]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/publicip.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "CLIENT"
+          },
+          "count": {
+            "value": "[parameters('numberOfClientVms')]"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "dnsLabelPrefix": {
+            "value": "[parameters('dnsLabelPrefix')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[variables('network').vnetName]",
+      "type": "Microsoft.Network/virtualNetworks",
+      "dependsOn": [
+        "[variables('network').nsgName]"
+      ],
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2018-01-01",
+      "comments": "This is the backend virtual network for the deployment.",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[variables('network').addressSpace]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "frontend",
+            "properties": {
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('network').nsgName)]"
+              },
+              "addressPrefix": "[variables('network').subnetFrontend]"
+            }
+          },
+          {
+            "name": "backend",
+            "properties": {
+              "addressPrefix": "[variables('network').subnetBackend]"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[variables('network').frontendNicNameSIEM]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "This is the deployment resource for SIEM NICs.",
+      "dependsOn": [
+        "[variables('network').vnetName]",
+        "[concat(parameters('configName'),'-SIEM_IP')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/nic.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "SIEM"
+          },
+          "count": {
+            "value": "[parameters('numberOfSIEMVms')]"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "vnetName": {
+            "value": "[variables('network').vnetName]"
+          },
+          "subnet": {
+            "value": "frontend"
+          }
+
+        }
+      }
+    },
+    {
+      "name": "[variables('network').backendNicNameSIEM]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "This is the deployment resource for backend SIEM NICs.",
+      "dependsOn": ["[variables('network').vnetName]"],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/nic.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "SIEM"
+          },
+          "count": {
+            "value": "[parameters('numberOfSIEMVms')]"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "vnetName": {
+            "value": "[variables('network').vnetName]"
+          },
+          "subnet": {
+            "value": "backend"
+          }
+        }
+      }
+    },
+    {
+      "name": "[variables('network').frontendNicNameCLIENT]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "This is the deployment resource for CLIENT NICs.",
+      "dependsOn": [
+        "[variables('network').vnetName]",
+        "[concat(parameters('configName'),'-CLIENT_IP')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/nic.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "CLIENT"
+          },
+          "count": {
+            "value": "[parameters('numberOfClientVms')]"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "vnetName": {
+            "value": "[variables('network').vnetName]"
+          },
+          "subnet": {
+            "value": "frontend"
+          }
+        }
+      }
+    },
+    {
+      "name": "[variables('network').backendNicNameCLIENT]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "This is the deployment resource for CLIENT backend NICs.",
+      "dependsOn": ["[variables('network').vnetName]"],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/nic.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "CLIENT"
+          },
+          "count": {
+            "value": "[parameters('numberOfClientVms')]"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "vnetName": {
+            "value": "[variables('network').vnetName]"
+          },
+          "subnet": {
+            "value": "backend"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('configName'),'-SIEM_DEPLOY')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "This is the deployment resource for the SIEM server VM.",
+      "dependsOn": [
+        "[variables('network').frontendNicNameSIEM]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/siem.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "SharedVmConfig": { 
+            "value": "[variables('SharedVmConfig')]" 
+          },
+          "count": {
+            "value": "[parameters('numberOfSIEMVms')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('configName'),'-CLIENT_DEPLOY')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "This is the deployment resource for client VMs.",
+      "dependsOn": [
+        "[variables('network').frontendNicNameCLIENT]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/client.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "SharedVmConfig": { 
+            "value": "[variables('SharedVmConfig')]" 
+          },
+          "count": {
+            "value": "[parameters('numberOfClientVms')]"
+          }
+        }
+      }
+    }
+  ],
+
+  "outputs": {}
+}
