@@ -9,6 +9,7 @@
 | MAXLAB R&D Sandbox
 | MAXLAB R&D EXT 1
 | MAXLAB R&D EXT 2
+|
 
 **Time to deploy**: 25+ minutes
 
@@ -23,13 +24,25 @@ The **ArcSight SIEM Base Configuration - Public** template provisions a test env
 
 ## Usage
 
+Prior to deployment of ArcSight software, you must download the following binaries and acquire licenses:
+
+| Package | Binaries | Documentation
+| :------------------- | :------------------- | :-------------------
+| Micro Focus Security ArcSight Enterprise Security Manager Software v7.0 (TH001H) | ArcSightESMSuite-7.0.0.2234.1.tar <br> ArcSight-7.0.0.2436.1-Console-Win.exe | ESM_InstallGuide_7.0P1.pdf <br> ESM_ArcSightConsole_UserGuide_7.0P1.pdf |
+| Micro Focus Security ArcSight SmartConnectors Framework 7.10.0 (TH016AAE) | ArcSight-7.10.0.8114.0-Connector-Win64.exe | MicrosoftOffice365Config.pdf |
+|
+
+To deploy the template:
+
 + Click the "Deploy to Azure" button to open the deployment UI in the Azure portal
-+ Log into SIEM VM as admin user and manually run /scripts/siemconfig.sh as root (sudo -s)
-+ Log into client VM as admin user and install ArcSight console and connectors as needed
++ Log into SIEM VM as **admin** user and manually run /scripts/prep-arcsight.sh | reboot
++ Log into SIEM VM as **arcsight** user and manually run /scripts/install-arcisght.sh
++ Log into SIEM VM as **admin** user and manually run /scripts/start-arcisght.sh
++ Log into CLIENT VM as **admin** user and install ArcSight console and connectors as needed
 
 ## Solution overview and deployed resources
 
->**NOTE:** As of 10/31/2018, the template successfully deploys all VMs with xrdp running on the CentOS VMs. ArcSight installation must be done manually by following the script siemconfig.sh on each SIEM server you wish to configure with ESM.
+>**NOTE:** ArcSight ESM installation must be done manually by manually running the scripts listed in _Usage_ on each SIEM server you wish to configure with ESM.
 
 The following resources are deployed as part of the solution:
 
@@ -77,10 +90,11 @@ https://github.com/maxskunkworks
 
 ![alt text](images/maxskunkworkslogo-small.jpg "MAX Skunkworks")
 
-Last update: _10/31/2018_
+Last update: _11/6/2018_
 
 ## Changelog
 
 + **9/4/2018**: Original commit, derived from https://github.com/oualabadmins/lab_deploy/tree/master/max-base-config_x-vm_corpnet.
 + **9/12/2018**: Deployment of Azure resources working, ./scripts/siemconfig.sh is being developed. XRDP with Mate desktop is deployed automatically.
 + **9/19/2018**: Split script: initialconfig.sh installs xrdp, MATE, and configures user desktop. Also mounts the 1TB data disk at /arcsight. siemconfig.sh will run after, and will provision ArcSight.
++ **11/6/2018**: Split scripts by execution order and login user. Added binary info to _Usage_ section.
