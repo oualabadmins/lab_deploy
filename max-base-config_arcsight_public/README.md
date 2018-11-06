@@ -13,7 +13,7 @@
 
 **Time to deploy**: 25+ minutes
 
-The **ArcSight SIEM Base Configuration - Public** template provisions a test environment on a public virtual network consisting of a CentOS 7.4 Linux VM with ArcSight ESM installed, and one or more Windows 10 VMs.
+The **ArcSight SIEM Base Configuration - Public** template provisions a test environment on a public virtual network consisting of a CentOS 7.4 Linux VM with ArcSight ESM installed, and one or more Windows 10 VMs running the ArcSight console and the Office 365 Connector.
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Foualabadmins%2Flab_deploy%2Fbase-config-arcsight-siem%2Fmax-base-config_arcsight_public%2Fazuredeploy.json" target="_blank">
 <img src="http://azuredeploy.net/deploybutton.png"/>
@@ -36,8 +36,8 @@ To deploy the template:
 
 + Click the "Deploy to Azure" button to open the deployment UI in the Azure portal
 + Log into SIEM VM as **admin** user and manually run /scripts/prep-arcsight.sh | reboot
-+ Log into SIEM VM as **arcsight** user and manually run /scripts/install-arcisght.sh
-+ Log into SIEM VM as **admin** user and manually run /scripts/start-arcisght.sh
++ Log into SIEM VM as **arcsight** user and manually run /scripts/install-arcsight.sh
++ Log into SIEM VM as **admin** user and manually run /scripts/start-arcsight.sh
 + Log into CLIENT VM as **admin** user and install ArcSight console and connectors as needed
 
 ## Solution overview and deployed resources
