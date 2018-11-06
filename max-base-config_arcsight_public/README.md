@@ -4,8 +4,8 @@
 
 **Choose one of these MAX Skunkworks Lab subscriptions/regions:**
 
-| Subscription | Region 
-| :------------------- | :------------------- 
+| Subscription | Region
+| :------------------- | :-------------------
 | MAXLAB R&D Sandbox | West US 2
 | MAXLAB R&D EXT 1 | West US 2 <br> East US
 | MAXLAB R&D EXT 2 | Central US <br> East US
@@ -23,7 +23,7 @@ The **ArcSight SIEM Base Configuration - Public** template provisions a test env
 
 ## Prerequisites
 
-Prior to deployment of ArcSight software, you must download the following binaries from the [MicroFocus website]() and acquire licenses. You can inquire about 180-day trial licenses by contacting Micro Focus at software.partner@microfocus.com. 
+Prior to deployment of ArcSight software, you must download the following binaries from the MicroFocus website and acquire licenses. You can inquire about 180-day trial licenses by contacting Micro Focus at software.partner@microfocus.com.
 
 | Package | Binaries | Documentation
 | :------------------- | :------------------- | :-------------------
@@ -67,16 +67,16 @@ The following resources are deployed as part of the solution:
 
 ### Extensions
 
-+ **initialconfig**: The bash script /scripts/initialconfig.sh is executed on the SIEM VM with the Linux custom script extension. This script creates a cron job to run /scripts/siemconfig.sh after reboot (NOT YET IMPLEMENTED). Staggering the scripts this way avoids CSE extension timeouts.
-+ **BGInfo**: The **BGInfo** extension is applied to all VMs.
-+ **Antimalware**: The **iaaSAntimalware** extension is applied to all VMs with basic scheduled scan and exclusion settings.
++ **initialconfig**: The bash script /scripts/initialconfig.sh is executed on the SIEM VM(s) with the Linux custom script extension. Additional scripts must be executed manually.
++ **BGInfo**: The **BGInfo** extension is applied to all Windows VMs.
++ **Antimalware**: The **iaaSAntimalware** extension is applied to all Windows VMs with basic scheduled scan and exclusion settings.
 
 ## Solution notes
 
 + **Minimum requirements**: The SIEM server should be a DS4_V2 at minimum. Minimum server requirements:
-    + 8 cores
-    + 36GB RAM
-    + 250GB disk capacity
+  + 8 cores
+  + 36GB RAM
+  + 250GB disk capacity
 + Current template successfully deploys SIEM VM with xrdp and Mate Desktop, and mounts 1TB data disk at _/arcsight_.
 + Remember, when you RDP to your VM, you will use the admin username and password you specified at deploy time, _not_ your corpnet credentials.
 
