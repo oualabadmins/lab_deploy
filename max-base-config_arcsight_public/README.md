@@ -9,7 +9,6 @@
 | MAXLAB R&D Sandbox
 | MAXLAB R&D EXT 1
 | MAXLAB R&D EXT 2
-|
 
 **Time to deploy**: 25+ minutes
 
@@ -30,7 +29,6 @@ Prior to deployment of ArcSight software, you must download the following binari
 | :------------------- | :------------------- | :-------------------
 | Micro Focus Security ArcSight Enterprise Security Manager Software 7.0 (TH001H) | ArcSightESMSuite-7.0.0.2234.1.tar <br> ArcSight-7.0.0.2436.1-Console-Win.exe | ESM_InstallGuide_7.0P1.pdf <br> ESM_ArcSightConsole_UserGuide_7.0P1.pdf |
 | Micro Focus Security ArcSight SmartConnectors Framework 7.10.0 (TH016AAE) | ArcSight-7.10.0.8114.0-Connector-Win64.exe | [MicrosoftOffice365Config.pdf](https://community.softwaregrp.com/t5/ArcSight-Connectors/SmartConnector-for-Microsoft-Office-365/ta-p/1583309?attachment-id=68456) |
-|
 
 You must also provision an Office 365 E5 tenant and configure an AAD Enterprise App for connector authentication.
 
