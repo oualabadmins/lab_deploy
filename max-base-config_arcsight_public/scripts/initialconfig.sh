@@ -46,3 +46,8 @@ mkdir /arcsight
 mount /dev/sdc1 /arcsight
 cp /etc/fstab /etc/fstab.old
 echo -e "/dev/sdc1 /arcsight xfs defaults 0 0" >> /etc/fstab
+
+# Expand /dev/sda2 to max (use gparted to do this manually, does not require reboot!)
+echo -e "p\nd\n2\nn\np\n2\n\n\nw" | fdisk /dev/sda
+
+# END

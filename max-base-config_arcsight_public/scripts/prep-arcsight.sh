@@ -1,16 +1,24 @@
 #!/bin/bash
 
-## siemconfig.sh
+## prep-arcsight.sh
 ## kvice 9/12/2018
-## Configures a CentOS Linux host with ArcSight EMS
+## Configures a CentOS Linux host with prerequisites for ArcSight EMS 7
 ## Currently configured to run manually on SIEM server
 ## 10/31/2018 - Tested successfully, although enabling arcsight user to connect to VNC was still problematic. May have to reboot after adding arcsight user.
+## 11/6/2018 - Restructured, moved arcsight install to install-arcsight.sh
+
+## Run this script on the SIEM server as the admin user
 
 # Set SELinux enforcement to permissive
 setenforce 0
 
-# Allow root to open GUI apps as sudo (run from non-root console): xhost +local:
-# sudo persistent (if running manually): sudo -s
+# Allow root to open GUI apps as sudo (run from non-root console): 
+xhost +local:
+# sudo persistent (if running manually): 
+sudo -s
+
+# Autogrow /dev/sda2 partition from changes in
+xfs_growfs /dev/sda2
 
 # Add .vnc to /etc/skel to enable VNC config for new users
 mkdir /etc/skel/.vnc
@@ -57,27 +65,6 @@ cd Tools
 ./prepare_system.sh
 
 #### REBOOT SYSTEM NOW
-
-# Confirm setup
-ulimit -a
-# Check for the following two lines:
-#open files 65536
-#max user processes 10240
-
-# Expand /dev/sda2 to max (use gparted to do this manually, does not require reboot!)
-fdisk /dev/sda p d 2 n p 2 w q
 reboot
-# post reboot
-xfs_growfs /dev/sda2
-
-# Install ESM
-## NOTE: login as arcsight user
-cd /arcsight/arcsight_install/
-chmod +x ArcSightESMSuite.bin
-./ArcSightESMSuite.bin
-
-# Start services
-## NOTE: login as oualabadmin, sudo -s for root
- /opt/arcsight/manager/bin/setup_services.sh
 
 # END
