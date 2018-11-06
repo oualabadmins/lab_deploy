@@ -70,7 +70,7 @@
       "metadata": {
         "description": "Container where template files and resources are stored."
       },
-      "defaultValue": "https://raw.githubusercontent.com/oualabadmins/lab_deploy/base-config-arcsight-siem/max-base-config_arcsight_public"
+      "defaultValue": "https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/max-base-config_arcsight_public"
     },
     "_artifactsLocationSasToken": {
       "type": "securestring",
