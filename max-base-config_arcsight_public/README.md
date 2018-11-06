@@ -2,13 +2,13 @@
 
 **IMPORTANT**: Only deploy this template into a PUBLIC subscription.
 
-**Choose one of these MAX Skunkworks Lab subscriptions:**
+**Choose one of these MAX Skunkworks Lab subscriptions/regions:**
 
-| Subscription
-| :-------------------
-| MAXLAB R&D Sandbox
-| MAXLAB R&D EXT 1
-| MAXLAB R&D EXT 2
+| Subscription | Region 
+| :------------------- | :------------------- 
+| MAXLAB R&D Sandbox | West US 2
+| MAXLAB R&D EXT 1 | West US 2 <br> East US
+| MAXLAB R&D EXT 2 | Central US <br> East US
 
 **Time to deploy**: 25+ minutes
 
