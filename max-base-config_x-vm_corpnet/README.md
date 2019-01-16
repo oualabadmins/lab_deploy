@@ -70,3 +70,4 @@ Last update: _8/9/2018_
 
 + **8/8/2018**: Original commit, derived from https://github.com/oualabadmins/lab_deploy/tree/master/max-base-config_x-vm.
 + **8/9/2018**: Updates to output from nic.json to return DC IP value back to the main template for passing to linked app and client templates. This enables adding the DC IP to DNS settings on member VMs. Removed NSG to avoid inadvertently applying security rules to existing common virtual networks.
++ **1/16/2019**: Updated Win10 SKU to rs3-pro-test to match availability.
