@@ -37,7 +37,7 @@
           "imageReference": {
             "publisher": "MicrosoftWindowsDesktop",
             "offer": "Windows-10",
-            "sku": "rs3-pro-test",
+            "sku": "RS3-Pro",
             "version": "latest"
           },
           "osDisk": {
