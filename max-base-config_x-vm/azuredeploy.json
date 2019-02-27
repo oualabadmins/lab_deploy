@@ -87,7 +87,7 @@
       },
       "defaultValue": "10.0.0.0/23",
       "allowedValues": [
-        "10.0.0.0/23", "10.10.0.0/23", "10.100.0.0/23", "10.10.10.0/23", "10.10.10.10/23", "10.10.10.100/23", "172.16.0.0/23", "172.16.10.0/23", "172.16.100.0/23", "172.16.10.0/23", "172.16.10.10/23", "172.16.10.100/23"
+        "10.0.0.0/23", "10.0.10.0/23", "10.0.100.0/23", "172.16.0.0/23", "172.16.10.0/23", "172.16.100.0/23"
       ]
     },
     "routeTableToAzureService": {
@@ -121,9 +121,11 @@
     "templates": "[concat(parameters('_artifactsLocation'),'/nested')]",
     "storageAccountName": "[concat(uniqueString(resourceGroup().id),'storage')]",
 
+    "frontSubnet": "[replace(parameters('addressSpace'),'23', '24')]",
+
     "network": {
       "vnetName": "[concat(parameters('configName'),'-VNET')]",
-      "frontSubnet": "[replace(parameters('addressSpace'),'23', '24')]",
+      "frontSubnet": "[variables('frontSubnet')]",
       "backSubnet": "[replace(parameters('addressSpace'),'0.0/23', '1.0/24')]",
       "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-VNET'), 'subnet-frontend')]",
       "subnetRefBackend": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-VNET'), 'subnet-backend')]",
@@ -139,7 +141,7 @@
       "adConfigurationFunction": {
         "CreateADPDC": "CreateADPDC.ps1\\CreateADPDC"
       },
-      "adNicIP": "[replace(variables('network').frontSubnet,'0/24','10')]",
+      "adNicIP": "[replace(variables('frontSubnet'),'0/24','10')]",
       "adPublicIpName": "[concat(parameters('configName'),'-AD_IP')]",
 
       "appConfigurationFunction": "AppConfig.ps1\\AppConfig"
@@ -525,7 +527,7 @@
             "value": ""
           },
           "subnetRef": {
-            "value": "[variables('network').subnetRefBackend]"
+            "value": "[variables('network').subnetRef]"
           },
           "subnetRefBackend": {
             "value": "[variables('network').subnetRefBackend]"
