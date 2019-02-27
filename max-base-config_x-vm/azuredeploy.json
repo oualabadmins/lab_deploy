@@ -203,7 +203,6 @@
       "name": "[variables('network').vnetName]",
       "type": "Microsoft.Network/virtualNetworks",
       "dependsOn": [
-        "[concat('Microsoft.Network/networkSecurityGroups/',variables('network').nsgName)]",
         "[resourceId('Microsoft.Network/routeTables', parameters('routeTableToAzureService'))]"
       ],
       "location": "[resourceGroup().location]",
