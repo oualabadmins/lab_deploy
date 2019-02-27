@@ -25,6 +25,7 @@
         "count": "[parameters('count')]"
       },   
       "properties": {
+        "licenseType": "Windows_Client",
         "hardwareProfile": {
           "vmSize": "[parameters('SharedVmConfig').vmSizeClient]"
         },
