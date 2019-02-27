@@ -444,9 +444,6 @@
           },
           "domainName": {
             "value": "[parameters('domainName')]"
-          },
-          "deployPublicIp": {
-            "value": "yes"
           }
         }
       }
@@ -489,9 +486,6 @@
           },
           "domainName": {
             "value": "[parameters('domainName')]"
-          },
-          "deployPublicIp": {
-            "value": "yes"
           }
         }
       }
@@ -534,9 +528,6 @@
           },
           "domainName": {
             "value": "[parameters('domainName')]"
-          },
-          "deployPublicIp": {
-            "value": "no"
           }
         }
       }
@@ -580,9 +571,6 @@
           },
           "domainName": {
             "value": "[parameters('domainName')]"
-          },
-          "deployPublicIp": {
-            "value": "yes"
           }
         }
       }
