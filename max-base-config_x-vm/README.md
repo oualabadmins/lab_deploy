@@ -74,4 +74,4 @@ Last update: _8/9/2018_
 + **7/19/2018**: Updated to allow choice of tenant subnet CIDR address, and added separate parameters for server and client VM size.
 + **7/31/2018**: Added :443 inbound to NSG security rules.
 + **8/9/2018**:  Added security rules to the NSG for ports 80, 443, 5985 and 5986.
-+ **2/27/2019**: Added backend subnet, added 2nd NIC for APP VMs with private IPs only.
++ **2/27/2019**: Added backend subnet, added 2nd NIC for APP VMs with private IPs only (nested/nic-backend.json). Moved NSG resource to nested/nsg.json.
