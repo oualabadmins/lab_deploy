@@ -294,7 +294,7 @@
           {
             "name": "subnet-backend",
             "properties": {
-              "addressPrefix": "[parameters('subnet-backend-CIDR')]",
+              "addressPrefix": "[variables('network').subnetBackend]",
               "routeTable": {
                 "id": "[resourceId('Microsoft.Network/routeTables', parameters('routeTableToAzureService'))]"
               }
