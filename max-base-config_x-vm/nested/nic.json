@@ -87,6 +87,9 @@
                   "name": "[concat('ipconfig2',copyIndex(1))]",
                   "properties": {
                     "privateIPAllocationMethod": "[parameters('ipAllocation')]",
+                    "publicIPAddress": {
+                      "id": "[if(equals(parameters('deployPublicIp'), 'yes'), concat(variables('publicIpID'),copyIndex(1)), json('null'))]"
+                    },
                     "subnet": {
                       "id": "[parameters('subnetRefBackend')]"
                     }
