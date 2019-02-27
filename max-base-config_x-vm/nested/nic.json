@@ -87,7 +87,6 @@
                   "name": "[concat('ipconfig2',copyIndex(1))]",
                   "properties": {
                     "privateIPAllocationMethod": "[parameters('ipAllocation')]",
-                    "privateIPAddress": "[parameters('privateIp')]",
                     "subnet": {
                       "id": "[parameters('subnetRefBackend')]"
                     }
