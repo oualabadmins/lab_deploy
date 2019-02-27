@@ -33,8 +33,7 @@
     },
     "variables": {
         "publicIp": "[concat(parameters('configName'),'-',parameters('tier'),'_IP-')]",
-        "publicIpID": "[resourceId ('Microsoft.Network/publicIPAddresses/',variables('publicIp'))]",
-        "publicIpDeployID": "[concat(variables('publicIpID'),copyIndex(1))]"
+        "publicIpID": "[resourceId ('Microsoft.Network/publicIPAddresses/',variables('publicIp'))]"
     },
     "resources": [
         {
@@ -56,7 +55,7 @@
                     "privateIPAllocationMethod": "[parameters('ipAllocation')]",
                     "privateIPAddress": "[parameters('privateIp')]",
                     "publicIPAddress": {
-                      "id": "[if(equals(parameters('deployPublicIp'), 'yes'), variables('publicIpDeployID'), json('null'))]"
+                      "id": "[if(equals(parameters('deployPublicIp'), 'yes'), concat(variables('publicIpID'),copyIndex(1)), json('null'))]"
                     },
                     "subnet": {
                       "id": "[parameters('subnetRef')]"
@@ -89,9 +88,6 @@
                   "properties": {
                     "privateIPAllocationMethod": "[parameters('ipAllocation')]",
                     "privateIPAddress": "[parameters('privateIp')]",
-                    "publicIPAddress": {
-                      "id": "[if(equals(parameters('deployPublicIp'), 'yes'), variables('publicIpDeployID'), json('null'))]"
-                    },
                     "subnet": {
                       "id": "[parameters('subnetRefBackend')]"
                     }
