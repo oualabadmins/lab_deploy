@@ -164,73 +164,21 @@
 
   "resources": [
     {
-      "apiVersion": "2018-01-01",
-      "type": "Microsoft.Network/networkSecurityGroups",
-      "name": "[variables('network').nsgName]",
-      "location": "[resourceGroup().location]",
-      "tags": {
-        "displayName": "NSG - Front End"
-      },
-      "comments": "This network security group permits common ports.",
+      "name": "[concat(parameters('configName'),'NSG')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "NEW This is the deployment resource for the front-end NSG.",
       "properties": {
-        "securityRules": [
-          {
-            "name": "rdp",
-            "properties": {
-              "description": "Allow RDP inbound",
-              "protocol": "Tcp",
-              "sourcePortRange": "*",
-              "destinationPortRange": "3389",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 100,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "name": "http",
-            "properties": {
-              "description": "Allow HTTP inbound",
-              "protocol": "Tcp",
-              "sourcePortRange": "*",
-              "destinationPortRange": "80",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 101,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "name": "https",
-            "properties": {
-              "description": "Allow HTTPS inbound",
-              "protocol": "Tcp",
-              "sourcePortRange": "*",
-              "destinationPortRange": "443",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 102,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "name": "remoting",
-            "properties": {
-              "description": "Allow WSMan and PoSH inbound",
-              "protocol": "Tcp",
-              "sourcePortRange": "*",
-              "destinationPortRange": "5985-5986",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 103,
-              "direction": "Inbound"
-            }
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/nsg.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "nsgName": { 
+            "value": "[variables('network').nsgName]" 
           }
-        ]
+        }
       }
     },
     {
@@ -410,7 +358,7 @@
       "name": "[concat(parameters('configName'),'-AD_NIC_DEPLOY')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
-      "comments": "NEW This is the deployment resource for the ADDC NIC.",
+      "comments": "This is the deployment resource for the ADDC NIC.",
       "dependsOn": [
         "[concat(parameters('configName'),'-AD_IP')]"
       ],
@@ -439,9 +387,6 @@
           "subnetRef": {
             "value": "[variables('network').subnetRef]"
           },
-          "subnetRefBackend": {
-            "value": "[variables('network').subnetRefBackend]"
-          },
           "domainName": {
             "value": "[parameters('domainName')]"
           }
@@ -452,7 +397,7 @@
       "name": "[concat(parameters('configName'),'-APP_NIC_DEPLOY')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
-      "comments": "NEW This is the deployment resource for APP frontend NICs.",
+      "comments": "This is the deployment resource for APP frontend NICs.",
       "dependsOn": [
         "[concat(parameters('configName'),'-APP_IP')]"
       ],
@@ -481,9 +426,6 @@
           "subnetRef": {
             "value": "[variables('network').subnetRef]"
           },
-          "subnetRefBackend": {
-            "value": "[variables('network').subnetRefBackend]"
-          },
           "domainName": {
             "value": "[parameters('domainName')]"
           }
@@ -494,14 +436,14 @@
       "name": "[concat(parameters('configName'),'-APP_NIC2_DEPLOY')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
-      "comments": "NEW This is the deployment resource for APP backend NICs.",
+      "comments": "This is the deployment resource for APP backend NICs.",
       "dependsOn": [
         "[variables('network').vnetName]"
       ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(variables('templates'),'/nic.json',parameters('_artifactsLocationSasToken'))]",
+          "uri": "[concat(variables('templates'),'/nic-backend.json',parameters('_artifactsLocationSasToken'))]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -517,17 +459,8 @@
           "ipAllocation": {
             "value": "Dynamic"
           },
-          "privateIp": {
-            "value": ""
-          },
           "subnetRef": {
-            "value": "[variables('network').subnetRef]"
-          },
-          "subnetRefBackend": {
             "value": "[variables('network').subnetRefBackend]"
-          },
-          "domainName": {
-            "value": "[parameters('domainName')]"
           }
         }
       }
@@ -537,7 +470,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "condition": "[equals(parameters('deployClientVm'),'Yes')]",
-      "comments": "NEW This is the deployment resource for CLIENT NICs.",
+      "comments": "This is the deployment resource for CLIENT NICs.",
       "dependsOn": [
         "[concat(parameters('configName'),'-CLIENT_IP')]"
       ],
@@ -565,9 +498,6 @@
           },
           "subnetRef": {
             "value": "[variables('network').subnetRef]"
-          },
-          "subnetRefBackend": {
-            "value": "[variables('network').subnetRefBackend]"
           },
           "domainName": {
             "value": "[parameters('domainName')]"

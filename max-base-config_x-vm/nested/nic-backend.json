@@ -15,58 +15,41 @@
         "ipAllocation": {
           "type": "string" 
         },
-        "privateIp": {
-          "type": "string" 
-        },
         "subnetRef": {
-          "type": "string" 
-        },
-        "domainName": {
           "type": "string" 
         }
     },
-    "variables": {
-        "publicIp": "[concat(parameters('configName'),'-',parameters('tier'),'_IP-')]",
-        "publicIpID": "[resourceId ('Microsoft.Network/publicIPAddresses/',variables('publicIp'))]"
-    },
+    "variables": {},
     "resources": [
-        {
-            "name": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-',copyIndex(1))]",
+          {
+            "name": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC2-',copyIndex(1))]",
             "copy": {
-              "name": "nics",
+              "name": "nics2",
               "count": "[parameters('count')]"
             },
             "type": "Microsoft.Network/networkInterfaces",
             "location": "[resourceGroup().location]",
             "dependsOn": [],
             "apiVersion": "2018-01-01",
-            "comments": "NIC",
+            "comments": "NIC2",
             "properties": {
               "ipConfigurations": [
                 {
-                  "name": "[concat('ipconfig',copyIndex(1))]",
+                  "name": "[concat('ipconfig2',copyIndex(1))]",
                   "properties": {
                     "privateIPAllocationMethod": "[parameters('ipAllocation')]",
-                    "privateIPAddress": "[parameters('privateIp')]",
-                    "publicIPAddress": {
-                      "id": "[concat(variables('publicIpID'),copyIndex(1))]"
-                    },
                     "subnet": {
                       "id": "[parameters('subnetRef')]"
                     }
                   }
                 }
-              ],
-              "dnsSettings": {
-                "dnsServers": [],
-                "internalDomainNameSuffix": "[parameters('domainName')]"
-              }
+              ]
             }
-          }
+          } 
     ],
     "outputs": {
-      "nicNames": {
-        "value": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-',copyIndex(1))]",
+      "nicNamesBackend": {
+        "value": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC2-',copyIndex(1))]",
         "type": "object"
       }
     }
