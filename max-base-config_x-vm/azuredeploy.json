@@ -80,24 +80,14 @@
         "description": "DNS label prefix for public IPs. Must be lowercase and match the regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$."
       }
     },
-    "subnet-frontend-CIDR": {
+    "addressSpace": {
       "type": "string",
       "metadata": {
-        "description": "The CIDR subnet for your frontend virtual network, i.e. 10.0.0.0/24."
+        "description": "The address space for your virtual network, i.e. 10.0.0.0/23. This will contain both frontend and backend subnets."
       },
-      "defaultValue": "10.0.0.0/24",
+      "defaultValue": "10.0.0.0/23",
       "allowedValues": [
-        "10.0.0.0/24", "10.10.0.0/24", "10.100.0.0/24", "10.10.10.0/24", "10.10.10.10/24", "10.10.10.100/24", "172.16.0.0/24", "172.16.10.0/24", "172.16.100.0/24", "172.16.10.0/24", "172.16.10.10/24", "172.16.10.100/24"
-      ]
-    },
-    "subnet-backend-CIDR": {
-      "type": "string",
-      "metadata": {
-        "description": "The CIDR subnet for your backend virtual network, i.e. 10.0.1.0/24."
-      },
-      "defaultValue": "10.0.1.0/24",
-      "allowedValues": [
-        "10.0.1.0/24", "10.10.1.0/24", "10.100.1.0/24", "10.10.11.0/24", "10.10.11.10/24", "10.10.11.100/24", "172.16.1.0/24", "172.16.11.0/24", "172.16.101.0/24", "172.16.11.0/24", "172.16.11.10/24", "172.16.11.100/24"
+        "10.0.0.0/23", "10.10.0.0/23", "10.100.0.0/23", "10.10.10.0/23", "10.10.10.10/23", "10.10.10.100/23", "172.16.0.0/23", "172.16.10.0/23", "172.16.100.0/23", "172.16.10.0/23", "172.16.10.10/23", "172.16.10.100/23"
       ]
     },
     "routeTableToAzureService": {
@@ -133,10 +123,10 @@
 
     "network": {
       "vnetName": "[concat(parameters('configName'),'-VNET')]",
+      "frontSubnet": "[replace(parameters('addressSpace'),'23', '24')]",
+      "backSubnet": "[replace(parameters('addressSpace'),'0.0/23', '1.0/24')]",
       "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-VNET'), 'subnet-frontend')]",
-      "subnet": "[parameters('subnet-frontend-CIDR')]",
       "subnetRefBackend": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-VNET'), 'subnet-backend')]",
-      "subnetBackend": "[parameters('subnet-backend-CIDR')]",
       "nsgName": "[concat(parameters('configName'),'-NSG')]",
       "dnsServers": {
         "local": "[variables('VMs').adNicIP]",
@@ -149,7 +139,7 @@
       "adConfigurationFunction": {
         "CreateADPDC": "CreateADPDC.ps1\\CreateADPDC"
       },
-      "adNicIP": "[replace(parameters('subnet-frontend-CIDR'),'0/24','10')]",
+      "adNicIP": "[replace(variables('network').frontSubnet,'0/24','10')]",
       "adPublicIpName": "[concat(parameters('configName'),'-AD_IP')]",
 
       "appConfigurationFunction": "AppConfig.ps1\\AppConfig"
@@ -272,7 +262,7 @@
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
-            "[variables('network').subnet]"
+            "[parameters('addressSpace')]"
           ]
         },
         "dhcpOptions": {
@@ -285,7 +275,7 @@
           {
             "name": "subnet-frontend",
             "properties": {
-              "addressPrefix": "[variables('network').subnet]",
+              "addressPrefix": "[variables('network').frontSubnet]",
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('network').nsgName)]"
               }
@@ -294,7 +284,7 @@
           {
             "name": "subnet-backend",
             "properties": {
-              "addressPrefix": "[variables('network').subnetBackend]",
+              "addressPrefix": "[variables('network').backSubnet]",
               "routeTable": {
                 "id": "[resourceId('Microsoft.Network/routeTables', parameters('routeTableToAzureService'))]"
               }
