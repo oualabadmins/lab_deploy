@@ -1,4 +1,4 @@
-﻿# MAX Skunkworks Lab - X VM Base Configuration - Public (v1.3)
+﻿# MAX Skunkworks Lab - X VM Base Configuration - Public (v1.4)
 
 **IMPORTANT**: Only deploy this template into an external-facing subscription with no ExpressRoute circuit. These currently include:
 
@@ -8,9 +8,9 @@
 
 **Time to deploy**: 40+ minutes
 
-The **X VM Base Configuration - Public** provisions a test environment in a private virtual network consisting of a Windows Server 2012 R2 or 2016 Active Directory domain controller using the specified domain name, one or more application servers running Windows Server 2012 R2 or 2016, and optionally one or more client VMs running Windows 10. All member VMs are joined to the domain.
+The **X VM Base Configuration - Public** provisions a test environment in a private virtual network with 2 subnets consisting of a Windows Server 2012 R2 or 2016 Active Directory domain controller using the specified domain name, one or more application servers running Windows Server 2012 R2 or 2016, and optionally one or more client VMs running Windows 10. All member VMs are joined to the domain. App servers are deployed with a second NIC connecting to the backend subnet.
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Foualabadmins%2Flab_deploy%2Fmaster%2Fmax-base-config_x-vm%2Fazuredeploy.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Foualabadmins%2Flab_deploy%2Fkv-spmi%2Fmax-base-config_x-vm%2Fazuredeploy.json" target="_blank">
 <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 <a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2Foualabadmins%2Flab_deploy%2Fmaster%2Fmax-base-config_x-vm%2Fazuredeploy.json" target="_blank">
@@ -35,12 +35,12 @@ You can deploy this template in one of two ways:
 The following resources are deployed as part of the solution:
 
 + **AD DC VM**: Windows Server 2012 R2 or 2016 VM configured as a domain controller and DNS with static private IP address
-+ **App Server VM(s)**: Windows Server 2012 R2 or 2016 VM(s) joined to the domain. IIS is installed, and C:\Files containing example.txt is shared as "Files".
++ **App Server VM(s)**: Windows Server 2012 R2 or 2016 VM(s) joined to the domain. IIS is installed, and C:\Files containing example.txt is shared as "Files". App servers are deployed with a second NIC connecting to the backend subnet.
 + **Client VM(s)**: Windows 10 client(s) joined to the domain
 + **Storage account**: Diagnostics storage account, and client VM storage account if indicated. ADDC and App Server VMs in the deployment use managed disks, so no storage accounts are created for VHDs.
 + **NSG**: Network security group configured to allow inbound RDP on 3389
-+ **Virtual network**: Virtual network for internal traffic, configured with custom DNS pointing to the ADDC's private IP address and tenant subnet.
-+ **Network interfaces**: 1 NIC per VM
++ **Virtual network**: Virtual network for internal traffic, configured with custom DNS pointing to the ADDC's private IP address and 2 tenant subnets, _subnet-frontend_ and _subnet-backend_.
++ **Network interfaces**: 1 NIC per VM (AD and CLIENT), 2 NICs per APP VM
 + **Public IP addresses**: 1 static public IP per VM. Note that some subscriptions may have limits on the number of static IPs that can be deployed for a given region.
 + **JoinDomain**: Each member VM uses the **JsonADDomainExtension** extension to join the domain.
 + **BGInfo**: The **BGInfo** extension is applied to all VMs.
@@ -74,3 +74,4 @@ Last update: _8/9/2018_
 + **7/19/2018**: Updated to allow choice of tenant subnet CIDR address, and added separate parameters for server and client VM size.
 + **7/31/2018**: Added :443 inbound to NSG security rules.
 + **8/9/2018**:  Added security rules to the NSG for ports 80, 443, 5985 and 5986.
++ **2/27/2019**: Added backend subnet, added 2nd NIC for APP VMs with private IPs only.

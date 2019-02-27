@@ -21,13 +21,20 @@
         "subnetRef": {
           "type": "string" 
         },
+        "subnetRefBackend": {
+          "type": "string" 
+        },
         "domainName": {
+          "type": "string" 
+        },
+        "deployPublicIp": {
           "type": "string" 
         }
     },
     "variables": {
         "publicIp": "[concat(parameters('configName'),'-',parameters('tier'),'_IP-')]",
-        "publicIpID": "[resourceId ('Microsoft.Network/publicIPAddresses/',variables('publicIp'))]"
+        "publicIpID": "[resourceId ('Microsoft.Network/publicIPAddresses/',variables('publicIp'))]",
+        "publicIpDeployID": "[concat(variables('publicIpID'),copyIndex(1))]"
     },
     "resources": [
         {
@@ -49,7 +56,7 @@
                     "privateIPAllocationMethod": "[parameters('ipAllocation')]",
                     "privateIPAddress": "[parameters('privateIp')]",
                     "publicIPAddress": {
-                      "id": "[concat(variables('publicIpID'),copyIndex(1))]"
+                      "id": "[if(equals(parameters('deployPublicIp'), 'yes'), variables('publicIpDeployID'), json('null'))]"
                     },
                     "subnet": {
                       "id": "[parameters('subnetRef')]"
@@ -62,11 +69,45 @@
                 "internalDomainNameSuffix": "[parameters('domainName')]"
               }
             }
-          }   
+          },
+          {
+            "name": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC2-',copyIndex(1))]",
+            "condition": "[equals(parameters('tier'), 'APP')]",
+            "copy": {
+              "name": "nics2",
+              "count": "[parameters('count')]"
+            },
+            "type": "Microsoft.Network/networkInterfaces",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [],
+            "apiVersion": "2018-01-01",
+            "comments": "NIC2",
+            "properties": {
+              "ipConfigurations": [
+                {
+                  "name": "[concat('ipconfig2',copyIndex(1))]",
+                  "properties": {
+                    "privateIPAllocationMethod": "[parameters('ipAllocation')]",
+                    "privateIPAddress": "[parameters('privateIp')]",
+                    "publicIPAddress": {
+                      "id": "[if(equals(parameters('deployPublicIp'), 'yes'), variables('publicIpDeployID'), json('null'))]"
+                    },
+                    "subnet": {
+                      "id": "[parameters('subnetRefBackend')]"
+                    }
+                  }
+                }
+              ]
+            }
+          } 
     ],
     "outputs": {
       "nicNames": {
         "value": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-',copyIndex(1))]",
+        "type": "object"
+      },
+      "nicNamesBackend": {
+        "value": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC2-',copyIndex(1))]",
         "type": "object"
       }
     }

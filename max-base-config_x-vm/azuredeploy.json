@@ -80,22 +80,39 @@
         "description": "DNS label prefix for public IPs. Must be lowercase and match the regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$."
       }
     },
-    "subnetCIDR": {
+    "subnet-frontend-CIDR": {
       "type": "string",
       "metadata": {
-        "description": "The CIDR subnet for your virtual network, i.e. 10.0.0.0/24."
+        "description": "The CIDR subnet for your frontend virtual network, i.e. 10.0.0.0/24."
       },
       "defaultValue": "10.0.0.0/24",
       "allowedValues": [
         "10.0.0.0/24", "10.10.0.0/24", "10.100.0.0/24", "10.10.10.0/24", "10.10.10.10/24", "10.10.10.100/24", "172.16.0.0/24", "172.16.10.0/24", "172.16.100.0/24", "172.16.10.0/24", "172.16.10.10/24", "172.16.10.100/24"
       ]
     },
+    "subnet-backend-CIDR": {
+      "type": "string",
+      "metadata": {
+        "description": "The CIDR subnet for your backend virtual network, i.e. 10.0.1.0/24."
+      },
+      "defaultValue": "10.0.1.0/24",
+      "allowedValues": [
+        "10.0.1.0/24", "10.10.1.0/24", "10.100.1.0/24", "10.10.11.0/24", "10.10.11.10/24", "10.10.11.100/24", "172.16.1.0/24", "172.16.11.0/24", "172.16.101.0/24", "172.16.11.0/24", "172.16.11.10/24", "172.16.11.100/24"
+      ]
+    },
+    "routeTableToAzureService": {
+      "type": "string",
+      "defaultValue": "RouteToAzureSqlMiMngSvc",
+      "metadata": {
+        "description": "The name of the existing or new route table that enables access to Azure SQL Managed Instance Management Service that controls the instance, manages backups and other maintenance operations"
+      }
+    },
     "_artifactsLocation": {
       "type": "string",
       "metadata": {
         "description": "Auto-generated container in staging storage account to receive post-build staging folder upload."
       },
-      "defaultValue": "https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/max-base-config_x-vm"
+      "defaultValue": "https://raw.githubusercontent.com/oualabadmins/lab_deploy/kv-spmi/max-base-config_x-vm"
     },
     "_artifactsLocationSasToken": {
       "type": "securestring",
@@ -116,8 +133,10 @@
 
     "network": {
       "vnetName": "[concat(parameters('configName'),'-VNET')]",
-      "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-VNET'), 'subnet-01')]",
-      "subnet": "[parameters('subnetCIDR')]",
+      "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-VNET'), 'subnet-frontend')]",
+      "subnet": "[parameters('subnet-frontend-CIDR')]",
+      "subnetRefBackend": "[resourceId('Microsoft.Network/virtualNetworks/subnets', concat(parameters('configName'),'-VNET'), 'subnet-backend')]",
+      "subnetBackend": "[parameters('subnet-backend-CIDR')]",
       "nsgName": "[concat(parameters('configName'),'-NSG')]",
       "dnsServers": {
         "local": "[variables('VMs').adNicIP]",
@@ -130,7 +149,7 @@
       "adConfigurationFunction": {
         "CreateADPDC": "CreateADPDC.ps1\\CreateADPDC"
       },
-      "adNicIP": "[replace(parameters('subnetCIDR'),'0/24','10')]",
+      "adNicIP": "[replace(parameters('subnet-frontend-CIDR'),'0/24','10')]",
       "adPublicIpName": "[concat(parameters('configName'),'-AD_IP')]",
 
       "appConfigurationFunction": "AppConfig.ps1\\AppConfig"
@@ -223,10 +242,29 @@
       }
     },
     {
+      "type": "Microsoft.Network/routeTables",
+      "name": "[parameters('routeTableToAzureService')]",
+      "apiVersion": "2018-02-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+          "disableBgpRoutePropagation": false,
+          "routes": [
+              {
+                  "name": "[parameters('routeTableToAzureService')]",
+                  "properties": {
+                      "addressPrefix": "0.0.0.0/0",
+                      "nextHopType": "Internet"
+                  }
+              }
+          ]
+      }
+    },
+    {
       "name": "[variables('network').vnetName]",
       "type": "Microsoft.Network/virtualNetworks",
       "dependsOn": [
-        "[concat('Microsoft.Network/networkSecurityGroups/',variables('network').nsgName)]"
+        "[concat('Microsoft.Network/networkSecurityGroups/',variables('network').nsgName)]",
+        "[resourceId('Microsoft.Network/routeTables', parameters('routeTableToAzureService'))]"
       ],
       "location": "[resourceGroup().location]",
       "apiVersion": "2018-01-01",
@@ -245,11 +283,20 @@
         },
         "subnets": [
           {
-            "name": "subnet-01",
+            "name": "subnet-frontend",
             "properties": {
               "addressPrefix": "[variables('network').subnet]",
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('network').nsgName)]"
+              }
+            }
+          },
+          {
+            "name": "subnet-backend",
+            "properties": {
+              "addressPrefix": "[parameters('subnet-backend-CIDR')]",
+              "routeTable": {
+                "id": "[resourceId('Microsoft.Network/routeTables', parameters('routeTableToAzureService'))]"
               }
             }
           }
@@ -400,8 +447,14 @@
           "subnetRef": {
             "value": "[variables('network').subnetRef]"
           },
+          "subnetRefBackend": {
+            "value": "[variables('network').subnetRefBackend]"
+          },
           "domainName": {
             "value": "[parameters('domainName')]"
+          },
+          "deployPublicIp": {
+            "value": "yes"
           }
         }
       }
@@ -410,7 +463,7 @@
       "name": "[concat(parameters('configName'),'-APP_NIC_DEPLOY')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
-      "comments": "NEW This is the deployment resource for APP NICs.",
+      "comments": "NEW This is the deployment resource for APP frontend NICs.",
       "dependsOn": [
         "[concat(parameters('configName'),'-APP_IP')]"
       ],
@@ -439,8 +492,57 @@
           "subnetRef": {
             "value": "[variables('network').subnetRef]"
           },
+          "subnetRefBackend": {
+            "value": "[variables('network').subnetRefBackend]"
+          },
           "domainName": {
             "value": "[parameters('domainName')]"
+          },
+          "deployPublicIp": {
+            "value": "yes"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('configName'),'-APP_NIC2_DEPLOY')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "NEW This is the deployment resource for APP backend NICs.",
+      "dependsOn": [],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/nic.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "APP"
+          },
+          "count": {
+            "value": "[parameters('numberOfAppVms')]"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "privateIp": {
+            "value": ""
+          },
+          "subnetRef": {
+            "value": "[variables('network').subnetRefBackend]"
+          },
+          "subnetRefBackend": {
+            "value": "[variables('network').subnetRefBackend]"
+          },
+          "domainName": {
+            "value": "[parameters('domainName')]"
+          },
+          "deployPublicIp": {
+            "value": "no"
           }
         }
       }
@@ -479,8 +581,14 @@
           "subnetRef": {
             "value": "[variables('network').subnetRef]"
           },
+          "subnetRefBackend": {
+            "value": "[variables('network').subnetRefBackend]"
+          },
           "domainName": {
             "value": "[parameters('domainName')]"
+          },
+          "deployPublicIp": {
+            "value": "yes"
           }
         }
       }
