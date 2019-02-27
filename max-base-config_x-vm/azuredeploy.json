@@ -509,7 +509,9 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "comments": "NEW This is the deployment resource for APP backend NICs.",
-      "dependsOn": [],
+      "dependsOn": [
+        "[variables('network').vnetName]"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
