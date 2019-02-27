@@ -26,9 +26,6 @@
         },
         "domainName": {
           "type": "string" 
-        },
-        "deployPublicIp": {
-          "type": "string" 
         }
     },
     "variables": {
@@ -44,9 +41,7 @@
             },
             "type": "Microsoft.Network/networkInterfaces",
             "location": "[resourceGroup().location]",
-            "dependsOn": [
-              "[concat(variables('publicIpID'),copyIndex(1))]"
-            ],
+            "dependsOn": [],
             "apiVersion": "2018-01-01",
             "comments": "NIC",
             "properties": {
