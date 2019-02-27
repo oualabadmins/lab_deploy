@@ -164,7 +164,7 @@
 
   "resources": [
     {
-      "name": "[concat(parameters('configName'),'NSG')]",
+      "name": "[concat(parameters('configName'),'-NSG')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "comments": "NEW This is the deployment resource for the front-end NSG.",
