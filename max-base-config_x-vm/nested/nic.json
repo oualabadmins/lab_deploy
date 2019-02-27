@@ -44,7 +44,9 @@
             },
             "type": "Microsoft.Network/networkInterfaces",
             "location": "[resourceGroup().location]",
-            "dependsOn": [],
+            "dependsOn": [
+              "[concat(variables('publicIpID'),copyIndex(1))]"
+            ],
             "apiVersion": "2018-01-01",
             "comments": "NIC",
             "properties": {
