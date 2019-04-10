@@ -7,16 +7,14 @@
     },
     "count": {
       "type": "int"
-    },
-    "modulesURL": {
-      "type": "string"
     }
   },
   "variables": {
     "nicName": "[concat(parameters('sharedVmConfig').configName,'-DIRSYNC_NIC-')]",
     "nicID": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]",
     "nicNameBackend": "[concat(parameters('sharedVmConfig').configName,'-DIRSYNC_NIC2-')]",
-    "nicIDBackend": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicNameBackend'))]"
+    "nicIDBackend": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicNameBackend'))]",
+    "scriptPath": "C:\\Packages\\Plugins\\Microsoft.Compute.CustomScriptExtension\\1.9.3\\Downloads\\0\\corpnet\\base-config.ps1"
   },
   "resources": [
     {
@@ -103,33 +101,6 @@
     },
     {
       "type": "extensions",
-      "name": "/AppConfig",
-      "apiVersion": "2017-03-30",
-      "location": "[parameters('SharedVmConfig').location]",
-      "dependsOn": [
-        "[concat('DIRSYNC',copyIndex(1))]"
-      ],
-      "properties": {
-        "publisher": "Microsoft.Powershell",
-        "type": "DSC",
-        "typeHandlerVersion": "2.9",
-        "autoUpgradeMinorVersion": true,
-        "protectedSettings": {
-          "Items": {}
-        },
-        "settings": {
-          "modulesUrl": "[concat(parameters('modulesURL'),'/DirSyncConfig.ps1.zip')]",
-          "sasToken": "[parameters('SharedVmConfig').SasToken]",
-          "wmfVersion": "latest",
-          "configurationFunction": "[parameters('configurationFunction')]",
-          "Properties": {
-            "DomainName": "[parameters('SharedVmConfig').domainName]"
-          }
-        }
-      }
-    },
-    {
-      "type": "extensions",
       "name": "/BGInfo",
       "apiVersion": "2017-03-30",
       "scale": null,
@@ -178,7 +149,32 @@
         },
         "protectedSettings": null
       }
-    }        
+    },
+    {
+      "apiVersion": "2017-03-30",
+      "type": "extensions",
+      "name": "/DirSync",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('DIRSYNC',copyIndex(1))]",
+        "/JoinDomain"
+      ],
+      "tags": {
+          "displayName": "DirSync"
+      },
+      "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.9",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": ["../scripts/dirsync.ps1"]
+          },
+          "protectedSettings": {
+              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('scriptPath'), ' ', parameters('OfficeVersion'), ' ', parameters('labRole'))]"
+          }
+      }
+  }
     ]
     }
   ],
