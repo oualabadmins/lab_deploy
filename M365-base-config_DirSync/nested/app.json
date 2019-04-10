@@ -1,0 +1,189 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "SharedVmConfig": {
+      "type": "object"
+    },
+    "count": {
+      "type": "int"
+    },
+    "modulesURL": {
+      "type": "string"
+    },
+    "configurationFunction": {
+      "type": "string"
+    }
+  },
+  "variables": {
+    "nicName": "[concat(parameters('sharedVmConfig').configName,'-APP_NIC-')]",
+    "nicID": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]",
+    "nicNameBackend": "[concat(parameters('sharedVmConfig').configName,'-APP_NIC2-')]",
+    "nicIDBackend": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicNameBackend'))]"
+  },
+  "resources": [
+    {
+      "apiVersion": "2017-03-30",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[concat('APP',copyIndex(1))]",
+      "location": "[parameters('SharedVmConfig').location]",
+      "copy": {
+        "name": "vms",
+        "count": "[parameters('count')]"
+      },
+      "properties": {
+        "licenseType": "Windows_Server",
+        "hardwareProfile": {
+          "vmSize": "[parameters('SharedVmConfig').vmSize]"
+        },
+        "osProfile": {
+          "computerName": "[concat('APP',copyIndex(1))]",
+          "adminUsername": "[parameters('SharedVmConfig').adminUsername]",
+          "adminPassword": "[parameters('SharedVmConfig').adminPassword]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "[parameters('SharedVmConfig').serverOS]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[concat(variables('nicID'),copyIndex(1))]",
+              "properties":{
+                "primary":true
+              }
+            },
+            {
+              "id": "[concat(variables('nicIDBackend'),copyIndex(1))]",
+              "properties":{
+                "primary":false
+              }
+            }
+          ]
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "[reference(concat('Microsoft.Storage/storageAccounts/',parameters('SharedVmConfig').storageAccountNamePrefix),'2017-06-01').primaryEndpoints.blob]"
+          }
+        }
+      },
+      "resources": [
+    {
+      "apiVersion": "2017-03-30",
+      "type": "extensions",
+      "name": "/JoinDomain",
+      "location": "[parameters('SharedVmConfig').location]",
+      "dependsOn": [
+        "[concat('APP',copyIndex(1))]"
+      ],
+      "tags": {
+        "displayName": "Join Domain"
+      },
+      "properties": {
+        "publisher": "Microsoft.Compute",
+        "type": "JsonADDomainExtension",
+        "typeHandlerVersion": "1.3",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "Name": "[parameters('SharedVmConfig').domainName]",
+          "OUPath": null,
+          "Options": "3",
+          "Restart": "true",
+          "User": "[parameters('SharedVmConfig').domainUserName]"
+        },
+        "protectedsettings": {
+          "Password": "[parameters('SharedVmConfig').adminPassword]"
+        }
+      }
+    },
+    {
+      "type": "extensions",
+      "name": "/AppConfig",
+      "apiVersion": "2017-03-30",
+      "location": "[parameters('SharedVmConfig').location]",
+      "dependsOn": [
+        "[concat('APP',copyIndex(1))]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Powershell",
+        "type": "DSC",
+        "typeHandlerVersion": "2.9",
+        "autoUpgradeMinorVersion": true,
+        "protectedSettings": {
+          "Items": {}
+        },
+        "settings": {
+          "modulesUrl": "[concat(parameters('modulesURL'),'/AppConfig.ps1.zip')]",
+          "sasToken": "[parameters('SharedVmConfig').SasToken]",
+          "wmfVersion": "latest",
+          "configurationFunction": "[parameters('configurationFunction')]",
+          "Properties": {
+            "DomainName": "[parameters('SharedVmConfig').domainName]"
+          }
+        }
+      }
+    },
+    {
+      "type": "extensions",
+      "name": "/BGInfo",
+      "apiVersion": "2017-03-30",
+      "scale": null,
+      "location": "[parameters('SharedVmConfig').location]",
+      "dependsOn": [
+        "[concat('APP',copyIndex(1))]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Compute",
+        "type": "BGInfo",
+        "typeHandlerVersion": "2.1",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "properties": []
+        }
+      }
+    },
+    {
+      "type": "extensions",
+      "name": "/Antimalware",
+      "apiVersion": "2017-03-30",
+      "location": "[parameters('SharedVmConfig').location]",
+      "dependsOn": [
+        "[concat('APP',copyIndex(1))]",
+        "/JoinDomain"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Azure.Security",
+        "type": "IaaSAntimalware",
+        "typeHandlerVersion": "1.1",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "AntimalwareEnabled": true,
+          "Exclusions": {
+            "Paths": "C:\\Users",
+            "Extensions": ".txt",
+            "Processes": "taskmgr.exe"
+          },
+          "RealtimeProtectionEnabled": "true",
+          "ScheduledScanSettings": {
+            "isEnabled": "true",
+            "scanType": "Quick",
+            "day": "7",
+            "time": "120"
+          }
+        },
+        "protectedSettings": null
+      }
+    }        
+    ]
+    }
+  ],
+  "outputs": {}
+}
