@@ -1,0 +1,80 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vnetName": {
+        "type": "string"
+      },
+      "subnet": {
+          "type": "string"
+      },
+      "publicIpName": {
+          "type": "string"
+      }
+    },
+    "variables": {
+        "firewallName": "[concat(resourceGroup().name,'-firewall')]",
+        "azureFirewallSubnetId":  "[resourceId('Microsoft.Network/virtualNetworks/subnets',parameters('vnetName'), parameters('subnet'))]",
+        "azureFirewallPublicIpId": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('publicIPName'))]"
+    },
+    "resources": [
+    {
+    "apiVersion": "2018-06-01",
+    "type": "Microsoft.Network/azureFirewalls",
+    "name": "[variables('firewallName')]",
+    "location": "[resourceGroup().location]",
+    "dependsOn": [
+      "[resourceId('Microsoft.Network/virtualNetworks/', parameters('vnetName'))]"
+    ],
+    "properties": {
+      "ipConfigurations": [
+        {
+          "name": "IpConf",
+          "properties" : {
+            "subnet": {
+              "id": "[parameters('subnet')]"
+            },
+            "InternalPublicIPAddress": {
+              "id": "[variables('azureFirewallPublicIpId')]"
+            }
+          }
+        }
+      ],
+      "applicationRuleCollections": [
+        {
+          "name": "appRc1",
+          "properties": {
+            "priority": 101,
+            "action": {"type": "Allow"},
+            "rules": [
+              {
+                "name": "HTTP,HTTPS - Allow All",
+                "protocols": [{"port": "80", "protocolType": "http"}, {"port": "443", "protocolType": "https"}],
+                "targetUrls": ["*"]
+              }
+            ]
+          }
+        }
+      ],
+      "networkRuleCollections": [
+        {
+          "name": "netRc1",
+          "properties": {                    
+            "priority": 200,
+            "action":  { "type":  "Allow"},
+            "rules": [
+              {
+                "name": "netRule1",
+                "protocols": ["TCP"],
+                "sourceAddresses": ["192.168.2.0/24"],
+                "destinationAddresses": ["*"],
+                "destinationPorts": ["8000-8999"]
+              }
+            ]
+          }
+      }
+      ]
+  }
+}
+    ]
+}
