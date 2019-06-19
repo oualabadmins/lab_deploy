@@ -26,9 +26,9 @@
     "computerOU": {
       "type": "string",
       "metadata": {
-        "description": "The OU for computer accounts (with container identifier). Ensure that the case matches."
+        "description": "The custom OU for computer accounts (do not use CN=Computers). Ensure that the case matches."
       },
-      "defaultValue": "CN=Computers"
+      "defaultValue": "OU=Machines"
     },
     "adminUsername": {
       "type": "string",
