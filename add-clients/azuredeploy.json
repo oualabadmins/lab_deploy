@@ -26,9 +26,9 @@
     "computerOU": {
       "type": "string",
       "metadata": {
-        "description": "The OU for computer accounts. Ensure that the case matches."
+        "description": "The OU for computer accounts (with container identifier). Ensure that the case matches."
       },
-      "defaultValue": "Computers"
+      "defaultValue": "CN=Computers"
     },
     "adminUsername": {
       "type": "string",
@@ -105,7 +105,7 @@
       "sasToken": "[parameters('_artifactsLocationSasToken')]",
       "domainName": "[parameters('domainName')]",
       "configName": "[parameters('configName')]",
-      "ou": "[concat('OU=',parameters('computerOU'),',DC=',replace(parameters('domainName'),'.',',DC='))]",
+      "ou": "[concat(parameters('computerOU'),',DC=',replace(parameters('domainName'),'.',',DC='))]",
       "scriptPath": "[concat(parameters('_artifactsLocation'),'/scripts')]",
       "startNumber" : "[parameters('clientStartNumber')]"
     }
