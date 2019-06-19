@@ -15,11 +15,13 @@ The **Add client VMs to existing deployment** template provisions x number of cl
 
 Provide the following information:
 
-+ Resource group name
-+ VNet name
++ Resource group name of the existing deployment
++ VNet name VMs are connected to
 + AD domain name
 + AD DC IP address
 + AD username and password
++ Number of client VMs to add
++ Starting number for client names
 
 ## Solution notes
 
