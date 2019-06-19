@@ -23,6 +23,13 @@
       },
       "defaultValue": ""
     },
+    "computerOU": {
+      "type": "string",
+      "metadata": {
+        "description": "The OU for computer accounts. Ensure that the case matches."
+      },
+      "defaultValue": "Computers"
+    },
     "adminUsername": {
       "type": "string",
       "metadata": {
@@ -98,7 +105,7 @@
       "sasToken": "[parameters('_artifactsLocationSasToken')]",
       "domainName": "[parameters('domainName')]",
       "configName": "[parameters('configName')]",
-      "ou": "[concat('OU=Machines,DC=',replace(parameters('domainName'),'.',',DC='))]",
+      "ou": "[concat('OU=',parameters('computerOU'),',DC=',replace(parameters('domainName'),'.',',DC='))]",
       "scriptPath": "[concat(parameters('_artifactsLocation'),'/scripts')]",
       "startNumber" : "[parameters('clientStartNumber')]"
     }
