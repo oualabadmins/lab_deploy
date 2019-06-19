@@ -1,8 +1,8 @@
-﻿# Skunkworks Lab - Add client VMs to existing deployment
+﻿# Skunkworks Lab - Add client VMs to existing deployment v0.4
 
-**Time to deploy**: 10 minutes
+**Time to deploy**: ~10 minutes
 
-The **Add client VMs to existing deployment** template provisions x number of client VMs to an existing deployment, and joins them to the deployment's domain.
+The **Add client VMs to existing deployment** template provisions _x_ number of client VMs to an existing deployment, and joins them to the deployment's domain.
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Foualabadmins%2Flab_deploy%2Fmaster%2Fadd-clients%2Fazuredeploy.json" target="_blank">
 <img src="http://azuredeploy.net/deploybutton.png"/>
@@ -18,7 +18,7 @@ Provide the following information:
 + Resource group name of the existing deployment
 + VNet name VMs are connected to
 + AD domain name
-+ OU for computer accounts
++ OU for computer accounts, with container identifier (i.e. _CN=Computers_)
 + AD DC IP address
 + AD username and password
 + Number of client VMs to add
@@ -42,4 +42,4 @@ Last update: _6/19/2019_
 
 ## Changelog
 
-+ **6/19/2019**:  Initial commit
++ **6/19/2019**:  Initial commit. Derived from oualabadmins\lab_deploy\M365-base-config_DirSync. Added parameters for vnetName, OU, clientStartNumber, dcIp.
