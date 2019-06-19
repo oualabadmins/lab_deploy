@@ -48,6 +48,13 @@
       },
       "defaultValue": 1
     },
+    "clientStartNumber": {
+      "type": "int",
+      "metadata": {
+        "description": "The starting number for Windows 10 client VMs. Start with the number following the highest existing client number."
+      },
+      "defaultValue": 1
+    },
     "vmSizeClient": {
       "type": "string",
       "metadata": {
@@ -92,7 +99,8 @@
       "domainName": "[parameters('domainName')]",
       "configName": "[parameters('configName')]",
       "ou": "[concat('OU=Machines,DC=',replace(parameters('domainName'),'.',',DC='))]",
-      "scriptPath": "[concat(parameters('_artifactsLocation'),'/scripts')]"
+      "scriptPath": "[concat(parameters('_artifactsLocation'),'/scripts')]",
+      "startNumber" : "[parameters('clientStartNumber')]"
     }
   },
 
@@ -131,6 +139,9 @@
           },
           "dcIp": {
             "value": "[parameters('dcIpAddress')]"
+          },
+          "startNumber": {
+            "value": "[parameters('clientStartNumber')]"
           }
         }
       }

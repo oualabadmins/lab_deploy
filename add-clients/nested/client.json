@@ -17,7 +17,7 @@
     {
       "apiVersion": "2017-03-30",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat('CLIENT',copyIndex(1))]",
+      "name": "[concat('CLIENT',copyIndex(parameters('SharedVmConfig').startNumber))]",
       "location": "[parameters('SharedVmConfig').location]",
       "dependsOn": [],
       "copy": {
@@ -29,7 +29,7 @@
           "vmSize": "[parameters('SharedVmConfig').vmSizeClient]"
         },
         "osProfile": {
-          "computerName": "[concat('CLIENT',copyIndex(1))]",
+          "computerName": "[concat('CLIENT',copyIndex(parameters('SharedVmConfig').startNumber))]",
           "adminUsername": "[parameters('SharedVmConfig').adminUsername]",
           "adminPassword": "[parameters('SharedVmConfig').adminPassword]"
         },
@@ -47,7 +47,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[concat(variables('nicID'),copyIndex(1))]"
+              "id": "[concat(variables('nicID'),copyIndex(parameters('SharedVmConfig').startNumber))]"
             }
           ]
         }
@@ -59,7 +59,7 @@
       "name": "/JoinDomain",
       "location": "[parameters('SharedVmConfig').location]",
       "dependsOn": [
-        "[concat('CLIENT',copyIndex(1))]"
+        "[concat('CLIENT',copyIndex(parameters('SharedVmConfig').startNumber))]"
       ],
       "tags": {
         "displayName": "Join Domain"
@@ -88,7 +88,7 @@
       "scale": null,
       "location": "[parameters('SharedVmConfig').location]",
       "dependsOn": [
-        "[concat('CLIENT',copyIndex(1))]"
+        "[concat('CLIENT',copyIndex(parameters('SharedVmConfig').startNumber))]"
       ],
       "properties": {
         "publisher": "Microsoft.Compute",
@@ -106,7 +106,7 @@
       "apiVersion": "2017-03-30",
       "location": "[parameters('SharedVmConfig').location]",
       "dependsOn": [
-        "[concat('CLIENT',copyIndex(1))]",
+        "[concat('CLIENT',copyIndex(parameters('SharedVmConfig').startNumber))]",
         "/JoinDomain"
       ],
       "properties": {

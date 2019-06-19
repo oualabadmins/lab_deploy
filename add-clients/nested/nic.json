@@ -24,6 +24,9 @@
         "dcIp": {
           "type": "string",
           "defaultValue": "127.0.0.1"
+        },
+        "startNumber": {
+          "type": "int"
         }
     },
     "variables": {
@@ -35,7 +38,7 @@
     },
     "resources": [
         {
-            "name": "[concat(variables('nicPrefix'),copyIndex(1))]",
+            "name": "[concat(variables('nicPrefix'),copyIndex(parameters('startNumber')))]",
             "copy": {
               "name": "nics",
               "count": "[parameters('count')]"
@@ -48,7 +51,7 @@
             "properties": {
               "ipConfigurations": [
                 {
-                  "name": "[concat('ipconfig',copyIndex(1))]",
+                  "name": "[concat('ipconfig',copyIndex(parameters('startNumber')))]",
                   "properties": {
                     "privateIPAllocationMethod": "[parameters('ipAllocation')]",
                     "subnet": {
@@ -70,10 +73,5 @@
             }
           }   
     ],
-    "outputs": {
-      "nicip": {
-        "value": "[reference(concat(variables('nicPrefix'),'1')).ipConfigurations[0].properties.privateIPAddress]",
-        "type": "string"
-      }
-    }
+    "outputs": {}
 }
