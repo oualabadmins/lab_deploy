@@ -26,6 +26,8 @@ Provide the following information:
 
 ## Solution notes
 
++ You cannot add computer accounts to the default _CN=Computers_ OU using the ADDomainExtension. Before deployment, check **AD Users and Computers** to see if a custom OU exists for computer account objects. If not, create one (for example, **OU=Machines**).
+
 ## Known issues
 
 + The client VM deployment may take longer than expected, and then appear to fail. The client VMs and extensions may or may not deploy successfully. This is due to an ongoing Azure client deployment bug, and only happens when the client VM size is smaller than DS3_v2.
