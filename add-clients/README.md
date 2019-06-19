@@ -18,6 +18,7 @@ Provide the following information:
 + Resource group name of the existing deployment
 + VNet name VMs are connected to
 + AD domain name
++ OU for computer accounts
 + AD DC IP address
 + AD username and password
 + Number of client VMs to add
