@@ -1,0 +1,167 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "configName": {
+      "type": "string",
+      "metadata": {
+        "description": "The unique prefix name of the deployment, i.e. kvice-clients. Do not use spaces or special characters other than _ or -. Used to prefix resource names for the deployment."
+      },
+      "defaultValue": ""
+    },
+    "vnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the VNet."
+      },
+      "defaultValue": "MAXLab-CORP-WUS2-VNET-2"
+    },
+    "domainName": {
+      "type": "string",
+      "metadata": {
+        "description": "The FQDN of the AD domain, such as corp.contoso52.com."
+      },
+      "defaultValue": ""
+    },
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "The domain administrator username."
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The domain administrator account password."
+      }
+    },
+    "dcIpAddress": {
+      "type": "string",
+      "metadata": {
+        "description": "The IP address of the AD DC VM."
+      }
+    },
+    "numberOfClientVms": {
+      "type": "int",
+      "metadata": {
+        "description": "The number of Windows 10 client VMs."
+      },
+      "defaultValue": 1
+    },
+    "vmSizeClient": {
+      "type": "string",
+      "metadata": {
+        "description": "Select a VM size for all Windows 10 client VMs in your deployment."
+      },
+      "allowedValues": [
+        "Standard_DS2_v2", "Standard_DS3_v2", "Standard_DS4_v2"
+      ],
+      "defaultValue": "Standard_DS2_v2"
+    },
+    "_artifactsLocation": {
+      "type": "string",
+      "metadata": {
+        "description": "Github source repo. DO NOT CHANGE."
+      },
+      "defaultValue": "https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/add-clients"
+    },
+    "_artifactsLocationSasToken": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Github source repo SAS token, if needed. DO NOT CHANGE."
+      },
+      "defaultValue": ""
+    }
+  },
+
+  "variables": {
+
+    "shortDomainName": "[first(split(parameters('domainName'),'.'))]",
+    "domainUserName": "[concat(variables('shortDomainName'),'\\',parameters('adminUsername'))]",
+    "templates": "[concat(parameters('_artifactsLocation'),'/nested')]",
+    "storageAccountName": "[concat(uniqueString(resourceGroup().id),'storage')]",
+
+    "SharedVmConfig": {
+      "location": "[resourceGroup().location]",
+      "vmSizeClient": "[parameters('vmSizeClient')]",
+      "domainUsername": "[variables('domainUsername')]",
+      "adminUsername": "[parameters('adminUsername')]",
+      "adminPassword": "[parameters('adminPassword')]",
+      "storageAccountNamePrefix": "[variables('storageAccountName')]",
+      "sasToken": "[parameters('_artifactsLocationSasToken')]",
+      "domainName": "[parameters('domainName')]",
+      "configName": "[parameters('configName')]",
+      "ou": "[concat('OU=Machines,DC=',replace(parameters('domainName'),'.',',DC='))]",
+      "scriptPath": "[concat(parameters('_artifactsLocation'),'/scripts')]"
+    }
+  },
+
+  "resources": [
+    {
+      "name": "[concat(parameters('configName'),'-CLIENT_NIC_DEPLOY')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "condition": "[greater(parameters('numberOfClientVms'),0)]",
+      "comments": "This is the deployment resource for CLIENT NICs.",
+      "dependsOn": [],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/nic.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "CLIENT"
+          },
+          "count": {
+            "value": "[parameters('numberOfClientVms')]"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "vnetName": {
+            "value": "[parameters('vnetName')]"
+          },
+          "domainName": {
+            "value": "[parameters('domainName')]"
+          },
+          "dcIp": {
+            "value": "[parameters('dcIpAddress')]"
+          }
+        }
+      }
+    },
+
+    {
+      "name": "[concat(parameters('configName'),'-CLIENT_DEPLOY')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "condition": "[greater(parameters('numberOfClientVms'),0)]",
+      "comments": "This is the deployment resource for client VMs.",
+      "dependsOn": [
+        "[concat(parameters('configName'),'-CLIENT_NIC_DEPLOY')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/client.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "SharedVmConfig": { 
+            "value": "[variables('SharedVmConfig')]" 
+          },
+          "count": {
+            "value": "[parameters('numberOfClientVms')]"
+          }
+        }
+      }
+    }
+  ],
+
+  "outputs": {}
+}
