@@ -269,22 +269,6 @@
             "properties": {}
         },
         {
-            "apiVersion": "2017-03-30",
-            "type": "Microsoft.Compute/availabilitySets",
-            "name": "as1",
-            "location": "[parameters('location')]",
-            "tags": {
-                "CreatedBy": "[parameters('userEmail')]"
-            },
-            "sku": {
-                "name": "Aligned"
-            },
-            "properties": {
-                "platformFaultDomainCount": 2,
-                "platformUpdateDomainCount": 2
-            }
-        },
-        {
             "type": "Microsoft.Sql/servers",
             "name": "[parameters('serverName')]",
             "apiVersion": "2015-05-01-preview",
