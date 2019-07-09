@@ -2,6 +2,12 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "userEmail": {
+            "type": "string",
+            "metadata": {
+                "description": "Your email address"
+            }
+        },
         "serverName": {
             "type": "string",
             "metadata": {
@@ -29,7 +35,7 @@
             }
         },
         "enableADS": {
-            "defaultValue": false,
+            "defaultValue": true,
             "type": "bool",
             "metadata": {
                 "description": "Enable Advanced Data Security?"
@@ -133,6 +139,9 @@
             "type": "Microsoft.Network/virtualNetworks",
             "name": "[parameters('vnetName')]",
             "location": "[parameters('location')]",
+            "tags": {
+                "CreatedBy": "[parameters('userEmail')]"
+            },
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": [
@@ -166,7 +175,8 @@
             "name": "[variables('nsgName')]",
             "location": "[resourceGroup().location]",
             "tags": {
-                "displayName": "NSG - SQL"
+                "displayName": "NSG - SQL",
+                "CreatedBy": "[parameters('userEmail')]"
             },
             "comments": "This network security group permits SQL ports.",
             "properties": {
@@ -233,6 +243,9 @@
             "type": "Microsoft.Network/publicIPAddresses",
             "name": "[variables('publicIPAddressName')]",
             "location": "[parameters('location')]",
+            "tags": {
+                "CreatedBy": "[parameters('userEmail')]"
+            },
             "properties": {
                 "publicIPAllocationMethod": "Dynamic"
             }
@@ -243,6 +256,9 @@
             "name": "[variables('storageName')]",
             "apiVersion": "2018-07-01",
             "location": "[parameters('location')]",
+            "tags": {
+                "CreatedBy": "[parameters('userEmail')]"
+            },
             "dependsOn": [
                 "[concat('Microsoft.Network/virtualNetworks/', parameters('vnetName'))]"
             ],
@@ -257,6 +273,9 @@
             "type": "Microsoft.Compute/availabilitySets",
             "name": "as1",
             "location": "[parameters('location')]",
+            "tags": {
+                "CreatedBy": "[parameters('userEmail')]"
+            },
             "sku": {
                 "name": "Aligned"
             },
@@ -270,6 +289,9 @@
             "name": "[parameters('serverName')]",
             "apiVersion": "2015-05-01-preview",
             "location": "[parameters('location')]",
+            "tags": {
+                "CreatedBy": "[parameters('userEmail')]"
+            },
             "properties": {
                 "administratorLogin": "[parameters('adminusername')]",
                 "administratorLoginPassword": "[parameters('adminpassword')]",
@@ -295,8 +317,8 @@
                         "[resourceId('Microsoft.Sql/servers/', parameters('serverName'))]"
                     ],
                     "properties": {
-                        "endIpAddress": "0.0.0.0",
-                        "startIpAddress": "0.0.0.0"
+                        "endIpAddress": "[parameters('inboundIps')]",
+                        "startIpAddress": "[parameters('inboundIps')]"
                     }
                 },
                 {
@@ -324,7 +346,7 @@
                     "properties": {
                         "state": "Enabled",
                         "disabledAlerts": [],
-                        "emailAddresses": [],
+                        "emailAddresses": ["[parameters('userEmail')]"],
                         "emailAccountAdmins": true
                     }
                 },
