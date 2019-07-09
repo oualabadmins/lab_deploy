@@ -1,4 +1,4 @@
-﻿# MAX Skunkworks Lab - SQL Azure Secure Configuration - Public (v0.1)
+﻿# MAX Skunkworks Lab - SQL Azure Secure Configuration - Public (v0.2)
 
 **IMPORTANT**: Only deploy this template into an external-facing subscription with no ExpressRoute circuit. These currently include:
 
@@ -25,12 +25,11 @@ The **SQL Azure Secure Configuration** provisions a SQL Azure instance with two 
 
 The following resources are deployed as part of the solution:
 
-+ **SQL Azure instance**: SQL Azure server with one database.
-+ **Storage account**: Diagnostics storage account, and client VM storage account if indicated. ADDC and App Server VMs in the deployment use managed disks, so no storage accounts are created for VHDs.
-+ **NSG**: Network security group configured to allow inbound RDP on 3389
-+ **Virtual network**: Virtual network for internal traffic, configured with custom DNS pointing to the ADDC's private IP address and 2 tenant subnets, _subnet-frontend_ and _subnet-backend_.
-+ **Network interfaces**: 1 NIC per VM (AD and CLIENT), 2 NICs per APP VM
-+ **Public IP addresses**: 1 static public IP per VM. Note that some subscriptions may have limits on the number of static IPs that can be deployed for a given region.
++ **SQL Azure instance**: SQL Azure server.
++ **Storage account**: Advanced Data Security storage account.
++ **NSG**: Network security group configured to allow VNet access and specified inbound IP/range.
++ **Virtual network**: Virtual network for internal traffic, configured 2 tenant subnets.
++ **Public IP addresses**: 1 static public IP for the service endpoint.
 
 ## Solution notes
 
