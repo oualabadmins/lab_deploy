@@ -35,10 +35,10 @@
             }
         },
         "enableADS": {
-            "defaultValue": true,
+            "defaultValue": false,
             "type": "bool",
             "metadata": {
-                "description": "Enable Advanced Data Security?"
+                "description": "Enable Advanced Data Security? NOT WORKING"
             }
         },
         "allowAzureIPs": {
