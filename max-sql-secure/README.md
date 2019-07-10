@@ -39,7 +39,7 @@ Developed by the **MARVEL Skunkworks Lab**
 Author: Kelley Vice (kvice@microsoft.com)  
 https://github.com/maxskunkworks
 
-![alt text](https://github.com/oualabadmins/lab_deploy/common/images/maxskunkworkslogo-small.jpg "MARVEL Skunkworks")
+![alt text](../common/images/maxskunkworkslogo-small.jpg "MARVEL Skunkworks")
 
 Last update: _7/9/2019_
 
