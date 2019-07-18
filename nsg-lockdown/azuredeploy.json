@@ -19,7 +19,17 @@
     },
     "resources": [
         {
-            "name": "rdp-lockdown",
+            "apiVersion": "2018-01-01",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[parameters('nsgName')]",
+            "location": "[resourceGroup().location]",
+            "tags": {
+              "lockdown": "RDP,PoSH"
+            },
+            "properties": {}
+        },
+        {
+            "name": "[concat(parameters('nsgName'),'/rdp-lockdown')]",
             "apiVersion": "2018-01-01",
             "type": "Microsoft.Network/networkSecurityGroups/securityRules",
             "dependsOn": [
@@ -38,7 +48,7 @@
             }
         },
         {
-          "name": "powershell-remoting-lockdown",
+          "name": "[concat(parameters('nsgName'),'/powershell-remoting-lockdown')]",
           "apiVersion": "2018-01-01",
           "type": "Microsoft.Network/networkSecurityGroups/securityRules",
           "dependsOn": [
