@@ -50,7 +50,7 @@
                 "sourceAddressPrefixes": "[variables('corpnetSubnets')]",
                 "destinationAddressPrefix": "*",
                 "access": "Allow",
-                "priority": 20,
+                "priority": 720,
                 "direction": "Inbound"
             }
         },
@@ -70,7 +70,7 @@
                 "sourceAddressPrefixes": "[variables('corpnetSubnets')]",
                 "destinationAddressPrefix": "*",
                 "access": "Allow",
-                "priority": 21,
+                "priority": 721,
                 "direction": "Inbound"
             }
         },
@@ -91,7 +91,7 @@
                 "sourceAddressPrefixes": "[parameters('otherIps')]",
                 "destinationAddressPrefix": "*",
                 "access": "Allow",
-                "priority": 22,
+                "priority": 722,
                 "direction": "Inbound"
             }
         },
@@ -112,7 +112,7 @@
                 "sourceAddressPrefixes": "[parameters('otherIps')]",
                 "destinationAddressPrefix": "*",
                 "access": "Allow",
-                "priority": 23,
+                "priority": 723,
                 "direction": "Inbound"
             }
         }
