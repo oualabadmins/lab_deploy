@@ -33,11 +33,11 @@ Locks down RDP, SSH and PoSH to the following corpnet subnets:
 
 131.107.0.0/16, 167.220.0.0/23, 167.220.100.0/22, 167.220.104.0/23, 167.220.56.0/21, 167.220.98.0/23
 
-You can specify additional IPs and subnets with the _Other IPs_ parameter. Any of the following formats will work:
+You can specify additional IPs and subnets with the _Other IPs_ parameter. Any of the following formats will work, and should look like the following:
 
-+ 192.168.0.54
-+ 192.168.0.54,192.168.0.55
-+ 192.168.0.0/24
++ ["192.168.0.54"]
++ ["192.168.0.54,192.168.0.55"]
++ ["192.168.0.0/24"]
 
 ## Known issues
 ___
