@@ -18,7 +18,7 @@
     },
     "resources": [
         {
-            "name": "rdp",
+            "name": "rdp-lockdown",
             "apiVersion": "2018-01-01",
             "type": "Microsoft.Network/networkSecurityGroups/securityRules",
             "dependsOn": [
@@ -32,12 +32,12 @@
                 "sourceAddressPrefix": "[variables('permitIps')]",
                 "destinationAddressPrefix": "*",
                 "access": "Allow",
-                "priority": 100,
+                "priority": 20,
                 "direction": "Inbound"
             }
         },
         {
-          "name": "powershell-remoting",
+          "name": "powershell-remoting-lockdown",
           "apiVersion": "2018-01-01",
           "type": "Microsoft.Network/networkSecurityGroups/securityRules",
           "dependsOn": [
@@ -51,7 +51,7 @@
                 "sourceAddressPrefix": "[variables('permitIps')]",
                 "destinationAddressPrefix": "*",
                 "access": "Allow",
-                "priority": 100,
+                "priority": 21,
                 "direction": "Inbound"
             }
         }
