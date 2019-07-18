@@ -25,22 +25,9 @@
     },
     "resources": [
         {
-            "apiVersion": "2018-01-01",
-            "type": "Microsoft.Network/networkSecurityGroups",
-            "name": "[parameters('nsgName')]",
-            "location": "[resourceGroup().location]",
-            "tags": {
-              "lockdown": "RDP,PoSH"
-            },
-            "properties": {}
-        },
-        {
           "name": "[concat(parameters('nsgName'),'/ssh-rule')]",
           "apiVersion": "2018-01-01",
           "type": "Microsoft.Network/networkSecurityGroups/securityRules",
-          "dependsOn": [
-            "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('nsgName'))]"
-          ],
             "properties": {
                 "description": "Allow SSH inbound",
                 "protocol": "Tcp",
@@ -58,9 +45,6 @@
             "name": "[concat(parameters('nsgName'),'/rdp-rule')]",
             "apiVersion": "2018-01-01",
             "type": "Microsoft.Network/networkSecurityGroups/securityRules",
-            "dependsOn": [
-              "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('nsgName'))]"
-            ],
             "properties": {
                 "description": "Allow RDP inbound",
                 "protocol": "Tcp",
@@ -78,9 +62,6 @@
           "name": "[concat(parameters('nsgName'),'/powershell-remoting-rule')]",
           "apiVersion": "2018-01-01",
           "type": "Microsoft.Network/networkSecurityGroups/securityRules",
-          "dependsOn": [
-            "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('nsgName'))]"
-          ],
             "properties": {
                 "description": "Allow PowerShell remoting inbound",
                 "protocol": "Tcp",
@@ -99,9 +80,6 @@
             "condition": "[not(empty(parameters('otherIps')))]",
             "apiVersion": "2018-01-01",
             "type": "Microsoft.Network/networkSecurityGroups/securityRules",
-            "dependsOn": [
-              "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('nsgName'))]"
-            ],
             "properties": {
                 "description": "Allow SSH inbound",
                 "protocol": "Tcp",
@@ -120,9 +98,6 @@
             "condition": "[not(empty(parameters('otherIps')))]",
             "apiVersion": "2018-01-01",
             "type": "Microsoft.Network/networkSecurityGroups/securityRules",
-            "dependsOn": [
-              "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('nsgName'))]"
-            ],
             "properties": {
                 "description": "Allow RDP inbound",
                 "protocol": "Tcp",
@@ -141,9 +116,6 @@
           "condition": "[not(empty(parameters('otherIps')))]",
           "apiVersion": "2018-01-01",
           "type": "Microsoft.Network/networkSecurityGroups/securityRules",
-          "dependsOn": [
-            "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('nsgName'))]"
-          ],
             "properties": {
                 "description": "Allow PowerShell remoting inbound",
                 "protocol": "Tcp",
