@@ -1,0 +1,60 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "nsgName": {
+            "type": "string"
+        },
+        "otherIps": {
+            "type": "string",
+            "metadata": {
+                "description": "Enter additional IPs or subnets to permit (i.e. 10.10.10.1, 10.10.10.0/24)"
+            }
+        }
+    },
+    "variables": {
+        "corpnetSubnets": "131.107.0.0/16,167.220.0.0/23,167.220.100.0/22,167.220.104.0/23,167.220.56.0/21,167.220.98.0/23",
+        "permitIps": "[concat(variables('corpnetSubnets'),',',parameters('otherIps'))]"
+    },
+    "resources": [
+        {
+            "name": "rdp",
+            "apiVersion": "2018-01-01",
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "dependsOn": [
+              "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('nsgName'))]"
+            ],
+            "properties": {
+                "description": "Allow RDP inbound",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "3389",
+                "sourceAddressPrefix": "[variables('permitIps')]",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound"
+            }
+        },
+        {
+          "name": "powershell-remoting",
+          "apiVersion": "2018-01-01",
+          "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+          "dependsOn": [
+            "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('nsgName'))]"
+          ],
+            "properties": {
+                "description": "Allow PowerShell remoting inbound",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "5985",
+                "sourceAddressPrefix": "[variables('permitIps')]",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound"
+            }
+        }
+    ],
+    "outputs": {}
+}
