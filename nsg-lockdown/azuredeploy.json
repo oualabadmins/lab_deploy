@@ -9,7 +9,7 @@
             "type": "array",
             "defaultValue": [],
             "metadata": {
-                "description": "Enter additional IPs or subnets to permit (i.e. 10.10.10.1, 10.10.10.0/24)"
+                "description": "Enter additional IPs or subnets to permit (i.e. '10.10.10.1', '10.10.10.0/24', '10.10.10.1,10.10.10.2')"
             }
         }
     },
