@@ -6,9 +6,9 @@
 + MAXLAB R&D EXT 1
 + MAXLAB R&D EXT 2
 
-**Time to deploy**: ~2 minutes
+**Time to deploy**: ~1 minute
 
-The **NSG Lockdown** template adds security rules to an existing NSG to only permits RDP and PowerShell Remoting connections from corpnet subnets and any other IPs or subnets specified in the template.
+The **NSG Lockdown** template adds security rules to an existing NSG to permit RDP, SSH and PowerShell Remoting connections from corpnet subnets and any other IPs or subnets specified in the template.
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Foualabadmins%2Flab_deploy%2Fmaster%2Fnsg-lockdown%2Fazuredeploy.json" target="_blank">
 <img src="http://azuredeploy.net/deploybutton.png"/>
@@ -25,11 +25,11 @@ The **NSG Lockdown** template adds security rules to an existing NSG to only per
 
 The following resources are deployed as part of the solution:
 
-+ **NSG security rules**: RDP (port 3389) and PowerShell Remoting (port 5985).
++ **NSG security rules**: RDP (port 3389), SSH (port 22) and PowerShell Remoting (port 5985).
 
 ## Solution notes
 
-Locks down RDP and PoSH to the following corpnet subnets:
+Locks down RDP, SSH and PoSH to the following corpnet subnets:
 
 131.107.0.0/16, 167.220.0.0/23, 167.220.100.0/22, 167.220.104.0/23, 167.220.56.0/21, 167.220.98.0/23
 
