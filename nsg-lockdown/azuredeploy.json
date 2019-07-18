@@ -7,6 +7,7 @@
         },
         "otherIps": {
             "type": "string",
+            "defaultValue": "",
             "metadata": {
                 "description": "Enter additional IPs or subnets to permit (i.e. 10.10.10.1, 10.10.10.0/24)"
             }
@@ -29,7 +30,7 @@
                 "protocol": "Tcp",
                 "sourcePortRange": "*",
                 "destinationPortRange": "3389",
-                "sourceAddressPrefix": "[variables('permitIps')]",
+                "sourceAddressPrefix": "[if(empty(parameters('otherIps')),variables('corpnetSubnets'),variables('permitIps'))]",
                 "destinationAddressPrefix": "*",
                 "access": "Allow",
                 "priority": 20,
@@ -48,7 +49,7 @@
                 "protocol": "Tcp",
                 "sourcePortRange": "*",
                 "destinationPortRange": "5985",
-                "sourceAddressPrefix": "[variables('permitIps')]",
+                "sourceAddressPrefix": "[if(empty(parameters('otherIps')),variables('corpnetSubnets'),variables('permitIps'))]",
                 "destinationAddressPrefix": "*",
                 "access": "Allow",
                 "priority": 21,
