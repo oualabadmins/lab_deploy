@@ -35,7 +35,27 @@
             "properties": {}
         },
         {
-            "name": "[concat(parameters('nsgName'),'/rdp-lockdown')]",
+          "name": "[concat(parameters('nsgName'),'/ssh-rule')]",
+          "apiVersion": "2018-01-01",
+          "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+          "dependsOn": [
+            "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('nsgName'))]"
+          ],
+            "properties": {
+                "description": "Allow SSH inbound",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourcePortRanges": [],
+                "sourceAddressPrefixes": "[variables('corpnetSubnets')]",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 120,
+                "direction": "Inbound"
+            }
+        },
+        {
+            "name": "[concat(parameters('nsgName'),'/rdp-rule')]",
             "apiVersion": "2018-01-01",
             "type": "Microsoft.Network/networkSecurityGroups/securityRules",
             "dependsOn": [
@@ -50,12 +70,12 @@
                 "sourceAddressPrefixes": "[variables('corpnetSubnets')]",
                 "destinationAddressPrefix": "*",
                 "access": "Allow",
-                "priority": 720,
+                "priority": 121,
                 "direction": "Inbound"
             }
         },
         {
-          "name": "[concat(parameters('nsgName'),'/powershell-remoting-lockdown')]",
+          "name": "[concat(parameters('nsgName'),'/powershell-remoting-rule')]",
           "apiVersion": "2018-01-01",
           "type": "Microsoft.Network/networkSecurityGroups/securityRules",
           "dependsOn": [
@@ -70,7 +90,28 @@
                 "sourceAddressPrefixes": "[variables('corpnetSubnets')]",
                 "destinationAddressPrefix": "*",
                 "access": "Allow",
-                "priority": 721,
+                "priority": 122,
+                "direction": "Inbound"
+            }
+        },
+        {
+            "name": "[concat(parameters('nsgName'),'/ssh-lockdown-other')]",
+            "condition": "[not(empty(parameters('otherIps')))]",
+            "apiVersion": "2018-01-01",
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "dependsOn": [
+              "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('nsgName'))]"
+            ],
+            "properties": {
+                "description": "Allow SSH inbound",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "3389",
+                "sourcePortRanges": [],
+                "sourceAddressPrefixes": "[parameters('otherIps')]",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 123,
                 "direction": "Inbound"
             }
         },
@@ -91,7 +132,7 @@
                 "sourceAddressPrefixes": "[parameters('otherIps')]",
                 "destinationAddressPrefix": "*",
                 "access": "Allow",
-                "priority": 722,
+                "priority": 124,
                 "direction": "Inbound"
             }
         },
@@ -112,7 +153,7 @@
                 "sourceAddressPrefixes": "[parameters('otherIps')]",
                 "destinationAddressPrefix": "*",
                 "access": "Allow",
-                "priority": 723,
+                "priority": 125,
                 "direction": "Inbound"
             }
         }
