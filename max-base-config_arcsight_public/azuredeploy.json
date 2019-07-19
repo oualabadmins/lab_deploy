@@ -127,55 +127,21 @@
       }
     },
     {
-      "apiVersion": "2017-10-01",
-      "type": "Microsoft.Network/networkSecurityGroups",
-      "name": "[variables('network').nsgName]",
-      "location": "[resourceGroup().location]",
+      "name": "[concat(parameters('configName'),'-NSG')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "NEW This is the deployment resource for the front-end NSG.",
       "properties": {
-        "securityRules": [
-          {
-            "name": "ssh-rule",
-            "properties": {
-              "description": "Allow SSH",
-              "protocol": "Tcp",
-              "sourcePortRange": "*",
-              "destinationPortRange": "22",
-              "sourceAddressPrefix": "Internet",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 100,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "name": "rdp-rule",
-            "properties": {
-              "description": "Allow RDP",
-              "protocol": "Tcp",
-              "sourcePortRange": "*",
-              "destinationPortRange": "3389",
-              "sourceAddressPrefix": "Internet",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 102,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "name": "siem",
-            "properties": {
-              "description": "Allow SIEM ports",
-              "protocol": "Tcp",
-              "sourcePortRange": "*",
-              "destinationPortRange": "8443-9443",
-              "sourceAddressPrefix": "Internet",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 103,
-              "direction": "Inbound"
-            }
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/nsg.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "nsgName": { 
+            "value": "[variables('network').nsgName]" 
           }
-        ]
+        }
       }
     },
     {
