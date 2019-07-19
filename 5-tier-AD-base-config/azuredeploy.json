@@ -135,13 +135,6 @@
         "10.0.0.0/23", "10.0.10.0/23", "10.0.100.0/23", "172.16.0.0/23", "172.16.10.0/23", "172.16.100.0/23"
       ]
     },
-    "routeTableToAzureService": {
-      "type": "string",
-      "defaultValue": "RouteToAzureSqlMiMngSvc",
-      "metadata": {
-        "description": "The name of the existing or new route table that enables access to Azure SQL Managed Instance Management Service that controls the instance, manages backups and other maintenance operations"
-      }
-    },
     "_artifactsLocation": {
       "type": "string",
       "metadata": {
@@ -241,28 +234,10 @@
       }
     },
     {
-      "type": "Microsoft.Network/routeTables",
-      "name": "[parameters('routeTableToAzureService')]",
-      "apiVersion": "2018-02-01",
-      "location": "[resourceGroup().location]",
-      "properties": {
-          "disableBgpRoutePropagation": false,
-          "routes": [
-              {
-                  "name": "[parameters('routeTableToAzureService')]",
-                  "properties": {
-                      "addressPrefix": "0.0.0.0/0",
-                      "nextHopType": "Internet"
-                  }
-              }
-          ]
-      }
-    },
-    {
       "name": "[variables('network').vnetName]",
       "type": "Microsoft.Network/virtualNetworks",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/routeTables', parameters('routeTableToAzureService'))]"
+        "[concat(parameters('configName'),'-NSG')]"
       ],
       "location": "[resourceGroup().location]",
       "apiVersion": "2018-01-01",
@@ -292,10 +267,7 @@
           {
             "name": "subnet-backend",
             "properties": {
-              "addressPrefix": "[variables('network').backSubnet]",
-              "routeTable": {
-                "id": "[resourceId('Microsoft.Network/routeTables', parameters('routeTableToAzureService'))]"
-              }
+              "addressPrefix": "[variables('network').backSubnet]"
             }
           }
         ]
@@ -495,8 +467,11 @@
           "ipAllocation": {
             "value": "Dynamic"
           },
-          "vnetName": {
-            "value": "[variables('network').vnetName]"
+          "privateIp": {
+            "value": "[variables('VMs').adNicIP]"
+          },
+          "subnetRef": {
+            "value": "[variables('network').subnetRef]"
           },
           "domainName": {
             "value": "[parameters('domainName')]"
@@ -532,8 +507,11 @@
           "ipAllocation": {
             "value": "Dynamic"
           },
-          "vnetName": {
-            "value": "[variables('network').vnetName]"
+          "privateIp": {
+            "value": ""
+          },
+          "subnetRef": {
+            "value": "[variables('network').subnetRef]"
           },
           "domainName": {
             "value": "[parameters('domainName')]"
@@ -606,8 +584,11 @@
           "ipAllocation": {
             "value": "Dynamic"
           },
-          "vnetName": {
-            "value": "[variables('network').vnetName]"
+          "privateIp": {
+            "value": ""
+          },
+          "subnetRef": {
+            "value": "[variables('network').subnetRef]"
           },
           "domainName": {
             "value": "[parameters('domainName')]"
@@ -680,8 +661,11 @@
           "ipAllocation": {
             "value": "Dynamic"
           },
-          "vnetName": {
-            "value": "[variables('network').vnetName]"
+          "privateIp": {
+            "value": ""
+          },
+          "subnetRef": {
+            "value": "[variables('network').subnetRef]"
           },
           "domainName": {
             "value": "[parameters('domainName')]"
@@ -754,8 +738,11 @@
           "ipAllocation": {
             "value": "Dynamic"
           },
-          "vnetName": {
-            "value": "[variables('network').vnetName]"
+          "privateIp": {
+            "value": ""
+          },
+          "subnetRef": {
+            "value": "[variables('network').subnetRef]"
           },
           "domainName": {
             "value": "[parameters('domainName')]"

@@ -15,7 +15,10 @@
         "ipAllocation": {
           "type": "string" 
         },
-        "vnetName": {
+        "privateIp": {
+          "type": "string" 
+        },
+        "subnetRef": {
           "type": "string" 
         },
         "domainName": {
@@ -23,19 +26,16 @@
         },
         "dcIp": {
           "type": "string",
-          "defaultValue": "127.0.0.1"
+          "defaultValue": ""
         }
     },
     "variables": {
-      "subnetName": "Subnet-1",
-      "subnetRef": "[concat(variables('VnetPath'),'/subnets/', variables('subnetName'))]",
-      "VnetResourceGroup": "ERNetwork",
-      "vnetPath": "[resourceId(variables('VnetResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
-      "nicPrefix": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-')]"
+        "publicIp": "[concat(parameters('configName'),'-',parameters('tier'),'_IP-')]",
+        "publicIpID": "[resourceId ('Microsoft.Network/publicIPAddresses/',variables('publicIp'))]"
     },
     "resources": [
         {
-            "name": "[concat(variables('nicPrefix'),copyIndex(1))]",
+            "name": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-',copyIndex(1))]",
             "copy": {
               "name": "nics",
               "count": "[parameters('count')]"
@@ -51,8 +51,12 @@
                   "name": "[concat('ipconfig',copyIndex(1))]",
                   "properties": {
                     "privateIPAllocationMethod": "[parameters('ipAllocation')]",
+                    "privateIPAddress": "[parameters('privateIp')]",
+                    "publicIPAddress": {
+                      "id": "[concat(variables('publicIpID'),copyIndex(1))]"
+                    },
                     "subnet": {
-                      "id": "[variables('subnetRef')]"
+                      "id": "[parameters('subnetRef')]"
                     }
                   }
                 }
@@ -60,20 +64,17 @@
               "dnsSettings": {
                 "dnsServers": [
                   "[parameters('dcIp')]",
-                  "10.50.10.50",
-                  "10.50.50.50",
-                  "10.138.39.138",
-                  "10.138.39.139"
+                  "8.8.8.8"
                 ],
                 "internalDomainNameSuffix": "[parameters('domainName')]"
               }
             }
-          }   
+          }
     ],
     "outputs": {
-      "nicip": {
-        "value": "[reference(concat(variables('nicPrefix'),'1')).ipConfigurations[0].properties.privateIPAddress]",
-        "type": "string"
+      "nicNames": {
+        "value": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-',copyIndex(1))]",
+        "type": "object"
       }
     }
 }
