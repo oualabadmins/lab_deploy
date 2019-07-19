@@ -1,0 +1,56 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "apiProfile": "2017-03-09-profile",
+    "parameters": {
+        "configName": { 
+          "type": "string" 
+        },
+        "tier": {
+          "type": "string" 
+        },
+        "count": {
+          "type": "int" 
+        },
+        "ipAllocation": {
+          "type": "string" 
+        },
+        "subnetRef": {
+          "type": "string" 
+        }
+    },
+    "variables": {},
+    "resources": [
+          {
+            "name": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC2-',copyIndex(1))]",
+            "copy": {
+              "name": "nics2",
+              "count": "[parameters('count')]"
+            },
+            "type": "Microsoft.Network/networkInterfaces",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [],
+            "apiVersion": "2018-01-01",
+            "comments": "NIC2",
+            "properties": {
+              "ipConfigurations": [
+                {
+                  "name": "[concat('ipconfig2',copyIndex(1))]",
+                  "properties": {
+                    "privateIPAllocationMethod": "[parameters('ipAllocation')]",
+                    "subnet": {
+                      "id": "[parameters('subnetRef')]"
+                    }
+                  }
+                }
+              ]
+            }
+          } 
+    ],
+    "outputs": {
+      "nicNamesBackend": {
+        "value": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC2-',copyIndex(1))]",
+        "type": "object"
+      }
+    }
+}

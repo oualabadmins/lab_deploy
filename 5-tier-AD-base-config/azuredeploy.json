@@ -338,6 +338,7 @@
       "name": "[concat(parameters('configName'),'-APP_IP')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
+      "condition": "[greater(parameters('numberOfAppVms'),0)]",
       "comments": "This is the deployment resource for APP public IPs.",
       "dependsOn": [
         "[variables('network').vnetName]"
@@ -371,6 +372,7 @@
       "name": "[concat(parameters('configName'),'-SQL_IP')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
+      "condition": "[greater(parameters('numberOfSQLVms'),0)]",
       "comments": "This is the deployment resource for SQL public IPs.",
       "dependsOn": [
         "[variables('network').vnetName]"
@@ -404,6 +406,7 @@
       "name": "[concat(parameters('configName'),'-SP_IP')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
+      "condition": "[greater(parameters('numberOfSharePointVms'),0)]",
       "comments": "This is the deployment resource for SharePoint public IPs.",
       "dependsOn": [
         "[variables('network').vnetName]"
@@ -437,7 +440,7 @@
       "name": "[concat(parameters('configName'),'-CLIENT_IP')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
-      "condition": "[equals(parameters('deployClientVm'),'Yes')]",
+      "condition": "[greater(parameters('numberOfClientVms'),0)]",
       "comments": "This is the deployment resource for CLIENT public IPs.",
       "dependsOn": [
         "[variables('network').vnetName]"
@@ -542,6 +545,40 @@
       }
     },
     {
+      "name": "[concat(parameters('configName'),'-APP_NIC2_DEPLOY')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "condition": "[greater(parameters('numberOfAppVms'),0)]",
+      "comments": "This is the deployment resource for APP backend NICs.",
+      "dependsOn": [
+        "[variables('network').vnetName]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/nic-backend.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "APP"
+          },
+          "count": {
+            "value": "[parameters('numberOfAppVms')]"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "subnetRef": {
+            "value": "[variables('network').subnetRefBackend]"
+          }
+        }
+      }
+    },
+    {
       "name": "[concat(parameters('configName'),'-SQL_NIC_DEPLOY')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
@@ -582,6 +619,40 @@
       }
     },
     {
+      "name": "[concat(parameters('configName'),'-SQL_NIC2_DEPLOY')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "condition": "[greater(parameters('numberOfSqlVms'),0)]",
+      "comments": "This is the deployment resource for SQL backend NICs.",
+      "dependsOn": [
+        "[variables('network').vnetName]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/nic-backend.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "SQL"
+          },
+          "count": {
+            "value": "[parameters('numberOfSqlVms')]"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "subnetRef": {
+            "value": "[variables('network').subnetRefBackend]"
+          }
+        }
+      }
+    },
+    {
       "name": "[concat(parameters('configName'),'-SP_NIC_DEPLOY')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
@@ -617,6 +688,40 @@
           },
           "dcIp": {
             "value": "[reference(concat(parameters('configName'),'-AD_NIC_DEPLOY')).outputs.nicip.value]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('configName'),'-SP_NIC2_DEPLOY')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "condition": "[greater(parameters('numberOfSharePointVms'),0)]",
+      "comments": "This is the deployment resource for SharePoint backend NICs.",
+      "dependsOn": [
+        "[variables('network').vnetName]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/nic-backend.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "SP"
+          },
+          "count": {
+            "value": "[parameters('numberOfSharePointVms')]"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "subnetRef": {
+            "value": "[variables('network').subnetRefBackend]"
           }
         }
       }
