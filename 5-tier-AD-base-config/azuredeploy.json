@@ -35,7 +35,7 @@
         "description": "The number of app server VMs."
       },
       "allowedValues": [
-        0, 1, 2, 3, 4, 5
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
       ],
       "defaultValue": 1
     },
@@ -55,57 +55,17 @@
         "description": "The number of SharePoint Server VMs."
       },
       "allowedValues": [
-        0, 1, 2, 3, 4, 5
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
       ],
       "defaultValue": 1
     },
-    "numberOfClientVms-L1": {
+    "numberOfClientVms": {
       "type": "int",
       "metadata": {
-        "description": "The number of Level 1 (basic security) Windows 10 client VMs."
+        "description": "The number of Windows 10 client VMs."
       },
       "allowedValues": [
-        0, 1, 2, 3, 4, 5
-      ],
-      "defaultValue": 1
-    },
-    "numberOfClientVms-L2": {
-      "type": "int",
-      "metadata": {
-        "description": "The number of Level 2 (enhanced security) Windows 10 client VMs."
-      },
-      "allowedValues": [
-        0, 1, 2, 3, 4, 5
-      ],
-      "defaultValue": 1
-    },
-    "numberOfClientVms-L3": {
-      "type": "int",
-      "metadata": {
-        "description": "The number of Level 3 (high security) Windows 10 client VMs."
-      },
-      "allowedValues": [
-        0, 1, 2, 3, 4, 5
-      ],
-      "defaultValue": 1
-    },
-    "numberOfClientVms-L4": {
-      "type": "int",
-      "metadata": {
-        "description": "The number of Level 4 (Dev/Ops security) Windows 10 client VMs."
-      },
-      "allowedValues": [
-        0, 1, 2, 3, 4, 5
-      ],
-      "defaultValue": 1
-    },
-    "numberOfClientVms-L5": {
-      "type": "int",
-      "metadata": {
-        "description": "The number of Level 5 (administrator security) Windows 10 client VMs."
-      },
-      "allowedValues": [
-        0, 1, 2, 3, 4, 5
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
       ],
       "defaultValue": 1
     },
@@ -281,6 +241,24 @@
       }
     },
     {
+      "type": "Microsoft.Network/routeTables",
+      "name": "[parameters('routeTableToAzureService')]",
+      "apiVersion": "2018-02-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+          "disableBgpRoutePropagation": false,
+          "routes": [
+              {
+                  "name": "[parameters('routeTableToAzureService')]",
+                  "properties": {
+                      "addressPrefix": "0.0.0.0/0",
+                      "nextHopType": "Internet"
+                  }
+              }
+          ]
+      }
+    },
+    {
       "name": "[variables('network').vnetName]",
       "type": "Microsoft.Network/virtualNetworks",
       "dependsOn": [
@@ -324,6 +302,172 @@
       }
     },
     {
+      "name": "[concat(parameters('configName'),'-AD_IP')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "This is the deployment resource for the ADDC public IP.",
+      "dependsOn": [
+        "[variables('network').vnetName]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/publicip.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "AD"
+          },
+          "count": {
+            "value": 1
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "dnsLabelPrefix": {
+            "value": "[parameters('dnsLabelPrefix')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('configName'),'-APP_IP')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "This is the deployment resource for APP public IPs.",
+      "dependsOn": [
+        "[variables('network').vnetName]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/publicip.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "APP"
+          },
+          "count": {
+            "value": "[parameters('numberOfAppVms')]"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "dnsLabelPrefix": {
+            "value": "[parameters('dnsLabelPrefix')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('configName'),'-SQL_IP')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "This is the deployment resource for SQL public IPs.",
+      "dependsOn": [
+        "[variables('network').vnetName]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/sql.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "SQL"
+          },
+          "count": {
+            "value": "[parameters('numberOfSqlVms')]"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "dnsLabelPrefix": {
+            "value": "[parameters('dnsLabelPrefix')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('configName'),'-SP_IP')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "This is the deployment resource for SharePoint public IPs.",
+      "dependsOn": [
+        "[variables('network').vnetName]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/sp.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "SP"
+          },
+          "count": {
+            "value": "[parameters('numberOfSharePointVms')]"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "dnsLabelPrefix": {
+            "value": "[parameters('dnsLabelPrefix')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('configName'),'-CLIENT_IP')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "condition": "[equals(parameters('deployClientVm'),'Yes')]",
+      "comments": "This is the deployment resource for CLIENT public IPs.",
+      "dependsOn": [
+        "[variables('network').vnetName]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/publicip.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "CLIENT"
+          },
+          "count": {
+            "value": "[parameters('numberOfClientVms')]"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "dnsLabelPrefix": {
+            "value": "[parameters('dnsLabelPrefix')]"
+          }
+        }
+      }
+    },
+    {
       "name": "[concat(parameters('configName'),'-AD_NIC_DEPLOY')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
@@ -349,7 +493,7 @@
             "value": "Dynamic"
           },
           "vnetName": {
-            "value": "[variables('vnetName')]"
+            "value": "[variables('network').vnetName]"
           },
           "domainName": {
             "value": "[parameters('domainName')]"
@@ -386,7 +530,7 @@
             "value": "Dynamic"
           },
           "vnetName": {
-            "value": "[variables('vnetName')]"
+            "value": "[variables('network').vnetName]"
           },
           "domainName": {
             "value": "[parameters('domainName')]"
@@ -426,7 +570,7 @@
             "value": "Dynamic"
           },
           "vnetName": {
-            "value": "[variables('vnetName')]"
+            "value": "[variables('network').vnetName]"
           },
           "domainName": {
             "value": "[parameters('domainName')]"
@@ -466,7 +610,7 @@
             "value": "Dynamic"
           },
           "vnetName": {
-            "value": "[variables('vnetName')]"
+            "value": "[variables('network').vnetName]"
           },
           "domainName": {
             "value": "[parameters('domainName')]"
@@ -506,7 +650,7 @@
             "value": "Dynamic"
           },
           "vnetName": {
-            "value": "[variables('vnetName')]"
+            "value": "[variables('network').vnetName]"
           },
           "domainName": {
             "value": "[parameters('domainName')]"
