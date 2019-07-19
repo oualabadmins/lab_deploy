@@ -1,86 +1,98 @@
 {
-"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-    "nsgName": {
-      "type": "string"
-    }
-  },
-
-  "variables": {},
-
-  "resources": [
-    {
-        "apiVersion": "2018-01-01",
-        "type": "Microsoft.Network/networkSecurityGroups",
-        "name": "[parameters('nsgName')]",
-        "location": "[resourceGroup().location]",
-        "tags": {
-          "displayName": "NSG - Front End"
-        },
-        "comments": "This network security group permits common ports.",
-        "properties": {
-          "securityRules": [
-            {
-              "name": "rdp",
-              "properties": {
-                "description": "Allow RDP inbound",
-                "protocol": "Tcp",
-                "sourcePortRange": "*",
-                "destinationPortRange": "3389",
-                "sourceAddressPrefix": "*",
-                "destinationAddressPrefix": "*",
-                "access": "Allow",
-                "priority": 100,
-                "direction": "Inbound"
-              }
-            },
-            {
-              "name": "http",
-              "properties": {
-                "description": "Allow HTTP inbound",
-                "protocol": "Tcp",
-                "sourcePortRange": "*",
-                "destinationPortRange": "80",
-                "sourceAddressPrefix": "*",
-                "destinationAddressPrefix": "*",
-                "access": "Allow",
-                "priority": 101,
-                "direction": "Inbound"
-              }
-            },
-            {
-              "name": "https",
-              "properties": {
-                "description": "Allow HTTPS inbound",
-                "protocol": "Tcp",
-                "sourcePortRange": "*",
-                "destinationPortRange": "443",
-                "sourceAddressPrefix": "*",
-                "destinationAddressPrefix": "*",
-                "access": "Allow",
-                "priority": 102,
-                "direction": "Inbound"
-              }
-            },
-            {
-              "name": "remoting",
-              "properties": {
-                "description": "Allow WSMan and PoSH inbound",
-                "protocol": "Tcp",
-                "sourcePortRange": "*",
-                "destinationPortRange": "5985-5986",
-                "sourceAddressPrefix": "*",
-                "destinationAddressPrefix": "*",
-                "access": "Allow",
-                "priority": 103,
-                "direction": "Inbound"
-              }
-            }
-          ]
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "nsgName": {
+            "type": "string"
         }
-      }
-  ],
-
-  "outputs": {}
+    },
+    "variables": {
+        "corpnetSubnets": [
+            "131.107.0.0/16",
+            "167.220.0.0/23",
+            "167.220.100.0/22",
+            "167.220.104.0/23",
+            "167.220.56.0/21",
+            "167.220.98.0/23"
+        ],
+        "customSubnets": [
+            "71.231.66.104"
+        ],
+        "allSubnets": "[array(concat(variables('corpnetSubnets'),variables('customSubnets')))]"
+    },
+    "resources": [
+        {
+            "apiVersion": "2018-01-01",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[parameters('nsgName')]",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "NSG - Front End"
+            },
+            "comments": "This network security group permits common ports.",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "rdp",
+                        "properties": {
+                            "description": "Allow RDP inbound",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "3389",
+                            "sourcePortRanges": [],
+                            "sourceAddressPrefixes": "[variables('allSubnets')]",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 100,
+                            "direction": "Inbound"
+                        }
+                    },
+                    {
+                        "name": "remoting",
+                        "properties": {
+                            "description": "Allow PS & WSMan remoting inbound",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "5985-5986",
+                            "sourcePortRanges": [],
+                            "sourceAddressPrefixes": "[variables('allSubnets')]",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 101,
+                            "direction": "Inbound"
+                        }
+                    },
+                    {
+                        "name": "http",
+                        "properties": {
+                            "description": "Allow HTTP inbound",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "80",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 102,
+                            "direction": "Inbound"
+                        }
+                    },
+                    {
+                        "name": "https",
+                        "properties": {
+                            "description": "Allow HTTPS inbound",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "443",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 103,
+                            "direction": "Inbound"
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "outputs": {}
 }

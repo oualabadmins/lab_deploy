@@ -89,6 +89,20 @@
                             "priority": 103,
                             "direction": "Inbound"
                         }
+                    },
+                    {
+                        "name": "siem",
+                        "properties": {
+                            "description": "Allow SIEM ports",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "8443-9443",
+                            "sourceAddressPrefix": "Internet",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 104,
+                            "direction": "Inbound"
+                        }
                     }
                 ]
             }
