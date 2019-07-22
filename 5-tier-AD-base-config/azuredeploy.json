@@ -549,9 +549,6 @@
           },
           "subnetRef": {
             "value": "[variables('network').subnetRefBackend]"
-          },
-          "domainName": {
-            "value": "[parameters('domainName')]"
           }
         }
       }
@@ -626,9 +623,6 @@
           },
           "subnetRef": {
             "value": "[variables('network').subnetRefBackend]"
-          },
-          "domainName": {
-            "value": "[parameters('domainName')]"
           }
         }
       }
@@ -703,9 +697,6 @@
           },
           "subnetRef": {
             "value": "[variables('network').subnetRefBackend]"
-          },
-          "domainName": {
-            "value": "[parameters('domainName')]"
           }
         }
       }
