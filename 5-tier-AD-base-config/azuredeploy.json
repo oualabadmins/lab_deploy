@@ -447,7 +447,9 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for the ADDC NIC.",
-      "dependsOn": [],
+      "dependsOn": [
+        "[variables('network').vnetName]"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -486,7 +488,7 @@
       "condition": "[greater(parameters('numberOfAppVms'),0)]",
       "comments": "This is the deployment resource for APP NICs.",
       "dependsOn": [
-        "[concat(parameters('configName'),'-AD_NIC_DEPLOY')]"
+        "[variables('network').vnetName]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -560,7 +562,7 @@
       "condition": "[greater(parameters('numberOfSQLVms'),0)]",
       "comments": "This is the deployment resource for SQL NICs.",
       "dependsOn": [
-        "[concat(parameters('configName'),'-AD_NIC_DEPLOY')]"
+        "[variables('network').vnetName]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -634,7 +636,7 @@
       "condition": "[greater(parameters('numberOfSharePointVms'),0)]",
       "comments": "This is the deployment resource for SharePoint NICs.",
       "dependsOn": [
-        "[concat(parameters('configName'),'-AD_NIC_DEPLOY')]"
+        "[variables('network').vnetName]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -708,7 +710,7 @@
       "condition": "[greater(parameters('numberOfClientVms'),0)]",
       "comments": "This is the deployment resource for CLIENT NICs.",
       "dependsOn": [
-        "[concat(parameters('configName'),'-AD_NIC_DEPLOY')]"
+        "[variables('network').vnetName]"
       ],
       "properties": {
         "mode": "Incremental",
