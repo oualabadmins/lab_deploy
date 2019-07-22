@@ -448,7 +448,7 @@
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for the ADDC NIC.",
       "dependsOn": [
-        "[variables('network').vnetName]"
+        "[concat(parameters('configName'),'-AD_IP')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -488,7 +488,7 @@
       "condition": "[greater(parameters('numberOfAppVms'),0)]",
       "comments": "This is the deployment resource for APP NICs.",
       "dependsOn": [
-        "[variables('network').vnetName]"
+        "[concat(parameters('configName'),'-APP_IP')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -528,7 +528,7 @@
       "condition": "[greater(parameters('numberOfAppVms'),0)]",
       "comments": "This is the deployment resource for APP backend NICs.",
       "dependsOn": [
-        "[variables('network').vnetName]"
+        "[concat(parameters('configName'),'-APP_IP')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -562,7 +562,7 @@
       "condition": "[greater(parameters('numberOfSQLVms'),0)]",
       "comments": "This is the deployment resource for SQL NICs.",
       "dependsOn": [
-        "[variables('network').vnetName]"
+        "[concat(parameters('configName'),'-SQL_IP')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -602,7 +602,7 @@
       "condition": "[greater(parameters('numberOfSqlVms'),0)]",
       "comments": "This is the deployment resource for SQL backend NICs.",
       "dependsOn": [
-        "[variables('network').vnetName]"
+        "[concat(parameters('configName'),'-SQL_IP')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -636,7 +636,7 @@
       "condition": "[greater(parameters('numberOfSharePointVms'),0)]",
       "comments": "This is the deployment resource for SharePoint NICs.",
       "dependsOn": [
-        "[variables('network').vnetName]"
+        "[concat(parameters('configName'),'-SP_IP')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -676,7 +676,7 @@
       "condition": "[greater(parameters('numberOfSharePointVms'),0)]",
       "comments": "This is the deployment resource for SharePoint backend NICs.",
       "dependsOn": [
-        "[variables('network').vnetName]"
+        "[concat(parameters('configName'),'-SP_IP')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -710,7 +710,7 @@
       "condition": "[greater(parameters('numberOfClientVms'),0)]",
       "comments": "This is the deployment resource for CLIENT NICs.",
       "dependsOn": [
-        "[variables('network').vnetName]"
+        "[concat(parameters('configName'),'-CLIENT_IP')]"
       ],
       "properties": {
         "mode": "Incremental",
