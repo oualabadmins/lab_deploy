@@ -23,10 +23,6 @@
         },
         "domainName": {
           "type": "string" 
-        },
-        "dcIp": {
-          "type": "string",
-          "defaultValue": ""
         }
     },
     "variables": {
@@ -62,10 +58,6 @@
                 }
               ],
               "dnsSettings": {
-                "dnsServers": [
-                  "[parameters('dcIp')]",
-                  "8.8.8.8"
-                ],
                 "internalDomainNameSuffix": "[parameters('domainName')]"
               }
             }
