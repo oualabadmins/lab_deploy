@@ -465,7 +465,7 @@
             "value": 1
           },
           "ipAllocation": {
-            "value": "Dynamic"
+            "value": "Static"
           },
           "privateIp": {
             "value": "[variables('VMs').adNicIP]"
