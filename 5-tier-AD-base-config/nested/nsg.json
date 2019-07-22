@@ -89,6 +89,34 @@
                             "priority": 103,
                             "direction": "Inbound"
                         }
+                    },
+                    {
+                        "name": "AllowAllVnet",
+                        "properties": {
+                            "description": "Allow all traffic in VNet",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "VirtualNetwork",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 104,
+                            "direction": "Inbound"
+                        }
+                    },
+                    {
+                        "name": "dns",
+                        "properties": {
+                            "description": "Allow DNS inbound",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "53",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 105,
+                            "direction": "Inbound"
+                        }
                     }
                 ]
             }
