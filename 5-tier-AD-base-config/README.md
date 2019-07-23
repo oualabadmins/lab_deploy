@@ -1,8 +1,8 @@
-﻿# &#x1F34E; Skunkworks Lab - 5-Tier AD Base Configuration - Public v1.0
+﻿# &#x1f984; Skunkworks Lab - 5-Tier AD Base Configuration - Public v1.0
 
 **Time to deploy**: 20-40 minutes, depending on complexity
 
-&#x1F34E; - This is the **Golden Template** for public lab deployments! Use this template for multi-VM farms with a custom AD domain in PUBLIC (non-corpnet connected) subscriptions.
+&#x1f984; This is the **Golden Unicorn Template** for public lab deployments! Use this template for multi-VM farms with a custom AD domain in PUBLIC (non-corpnet connected) subscriptions. &#x1f984;
 
 The **5-Tier AD Base Configuration** template provisions a flexible lab environment with a custom AD domain in a public subscription. You can choose to deploy the following five tiers (only the _AD DC_ tier is required):
 
