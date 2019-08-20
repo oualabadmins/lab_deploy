@@ -65,7 +65,7 @@ Click the **Deploy to Azure** button and complete the deployment form. Select a 
 ___
 Developed by the **MARVEL Skunkworks Lab**
 
-![alt text](images/maxskunkworkslogo-small.jpg "MAX Skunkworks")
+![alt text](../common/images/maxskunkworkslogo-small.jpg "MARVEL Skunkworks")
 
 Author: Kelley Vice (kvice@microsoft.com)  
 https://github.com/maxskunkworks

@@ -1,4 +1,4 @@
-﻿# TLG (Test Lab Guide) - 3 VM Base Configuration (v1.0)
+﻿# Skunkworks Lab - TLG (Test Lab Guide) - 3 VM Base Configuration (v1.0)
 
 **This version configured to be deployed from the oualabadmins/lab_deploy repo.** See the section _MAX notes_ below for information on how to deploy for MAX Skunkworks lab admins.
 
@@ -72,8 +72,8 @@ the JoinDomain extensions for the member VMs. This asymmetric VM deployment proc
 
 `Tags: TLG, Test Lab Guide, Base Configuration`
 ___
-Developed by the **MAX Skunkworks Lab**  
+Developed by the **MARVEL Skunkworks Lab**  
 Author: Kelley Vice (kvice@microsoft.com)  
 https://github.com/maxskunkworks
 
-![alt text](images/maxskunkworkslogo-small.jpg "MAX Skunkworks")
+![alt text](../common/images/maxskunkworkslogo-small.jpg "MARVEL Skunkworks")

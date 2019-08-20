@@ -1,4 +1,4 @@
-# MAX Skunkworks Lab - Azure Skype for Business lab V3 - Public (v0.9)
+# Skunkworks Lab - Azure Skype for Business lab V3 - Public (v0.9)
 
 This template deploys a Skype for Business environment with Edge server, ADFS and Freeswitch PSTN Gateway.
 
@@ -136,11 +136,11 @@ An example of PSTN poviders configuration is already there you just have to modi
 
 `Tags: Base Configuration, Skype for Business, S4B`
 ___
-Developed by the **MAX Skunkworks Lab**  
+Developed by the **MARVEL Skunkworks Lab**  
 Author: Kelley Vice (kvice@microsoft.com)  
 https://github.com/maxskunkworks
 
-![alt text](images/maxskunkworkslogo-small.jpg "MAX Skunkworks")
+![alt text](../common/images/maxskunkworkslogo-small.jpg "MARVEL Skunkworks")
 
 Last update: _8/15/2018_
 

@@ -1,6 +1,6 @@
-# Oualabadmins Lab Deploy Repo
+# Skunkworks Lab Deploy Repo
 
-This is the public repo for MAX Skunkworks lab build deployments. All code in this repo is public (read-only to non-contributors), so do not commit code that contains usernames, passwords or any MBI-HBI information. All templates in the master branch of this repo have been tested and should deploy successfully, subject to limitations and known issues described in each template's README.
+This is the public repo for MARVEL Skunkworks Lab deployments. All code in this repo is public (read-only to non-contributors), so do not commit code that contains usernames, passwords or any MBI-HBI information. All templates in the master branch of this repo have been tested and should deploy successfully, subject to limitations and known issues described in each template's README.
 
 Templates in the repo but not listed below may not function properly!
 
@@ -20,9 +20,9 @@ Templates in the repo but not listed below may not function properly!
 | [**max-base-config_arcsight_public**](max-base-config_arcsight_public/README.md) | ArcSight SIEM Base Configuration - Public | The ArcSight SIEM Base Configuration - Public template provisions a test environment on a public virtual network consisting of a CentOS 7.4 Linux VM with ArcSight ESM 7.0 installed, and one or more Windows 10 VMs running the ArcSight console and the Office 365 Connector.
 
 ___
-Developed by the **MAX Skunkworks Lab**
+Developed by the **MARVEL Skunkworks Lab**
 https://github.com/maxskunkworks
 
-![alt text](https://github.com/oualabadmins/lab_deploy/blob/master/common/images/maxskunkworkslogo-small.jpg "MAX Skunkworks")
+![alt text](https://github.com/oualabadmins/lab_deploy/blob/master/common/images/maxskunkworkslogo-small.jpg "MARVEL Skunkworks")
 
 Last update: _7/22/2019_

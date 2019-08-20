@@ -1,4 +1,4 @@
-﻿# MAXLAB DTL (DevTest Lab) - Corpnet (v1.0)
+﻿# Skunkworks Lab - DTL (DevTest Lab) - Corpnet (v1.0)
 
 **IMPORTANT**: Only deploy this template into a subscription with an existing ExpressRoute circuit, and to a region with an ER circuit. The template will automatically choose the correct ER virtual network based on subscription and region.
 
@@ -49,11 +49,11 @@ The following resources are deployed as part of the solution:
 
 `Tags: DevTest`
 ___
-Developed by the **MAX Skunkworks Lab**  
+Developed by the **MARVEL Skunkworks Lab**  
 Author: Kelley Vice (kvice@microsoft.com)  
 https://github.com/maxskunkworks
 
-![alt text](images/maxskunkworkslogo-small.jpg "MAX Skunkworks")
+![alt text](../common/images/maxskunkworkslogo-small.jpg "MARVEL Skunkworks")
 
 Last update: _9/19/2018_
 

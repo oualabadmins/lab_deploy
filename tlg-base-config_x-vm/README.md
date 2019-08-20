@@ -1,4 +1,4 @@
-﻿# MAX Skunkworks Lab - X VM Base Configuration with Custom Client VM Image (v1.0)
+﻿# Skunkworks Lab - X VM Base Configuration with Custom Client VM Image (v1.0)
 
 * **IMPORTANT**: Only deploy this template into a subscription with no ExpressRoute circuit.
 
@@ -58,8 +58,8 @@ The following resources are deployed as part of the solution:
 
 `Tags: TLG, Test Lab Guide, Base Configuration`
 ___
-Developed by the **MAX Skunkworks Lab**  
+Developed by the **MARVEL Skunkworks Lab**  
 Author: Kelley Vice (kvice@microsoft.com)  
 https://github.com/maxskunkworks
 
-![alt text](images/maxskunkworkslogo-small.jpg "MAX Skunkworks")
+![alt text](../common/images/maxskunkworkslogo-small.jpg "MARVEL Skunkworks")

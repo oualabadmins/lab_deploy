@@ -1,4 +1,4 @@
-﻿# MAX Skunkworks Lab - SQL Azure Secure Configuration - Public (v0.2)
+﻿# Skunkworks Lab - SQL Azure Secure Configuration - Public (v0.2)
 
 **IMPORTANT**: Only deploy this template into an external-facing subscription with no ExpressRoute circuit. These currently include:
 

@@ -1,4 +1,4 @@
-﻿# MAX Skunkworks Lab - NSG Lockdown - Public (v1.0)
+﻿# Skunkworks Lab - NSG Lockdown - Public (v1.0)
 
 **IMPORTANT**: Only deploy this template into an external-facing subscription with no ExpressRoute circuit. These currently include:
 

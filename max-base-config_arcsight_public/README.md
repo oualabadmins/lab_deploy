@@ -1,4 +1,4 @@
-﻿# MAX Skunkworks Lab - ArcSight SIEM Base Configuration - Public (v1.0)
+﻿# Skunkworks Lab - ArcSight SIEM Base Configuration - Public (v1.0)
 
 **IMPORTANT**: Only deploy this template into a PUBLIC subscription.
 
@@ -88,11 +88,11 @@ The following resources are deployed as part of the solution:
 
 `Tags: SIEM, ArcSight, ESM`
 ___
-Developed by the **MAX Skunkworks Lab**  
+Developed by the **MARVEL Skunkworks Lab**  
 Author: Kelley Vice (kvice@microsoft.com)  
 https://github.com/maxskunkworks
 
-![alt text](images/maxskunkworkslogo-small.jpg "MAX Skunkworks")
+![alt text](../common/images/maxskunkworkslogo-small.jpg "MARVEL Skunkworks")
 
 Last update: _11/6/2018_
 
