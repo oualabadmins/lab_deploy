@@ -74,6 +74,12 @@
             "metadata": {
                 "description": "Enter an expiration date in the format MM/DD/YYYY (populates the ExpiresOn tag on resources in this deployment)."
             }
+        },
+        "SASkey": {
+            "type": "string",
+            "metadata": {
+                "description": "If required, a valid SAS key for the source storage account, beginning with '?'."
+            }
         }
     },
     "variables": {
@@ -132,7 +138,7 @@
                         "name": "osdisk",
                         "osType": "Windows",
                         "vhd": {
-                            "uri": "[concat('https://',parameters('storageAccount'),'.blob.core.windows.net/',parameters('imageName'))]"
+                            "uri": "[concat('https://',parameters('storageAccount'),'.blob.core.windows.net/',parameters('imageName'),parameters('SASkey'))]"
                         },
                         "caching": "ReadWrite",
                         "createOption": "Attach"
