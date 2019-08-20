@@ -8,7 +8,7 @@
 
 **Time to deploy**: 40+ minutes
 
-The **M365 Base Configuration with DirSync** provisions a test environment in a private virtual network with 2 subnets consisting of a Windows Server 2016 or 2019 Active Directory domain controller using the specified domain name, one or more application servers running Windows Server 2016 or 2019, and one or more client VMs running Windows 10. All member VMs are joined to the domain. App servers are deployed with a second NIC connecting to the backend subnet.
+The **M365 Base Configuration with DirSync** provisions a test environment in a private virtual network with 2 subnets consisting of a Windows Server 2016 or 2019 Active Directory domain controller using the specified domain name, one or more application servers running Windows Server 2016 or 2019, and one or more client VMs running Windows 10. All member VMs are joined to the domain. App servers are deployed with a second NIC connecting to the backend subnet, and AAD Sync installed on the first app server (APP1).
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Foualabadmins%2Flab_deploy%2Fkv-spmi%2Fmax-base-config_x-vm%2Fazuredeploy.json" target="_blank">
 <img src="http://azuredeploy.net/deploybutton.png"/>
