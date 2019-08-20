@@ -2,7 +2,7 @@
 
 **Time to deploy**: ~10 minutes
 
-The **Add client VMs to existing deployment** template provisions _x_ number of client VMs to an existing deployment, and joins them to the deployment's domain.
+The **Add client VMs to existing deployment** template provisions _x_ number of client VMs to an existing deployment (either public or private), and joins them to the deployment's domain.
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Foualabadmins%2Flab_deploy%2Fmaster%2Fadd-clients%2Fazuredeploy.json" target="_blank">
 <img src="http://azuredeploy.net/deploybutton.png"/>
@@ -16,17 +16,17 @@ The **Add client VMs to existing deployment** template provisions _x_ number of 
 Provide the following information:
 
 + Resource group name of the existing deployment
-+ VNet name VMs are connected to
++ VNet name to which VMs will be connected
 + AD domain name
 + OU for computer accounts, with container identifier (i.e. _CN=Computers_)
 + AD DC IP address
 + AD username and password
 + Number of client VMs to add
-+ Starting number for client names
++ Starting number for client names (if there are existing clients, use the next unused increment)
 
 ## Solution notes
 
-+ You cannot add computer accounts to the default _CN=Computers_ OU using the ADDomainExtension. Before deployment, check **AD Users and Computers** to see if a custom OU exists for computer account objects. If not, create one (for example, **OU=Machines**).
++ You cannot add computer accounts to the default _CN=Computers_ OU using the ADDomainExtension. Before deployment, check **AD Users and Computers** to see if a custom OU exists for computer account objects. If not, create one in the AD domain (for example, **OU=Machines**).
 
 ## Known issues
 
