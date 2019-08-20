@@ -1,4 +1,4 @@
-﻿# Skunkworks Lab - Deploy VMs From Image v0.1
+﻿# Skunkworks Lab - Deploy VMs From Image v1.0
 
 **Time to deploy**: ~10 minutes
 
@@ -33,7 +33,7 @@ Provide the following information:
 ___
 Developed by the **MARVEL Skunkworks Lab**
 
-![alt text](images/maxskunkworkslogo-small.jpg "MAX Skunkworks")
+![alt text](../common/images/maxskunkworkslogo-small.jpg "MARVEL Skunkworks")
 
 Author: Kelley Vice (kvice@microsoft.com)  
 https://github.com/maxskunkworks
