@@ -19,14 +19,16 @@ Provide the following information:
 + VM size
 + Name of the storage account containing the image
 + The named path of the stored VM image, i.e. vhds/image.vhd
-+ VNet name to which VMs will be connected
++ Existing VNet name to which VMs will be connected
 + Vnet subnet name
 
 ## Solution notes
 
-## Known issues
++ Depends on an existing VNet/subnet and properly configured access to an image in an existing Azure storage account.
++ Image must be stored as a **page blob**, and must be of **fixed** type.
++ Access to the VM depends on pre-existing user accounts in the image configuration.
 
-+ The client VM deployment may take longer than expected, and then appear to fail. The client VMs and extensions may or may not deploy successfully. This is due to an ongoing Azure client deployment bug, and only happens when the client VM size is smaller than DS3_v2.
+## Known issues
 
 ___
 Developed by the **MARVEL Skunkworks Lab**
