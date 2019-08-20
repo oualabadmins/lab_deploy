@@ -80,9 +80,10 @@
         "nicName": "[concat(parameters('vmName'), '-NIC')]",
         "storageAccountNameNoHypens": "[replace(parameters('vmName'),'-','')]",
         "storageAccountName": "[toLower(variables('storageAccountNameNoHypens'))]",
-        "VnetPath": "[resourceId(resourceGroup(), 'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
+        "resourceGroupName": "[resourceGroup().name]",
+        "vnetPath": "[resourceId(variables('resourceGroupName'), 'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
         "subnetName": "[parameters('subnetName')]",
-        "subnetRef": "[concat(variables('VnetPath'),'/subnets/', variables('subnetName'))]",
+        "subnetRef": "[concat(variables('vnetPath'),'/subnets/', variables('subnetName'))]",
         "region": "[resourceGroup().location]",
         "subscriptionID": "[subscription().subscriptionId]"
     },
