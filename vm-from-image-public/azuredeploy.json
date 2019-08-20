@@ -1,180 +1,184 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-
-    "vmName": {
-      "type": "string",
-      "metadata": {
-        "description": "The name of the VM object. Use the computer name for consistency."
-      }
-    },
-    "vmSize": {
-      "type": "string",
-      "allowedValues": [ "Standard_DS3_v2", "Standard_DS4_v2", "Standard_DS5_v2" ],
-      "metadata": {
-        "description": "Select a VM size. DS3: 4 cores, 14GB RAM; DS4: 8 cores, 28GB RAM; DS5: 16 cores, 56GB RAM."
-      }
-    },
-    "storageAccount": {
-      "type": "string",
-      "metadata": {
-        "description": "The name of the storage account you created in the resource group, i.e. mystorageaccount"
-      }
-    },
-    "imageName": {
-      "type": "string",
-      "metadata": {
-        "description": "The named path of the stored image of the VM you're migrating in the vhds folder of the new storage account, i.e. vhds/image.vhd"
-      }
-    },
-    "vnetName": {
-      "type": "string",
-      "metadata": {
-        "description": "The name of the virtual network."
-      }
-    },
-    "subnetName": {
-      "type": "string",
-      "defaultValue": "Subnet-1",
-      "metadata": {
-        "description": "The name of the network subnet."
-      }
-    },
-    "CreatedBy": {
-      "type": "string",
-      "metadata": {
-        "description": "Enter your alias (populates the Createdby tag on resources in this deployment)."
-      }
-    },
-    "labRole": {
-      "type": "string",
-      "allowedValues": [ "Infrastructure", "RDS", "StaticFarm", "User", "Test" ],
-      "metadata": {
-        "description": "Choose a lab role (populates the labRole tag on resources in this deployment)."
-      }
-    },
-    "Requestor": {
-      "type": "string",
-      "metadata": {
-        "description": "If you are deploying this build for someone else, enter the alias of the requestor (populates the Requestor tag on resources in this deployment)."
-      }
-    },
-    "ExpiresOn": {
-      "type": "string",
-      "metadata": {
-        "description": "Enter an expiration date in the format MM/DD/YYYY (populates the ExpiresOn tag on resources in this deployment)."
-      }
-    }
-  },
-
-  "variables": {
-    "nicName": "[concat(parameters('vmName'), '-NIC')]",
-    "storageAccountNameNoHypens": "[replace(parameters('vmName'),'-','')]",
-    "storageAccountName": "[toLower(variables('storageAccountNameNoHypens'))]",
-    "VnetPath": "[resourceId(resourceGroup(), 'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
-    "subnetName": "[parameters('subnetName')]",
-    "subnetRef": "[concat(variables('VnetPath'),'/subnets/', variables('subnetName'))]",
-    "region": "[resourceGroup().location]",
-    "subscriptionID": "[subscription().subscriptionId]"
-  },
-
-  "resources": [
-    {
-      "apiVersion": "2016-03-30",
-      "type": "Microsoft.Network/networkInterfaces",
-      "name": "[variables('nicName')]",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [],
-      "properties": {
-        "ipConfigurations": [
-          {
-            "name": "ipconfig1",
-            "properties": {
-              "privateIPAllocationMethod": "Dynamic",
-              "subnet": {
-                "id": "[variables('subnetRef')]"
-              }
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vmName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the VM object. Use the computer name for consistency."
             }
-          }
-        ]
-      }
-    },
-    {
-      "apiVersion": "2015-06-15",
-      "type": "Microsoft.Compute/virtualMachines",
-      "name": "[parameters('vmName')]",
-      "location": "[resourceGroup().location]",
-      "tags": {
-        "labRole": "[parameters('labRole')]",
-        "CreatedBy": "[parameters('CreatedBy')]",
-        "Requestor": "[parameters('Requestor')]",
-        "ExpiresOn": "[parameters('ExpiresOn')]"
-      },
-      "dependsOn": [
-        "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
-      ],
-      "properties": {
-        "hardwareProfile": {
-          "vmSize": "[parameters('vmSize')]"
         },
-        "storageProfile": {
-          "osDisk": {
-            "name": "osdisk",
-            "osType": "Windows",
-            "vhd": {
-              "uri": "[concat('https://',parameters('storageAccount'),'.blob.core.windows.net/',parameters('imageName'))]"
-            },
-            "caching": "ReadWrite",
-            "createOption": "Attach"
-          },
-          "dataDisks": []
-        },
-        "networkProfile": {
-          "networkInterfaces": [
-            {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
+        "vmSize": {
+            "type": "string",
+            "allowedValues": [
+                "Standard_DS3_v2",
+                "Standard_DS4_v2",
+                "Standard_DS5_v2"
+            ],
+            "metadata": {
+                "description": "Select a VM size. DS3: 4 cores, 14GB RAM; DS4: 8 cores, 28GB RAM; DS5: 16 cores, 56GB RAM."
             }
-          ]
         },
-        "diagnosticsProfile": {
-          "bootDiagnostics": {
-            "enabled": "true",
-            "storageUri": "[concat('http://',variables('storageAccountName'),'diagnostics','.blob.core.windows.net')]"
-          }
+        "storageAccount": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the storage account you created in the resource group, i.e. mystorageaccount"
+            }
+        },
+        "imageName": {
+            "type": "string",
+            "metadata": {
+                "description": "The named path of the stored image of the VM you're migrating in the vhds folder of the new storage account, i.e. vhds/image.vhd"
+            }
+        },
+        "vnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the virtual network."
+            }
+        },
+        "subnetName": {
+            "type": "string",
+            "defaultValue": "Subnet-1",
+            "metadata": {
+                "description": "The name of the network subnet."
+            }
+        },
+        "CreatedBy": {
+            "type": "string",
+            "metadata": {
+                "description": "Enter your alias (populates the Createdby tag on resources in this deployment)."
+            }
+        },
+        "labRole": {
+            "type": "string",
+            "allowedValues": [
+                "Infrastructure",
+                "RDS",
+                "StaticFarm",
+                "User",
+                "Test"
+            ],
+            "metadata": {
+                "description": "Choose a lab role (populates the labRole tag on resources in this deployment)."
+            }
+        },
+        "Requestor": {
+            "type": "string",
+            "metadata": {
+                "description": "If you are deploying this build for someone else, enter the alias of the requestor (populates the Requestor tag on resources in this deployment)."
+            }
+        },
+        "ExpiresOn": {
+            "type": "string",
+            "metadata": {
+                "description": "Enter an expiration date in the format MM/DD/YYYY (populates the ExpiresOn tag on resources in this deployment)."
+            }
         }
-      },
-
-      "resources": []
     },
-
-    {
-      "type": "Microsoft.Storage/storageAccounts",
-      "name": "[variables('storageAccountName')]",
-      "apiVersion": "2016-01-01",
-      "location": "[resourceGroup().location]",
-      "sku": {
-        "name": "Premium_LRS",
-        "tier": "Premium"
-      },
-      "kind": "Storage",
-      "tags": {},
-      "properties": {}
+    "variables": {
+        "nicName": "[concat(parameters('vmName'), '-NIC')]",
+        "storageAccountNameNoHypens": "[replace(parameters('vmName'),'-','')]",
+        "storageAccountName": "[toLower(variables('storageAccountNameNoHypens'))]",
+        "VnetPath": "[resourceId(resourceGroup(), 'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
+        "subnetName": "[parameters('subnetName')]",
+        "subnetRef": "[concat(variables('VnetPath'),'/subnets/', variables('subnetName'))]",
+        "region": "[resourceGroup().location]",
+        "subscriptionID": "[subscription().subscriptionId]"
     },
-    {
-      "type": "Microsoft.Storage/storageAccounts",
-      "name": "[concat(variables('storageAccountName'), 'diagnostics')]",
-      "apiVersion": "2016-01-01",
-      "location": "[resourceGroup().location]",
-      "sku": {
-        "name": "Standard_LRS"
-      },
-      "kind": "Storage",
-      "tags": {},
-      "properties": {}
-    }
-
-  ],
-  "outputs": { }
+    "resources": [
+        {
+            "apiVersion": "2016-03-30",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[variables('nicName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "2015-06-15",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[parameters('vmName')]",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "labRole": "[parameters('labRole')]",
+                "CreatedBy": "[parameters('CreatedBy')]",
+                "Requestor": "[parameters('Requestor')]",
+                "ExpiresOn": "[parameters('ExpiresOn')]"
+            },
+            "dependsOn": [
+                "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+                "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('vmSize')]"
+                },
+                "storageProfile": {
+                    "osDisk": {
+                        "name": "osdisk",
+                        "osType": "Windows",
+                        "vhd": {
+                            "uri": "[concat('https://',parameters('storageAccount'),'.blob.core.windows.net/',parameters('imageName'))]"
+                        },
+                        "caching": "ReadWrite",
+                        "createOption": "Attach"
+                    },
+                    "dataDisks": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": "true",
+                        "storageUri": "[concat('http://',variables('storageAccountName'),'diagnostics','.blob.core.windows.net')]"
+                    }
+                }
+            },
+            "resources": []
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "[variables('storageAccountName')]",
+            "apiVersion": "2016-01-01",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Premium_LRS",
+                "tier": "Premium"
+            },
+            "kind": "Storage",
+            "tags": {},
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "[concat(variables('storageAccountName'), 'diagnostics')]",
+            "apiVersion": "2016-01-01",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Standard_LRS"
+            },
+            "kind": "Storage",
+            "tags": {},
+            "properties": {}
+        }
+    ],
+    "outputs": {}
 }
