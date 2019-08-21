@@ -750,7 +750,8 @@
       "apiVersion": "2015-01-01",
       "comments": "This is the deployment resource for the ADDC VM.",
       "dependsOn": [
-        "[concat(parameters('configName'),'-AD_NIC_DEPLOY')]"
+        "[concat(parameters('configName'),'-AD_NIC_DEPLOY')]",
+        "[variables('storageAccountName')]"
       ],
       "properties": {
         "mode": "Incremental",
