@@ -70,9 +70,10 @@ Developed by the **MARVEL Skunkworks Lab**
 Author: Kelley Vice (kvice@microsoft.com)  
 https://github.com/maxskunkworks
 
-Last update: _7/23/2019_
+Last update: _8/21/2019_
 
 ## Changelog
 
 + **7/19/2019**: Original commit, derived from https://github.com/oualabadmins/lab_deploy/tree/master/5-tier-AD-base-config.
 + **7/23/2019**: Updated DSC resources and reordered dependencies in azuredeploy.json. Deploys with no errors.
++ **8/21/2019**: Added a dependency to the ADDC resource to wait for the storage account.
