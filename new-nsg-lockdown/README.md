@@ -8,7 +8,7 @@
 
 **Time to deploy**: ~1 minute
 
-The **NSG Lockdown** template creates a new NSG with security rules to permit RDP, SSH and PowerShell Remoting connections **ONLY** from corpnet edge subnets and other IPs or subnets specified in the template.
+The **NSG Lockdown** template creates a new NSG for an existing virtual network subnet with security rules to permit RDP, SSH and PowerShell Remoting connections **ONLY** from corpnet edge subnets and other IPs or subnets specified in the template.
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Foualabadmins%2Flab_deploy%2Fmaster%2Fnsg-lockdown%2Fazuredeploy.json" target="_blank">
 <img src="http://azuredeploy.net/deploybutton.png"/>
@@ -28,6 +28,7 @@ The following resources are deployed as part of the solution:
 
 + **NSG**: A standard NSG with the provided name.
 + **NSG security rules**: RDP (port 3389), SSH (port 22) and PowerShell Remoting (port 5985-5986).
++ Updates the target subnet with the NSG.
 
 ## Solution notes
 
