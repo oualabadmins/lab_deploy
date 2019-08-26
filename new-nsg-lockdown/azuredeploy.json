@@ -2,18 +2,33 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "nsgName": {
+        "vnetName": {
             "type": "string",
             "metadata": {
-                "description": "Enter tne name for the new NSG"
+                "description": "Name of the existing virtual network"
+            }
+        },
+        "subnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the existing subnet"
             }
         },
         "otherIps": {
             "type": "array",
-            "defaultValue": ["71.231.66.104"],
+            "defaultValue": [
+                "71.231.66.104"
+            ],
             "metadata": {
                 "description": "Enter additional IPs or subnets to permit (i.e. '10.10.10.1', '10.10.10.0/24', '10.10.10.1,10.10.10.2')"
             }
+        },
+        "_artifactsLocation": {
+          "type": "string",
+          "metadata": {
+            "description": "The base URI where artifacts required by this template are located."
+          },
+          "defaultValue": "https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/new-nsg-lockdown/"
         }
     },
     "variables": {
@@ -24,24 +39,28 @@
             "167.220.104.0/23",
             "167.220.56.0/21",
             "167.220.98.0/23"
-        ]
+        ],
+        "nsgName": "corpnet-lockdown"
     },
     "resources": [
         {
             "apiVersion": "2018-01-01",
             "type": "Microsoft.Network/networkSecurityGroups",
-            "name": "[parameters('nsgName')]",
+            "name": "[variables('nsgName')]",
             "location": "[resourceGroup().location]",
             "tags": {
-                "displayName": "NSG - Front End"
+                "displayName": "NSG - Corpnet subnets"
             },
-            "comments": "This network security group permits common ports.",
+            "comments": "This network security group permits traffic only from corpnet subnets and optionally private IPs.",
             "properties": {}
         },
         {
-          "name": "[concat(parameters('nsgName'),'/ssh-corpnet')]",
-          "apiVersion": "2018-01-01",
-          "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "name": "[concat(variables('nsgName'),'/ssh-corpnet')]",
+            "apiVersion": "2018-01-01",
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "dependsOn": [
+                "[variables('nsgName')]"
+            ],
             "properties": {
                 "description": "Allow SSH inbound",
                 "protocol": "Tcp",
@@ -56,9 +75,12 @@
             }
         },
         {
-            "name": "[concat(parameters('nsgName'),'/rdp-corpnet')]",
+            "name": "[concat(variables('nsgName'),'/rdp-corpnet')]",
             "apiVersion": "2018-01-01",
             "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "dependsOn": [
+                "[variables('nsgName')]"
+            ],
             "properties": {
                 "description": "Allow RDP inbound",
                 "protocol": "Tcp",
@@ -73,9 +95,12 @@
             }
         },
         {
-          "name": "[concat(parameters('nsgName'),'/powershell-remoting-corpnet')]",
-          "apiVersion": "2018-01-01",
-          "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "name": "[concat(variables('nsgName'),'/powershell-remoting-corpnet')]",
+            "apiVersion": "2018-01-01",
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "dependsOn": [
+                "[variables('nsgName')]"
+            ],
             "properties": {
                 "description": "Allow PowerShell remoting inbound",
                 "protocol": "Tcp",
@@ -90,10 +115,13 @@
             }
         },
         {
-            "name": "[concat(parameters('nsgName'),'/ssh-custom')]",
+            "name": "[concat(variables('nsgName'),'/ssh-custom')]",
             "condition": "[not(empty(parameters('otherIps')))]",
             "apiVersion": "2018-01-01",
             "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "dependsOn": [
+                "[variables('nsgName')]"
+            ],
             "properties": {
                 "description": "Allow SSH inbound",
                 "protocol": "Tcp",
@@ -108,10 +136,13 @@
             }
         },
         {
-            "name": "[concat(parameters('nsgName'),'/rdp-custom')]",
+            "name": "[concat(variables('nsgName'),'/rdp-custom')]",
             "condition": "[not(empty(parameters('otherIps')))]",
             "apiVersion": "2018-01-01",
             "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "dependsOn": [
+                "[variables('nsgName')]"
+            ],
             "properties": {
                 "description": "Allow RDP inbound",
                 "protocol": "Tcp",
@@ -126,10 +157,13 @@
             }
         },
         {
-          "name": "[concat(parameters('nsgName'),'/powershell-remoting-custom')]",
-          "condition": "[not(empty(parameters('otherIps')))]",
-          "apiVersion": "2018-01-01",
-          "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "name": "[concat(variables('nsgName'),'/powershell-remoting-custom')]",
+            "condition": "[not(empty(parameters('otherIps')))]",
+            "apiVersion": "2018-01-01",
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "dependsOn": [
+                "[variables('nsgName')]"
+            ],
             "properties": {
                 "description": "Allow PowerShell remoting inbound",
                 "protocol": "Tcp",
@@ -141,6 +175,36 @@
                 "access": "Allow",
                 "priority": 125,
                 "direction": "Inbound"
+            }
+        },
+        {
+            "apiVersion": "2017-08-01",
+            "name": "deploy",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[resourceGroup().name]",
+            "dependsOn": [
+                "[variables('nsgName')]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsLocation'), concat('nested/updateSubnet.json'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "virtualNetworkName": {
+                        "value": "[parameters('vnetName')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('subnetName')]"
+                    },
+                    "subnetAddressPrefix": {
+                        "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName')), '2018-03-01').addressPrefix]"
+                    },
+                    "nsgId": {
+                        "value": "[resourceId('Microsoft.Network/networkSecurityGroups', 'new-nsg')]"
+                    }
+                }
             }
         }
     ],
