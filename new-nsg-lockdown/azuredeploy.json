@@ -8,6 +8,12 @@
                 "description": "Name of the existing virtual network"
             }
         },
+        "vnetLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "Location of the existing virtual network. i.e. westus2"
+            }
+        },
         "subnetName": {
             "type": "string",
             "metadata": {
@@ -26,7 +32,7 @@
         "_artifactsLocation": {
           "type": "string",
           "metadata": {
-            "description": "The base URI where artifacts required by this template are located."
+            "description": "The base URI where artifacts required by this template are located"
           },
           "defaultValue": "https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/new-nsg-lockdown/"
         }
@@ -47,7 +53,7 @@
             "apiVersion": "2018-01-01",
             "type": "Microsoft.Network/networkSecurityGroups",
             "name": "[variables('nsgName')]",
-            "location": "[resourceGroup().location]",
+            "location": "[parameters('vnetLocation')]",
             "tags": {
                 "displayName": "NSG - Corpnet subnets"
             },
@@ -192,8 +198,11 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "virtualNetworkName": {
+                    "vnetName": {
                         "value": "[parameters('vnetName')]"
+                    },
+                    "vnetLocation": {
+                        "value": "[parameters('vnetLocation')]"
                     },
                     "subnetName": {
                         "value": "[parameters('subnetName')]"
