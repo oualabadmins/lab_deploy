@@ -202,7 +202,7 @@
                         "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName')), '2018-03-01').addressPrefix]"
                     },
                     "nsgId": {
-                        "value": "[resourceId('Microsoft.Network/networkSecurityGroups', 'new-nsg')]"
+                        "value": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsgName'))]"
                     }
                 }
             }
