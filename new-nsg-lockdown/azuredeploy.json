@@ -1,0 +1,148 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "nsgName": {
+            "type": "string",
+            "metadata": {
+                "description": "Enter tne name for the new NSG"
+            }
+        },
+        "otherIps": {
+            "type": "array",
+            "defaultValue": ["71.231.66.104"],
+            "metadata": {
+                "description": "Enter additional IPs or subnets to permit (i.e. '10.10.10.1', '10.10.10.0/24', '10.10.10.1,10.10.10.2')"
+            }
+        }
+    },
+    "variables": {
+        "corpnetSubnets": [
+            "131.107.0.0/16",
+            "167.220.0.0/23",
+            "167.220.100.0/22",
+            "167.220.104.0/23",
+            "167.220.56.0/21",
+            "167.220.98.0/23"
+        ]
+    },
+    "resources": [
+        {
+            "apiVersion": "2018-01-01",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[parameters('nsgName')]",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "NSG - Front End"
+            },
+            "comments": "This network security group permits common ports.",
+            "properties": {}
+        },
+        {
+          "name": "[concat(parameters('nsgName'),'/ssh-corpnet')]",
+          "apiVersion": "2018-01-01",
+          "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "properties": {
+                "description": "Allow SSH inbound",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourcePortRanges": [],
+                "sourceAddressPrefixes": "[variables('corpnetSubnets')]",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 120,
+                "direction": "Inbound"
+            }
+        },
+        {
+            "name": "[concat(parameters('nsgName'),'/rdp-corpnet')]",
+            "apiVersion": "2018-01-01",
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "properties": {
+                "description": "Allow RDP inbound",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "3389",
+                "sourcePortRanges": [],
+                "sourceAddressPrefixes": "[variables('corpnetSubnets')]",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 121,
+                "direction": "Inbound"
+            }
+        },
+        {
+          "name": "[concat(parameters('nsgName'),'/powershell-remoting-corpnet')]",
+          "apiVersion": "2018-01-01",
+          "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "properties": {
+                "description": "Allow PowerShell remoting inbound",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "5985-5986",
+                "sourcePortRanges": [],
+                "sourceAddressPrefixes": "[variables('corpnetSubnets')]",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 122,
+                "direction": "Inbound"
+            }
+        },
+        {
+            "name": "[concat(parameters('nsgName'),'/ssh-custom')]",
+            "condition": "[not(empty(parameters('otherIps')))]",
+            "apiVersion": "2018-01-01",
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "properties": {
+                "description": "Allow SSH inbound",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourcePortRanges": [],
+                "sourceAddressPrefixes": "[parameters('otherIps')]",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 123,
+                "direction": "Inbound"
+            }
+        },
+        {
+            "name": "[concat(parameters('nsgName'),'/rdp-custom')]",
+            "condition": "[not(empty(parameters('otherIps')))]",
+            "apiVersion": "2018-01-01",
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "properties": {
+                "description": "Allow RDP inbound",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "3389",
+                "sourcePortRanges": [],
+                "sourceAddressPrefixes": "[parameters('otherIps')]",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 124,
+                "direction": "Inbound"
+            }
+        },
+        {
+          "name": "[concat(parameters('nsgName'),'/powershell-remoting-custom')]",
+          "condition": "[not(empty(parameters('otherIps')))]",
+          "apiVersion": "2018-01-01",
+          "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "properties": {
+                "description": "Allow PowerShell remoting inbound",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "5985-5986",
+                "sourcePortRanges": [],
+                "sourceAddressPrefixes": "[parameters('otherIps')]",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 125,
+                "direction": "Inbound"
+            }
+        }
+    ],
+    "outputs": {}
+}
