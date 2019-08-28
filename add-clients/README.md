@@ -1,8 +1,8 @@
-﻿# Skunkworks Lab - Add client VMs to existing deployment v1.0
+﻿# Skunkworks Lab - Add client VMs to existing deployment (Private) v1.0
 
 **Time to deploy**: ~10 minutes
 
-The **Add client VMs to existing deployment** template provisions _x_ number of client VMs to an existing deployment (either public or private), and joins them to the deployment's domain. You can choose Windows 7, 8.1 or 10.
+The **Add client VMs to existing deployment** template provisions _x_ number of client VMs to an existing deployment in a corpnet-connected subscription, and joins them to the deployment's domain. You can choose Windows 7, 8.1 or 10.
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Foualabadmins%2Flab_deploy%2Fmaster%2Fadd-clients%2Fazuredeploy.json" target="_blank">
 <img src="http://azuredeploy.net/deploybutton.png"/>
@@ -12,6 +12,13 @@ The **Add client VMs to existing deployment** template provisions _x_ number of 
 </a>
 
 ## Usage
+
+Only deploy this template in a corpnet-connected subscription such as:
+
++ MAXLAB R&D Primary
++ MAXLAB R&D INT 1
++ MAXLAB R&D INT 2
++ MAXLAB R&D Self Service
 
 Provide the following information:
 
