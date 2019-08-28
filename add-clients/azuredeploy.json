@@ -47,6 +47,16 @@
       "metadata": {
         "description": "The IP address of the AD DC VM."
       }
+    },    
+    "clientOS": {
+      "type": "string",
+      "metadata": {
+        "description": "The desired operating system for your client VMs."
+      },
+      "allowedValues": [
+        "Windows 7","Windows 8.1","Windows 10"
+      ],
+      "defaultValue": 1
     },
     "numberOfClientVms": {
       "type": "int",
@@ -107,7 +117,8 @@
       "configName": "[parameters('configName')]",
       "ou": "[concat(parameters('computerOU'),',DC=',replace(parameters('domainName'),'.',',DC='))]",
       "scriptPath": "[concat(parameters('_artifactsLocation'),'/scripts')]",
-      "startNumber" : "[parameters('clientStartNumber')]"
+      "startNumber" : "[parameters('clientStartNumber')]",
+      "clientOS": "[parameters('clientOS')]"
     }
   },
 

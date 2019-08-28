@@ -11,7 +11,10 @@
   },
   "variables": {
     "nicName": "[concat(parameters('sharedVmConfig').configName,'-CLIENT_NIC-')]",
-    "nicID": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
+    "nicID": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]",
+    "osPublisher": "[if(equals(parameters('SharedVmConfig').clientOS,'Windows 8.1'),'microsoftvisualstudio','MicrosoftWindowsDesktop')]",
+    "osOffer": "[if(equals(parameters('SharedVmConfig').clientOS,'Windows 8.1'),'Windows',if(equals(parameters('SharedVmConfig').clientOS,'Windows 7'),'Windows-7','Windows-10'))]",
+    "osSku": "[if(equals(parameters('SharedVmConfig').clientOS,'Windows 8.1'),'Win81-Ent-N-x64',if(equals(parameters('SharedVmConfig').clientOS,'Windows 7'),'win7-pro','rs5-pro'))]"
   },
   "resources": [
     {
@@ -35,9 +38,9 @@
         },
         "storageProfile": {
           "imageReference": {
-            "publisher": "MicrosoftWindowsDesktop",
-            "offer": "Windows-10",
-            "sku": "RS3-Pro",
+            "publisher": "[variables('osPublisher')]",
+            "offer": "[variables('osOffer')]",
+            "sku": "[variables('osSku')]",
             "version": "latest"
           },
           "osDisk": {
