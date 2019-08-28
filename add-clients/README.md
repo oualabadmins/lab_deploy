@@ -1,8 +1,8 @@
-﻿# Skunkworks Lab - Add client VMs to existing deployment v0.4
+﻿# Skunkworks Lab - Add client VMs to existing deployment v1.0
 
 **Time to deploy**: ~10 minutes
 
-The **Add client VMs to existing deployment** template provisions _x_ number of client VMs to an existing deployment (either public or private), and joins them to the deployment's domain.
+The **Add client VMs to existing deployment** template provisions _x_ number of client VMs to an existing deployment (either public or private), and joins them to the deployment's domain. You can choose Windows 7, 8.1 or 10.
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Foualabadmins%2Flab_deploy%2Fmaster%2Fadd-clients%2Fazuredeploy.json" target="_blank">
 <img src="http://azuredeploy.net/deploybutton.png"/>
@@ -19,8 +19,9 @@ Provide the following information:
 + VNet name to which VMs will be connected
 + AD domain name
 + OU for computer accounts, with container identifier (i.e. _CN=Computers_)
-+ AD DC IP address
 + AD username and password
++ AD DC IP address
++ Client OS (Windows 7, 8.1, or 10)
 + Number of client VMs to add
 + Starting number for client names (if there are existing clients, use the next unused increment)
 
@@ -40,8 +41,9 @@ Developed by the **MARVEL Skunkworks Lab**
 Author: Kelley Vice (kvice@microsoft.com)  
 https://github.com/maxskunkworks
 
-Last update: _6/19/2019_
+Last update: _8/28/2019_
 
 ## Changelog
 
-+ **6/19/2019**:  Initial commit. Derived from oualabadmins\lab_deploy\M365-base-config_DirSync. Added parameters for vnetName, OU, clientStartNumber, dcIp.
++ **6/19/2019**: Initial commit. Derived from oualabadmins\lab_deploy\M365-base-config_DirSync. Added parameters for vnetName, OU, clientStartNumber, dcIp.
++ **8/28/2019**: Added code to permit OS choice.
