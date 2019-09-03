@@ -1,0 +1,78 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "apiProfile": "2017-03-09-profile",
+    "parameters": {
+        "configName": { 
+          "type": "string" 
+        },
+        "tier": {
+          "type": "string" 
+        },
+        "count": {
+          "type": "int" 
+        },
+        "ipAllocation": {
+          "type": "string" 
+        },
+        "vnetName": {
+          "type": "string" 
+        },
+        "domainName": {
+          "type": "string" 
+        },
+        "dcIp": {
+          "type": "string",
+          "defaultValue": "127.0.0.1"
+        },
+        "startNumber": {
+          "type": "int"
+        }
+    },
+    "variables": {
+      "subnetName": "Subnet-1",
+      "subnetRef": "[concat(variables('VnetPath'),'/subnets/', variables('subnetName'))]",
+      "VnetResourceGroup": "ERNetwork",
+      "vnetPath": "[resourceId(variables('VnetResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
+      "nicPrefix": "[concat(parameters('configName'),'-',parameters('tier'),'_NIC-')]",
+      "publicIp": "[concat(parameters('configName'),'-',parameters('tier'),'_IP-')]",
+      "publicIpID": "[resourceId ('Microsoft.Network/publicIPAddresses/',variables('publicIp'))]"
+    },
+    "resources": [
+        {
+            "name": "[concat(variables('nicPrefix'),copyIndex(parameters('startNumber')))]",
+            "copy": {
+              "name": "nics",
+              "count": "[parameters('count')]"
+            },
+            "type": "Microsoft.Network/networkInterfaces",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [],
+            "apiVersion": "2018-01-01",
+            "comments": "NIC",
+            "properties": {
+              "ipConfigurations": [
+                {
+                  "name": "[concat('ipconfig',copyIndex(parameters('startNumber')))]",
+                  "properties": {
+                    "privateIPAllocationMethod": "[parameters('ipAllocation')]",
+                    "subnet": {
+                      "id": "[variables('subnetRef')]"
+                    },
+                    "publicIPAddress": {
+                      "id": "[concat(variables('publicIpID'),copyIndex(parameters('startNumber')))]"
+                    }
+                  }
+                }
+              ],
+              "dnsSettings": {
+                "dnsServers": [
+                  "[parameters('dcIp')]"
+                ],
+                "internalDomainNameSuffix": "[parameters('domainName')]"
+              }
+            }
+          }   
+    ],
+    "outputs": {}
+}

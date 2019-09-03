@@ -1,0 +1,248 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "configName": {
+      "type": "string",
+      "metadata": {
+        "description": "The unique prefix name of the deployment, i.e. kvice-clients. Do not use spaces or special characters other than _ or -. Used to prefix resource names for the deployment."
+      },
+      "defaultValue": ""
+    },
+    "vnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the VNet."
+      },
+      "defaultValue": "MAXLab-CORP-WUS2-VNET-2"
+    },
+    "domainName": {
+      "type": "string",
+      "metadata": {
+        "description": "The FQDN of the AD domain, such as corp.contoso52.com."
+      },
+      "defaultValue": ""
+    },
+    "computerOU": {
+      "type": "string",
+      "metadata": {
+        "description": "The custom OU for computer accounts (do not use CN=Computers). Ensure that the case matches."
+      },
+      "defaultValue": "OU=Machines"
+    },
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "The domain administrator username."
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The domain administrator account password."
+      }
+    },
+    "dcIpAddress": {
+      "type": "string",
+      "metadata": {
+        "description": "The IP address of the AD DC VM."
+      }
+    },    
+    "clientOS": {
+      "type": "string",
+      "metadata": {
+        "description": "The desired operating system for your client VMs."
+      },
+      "allowedValues": [
+        "Windows 7","Windows 8.1","Windows 10"
+      ],
+      "defaultValue": 1
+    },
+    "numberOfClientVms": {
+      "type": "int",
+      "metadata": {
+        "description": "The number of Windows 10 client VMs."
+      },
+      "defaultValue": 1
+    },
+    "clientNamePrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "The base name for the client VMs (i.e. CLIENT, which will result in VMs with names like CLIENT1, CLIENT2 etc.)."
+      },
+      "defaultValue": "CLIENT"
+    },
+    "clientStartNumber": {
+      "type": "int",
+      "metadata": {
+        "description": "The starting number for Windows 10 client VMs. Start with the number following the highest existing client number."
+      },
+      "defaultValue": 1
+    },
+    "vmSizeClient": {
+      "type": "string",
+      "metadata": {
+        "description": "Select a VM size for all Windows 10 client VMs in your deployment."
+      },
+      "allowedValues": [
+        "Standard_DS2_v2", "Standard_DS3_v2", "Standard_DS4_v2"
+      ],
+      "defaultValue": "Standard_DS2_v2"
+    },
+    "dnsLabelPrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "DNS label prefix for public IPs. Must be lowercase and match the regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$."
+      }
+    },
+    "_artifactsLocation": {
+      "type": "string",
+      "metadata": {
+        "description": "Github source repo. DO NOT CHANGE."
+      },
+      "defaultValue": "https://raw.githubusercontent.com/oualabadmins/lab_deploy/master/add-clients"
+    },
+    "_artifactsLocationSasToken": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Github source repo SAS token, if needed. DO NOT CHANGE."
+      },
+      "defaultValue": ""
+    }
+  },
+
+  "variables": {
+
+    "shortDomainName": "[first(split(parameters('domainName'),'.'))]",
+    "domainUserName": "[concat(variables('shortDomainName'),'\\',parameters('adminUsername'))]",
+    "templates": "[concat(parameters('_artifactsLocation'),'/nested')]",
+    "storageAccountName": "[concat(uniqueString(resourceGroup().id),'storage')]",
+
+    "SharedVmConfig": {
+      "location": "[resourceGroup().location]",
+      "vmSizeClient": "[parameters('vmSizeClient')]",
+      "domainUsername": "[variables('domainUsername')]",
+      "adminUsername": "[parameters('adminUsername')]",
+      "adminPassword": "[parameters('adminPassword')]",
+      "storageAccountNamePrefix": "[variables('storageAccountName')]",
+      "sasToken": "[parameters('_artifactsLocationSasToken')]",
+      "domainName": "[parameters('domainName')]",
+      "configName": "[parameters('configName')]",
+      "ou": "[concat(parameters('computerOU'),',DC=',replace(parameters('domainName'),'.',',DC='))]",
+      "scriptPath": "[concat(parameters('_artifactsLocation'),'/scripts')]",
+      "startNumber" : "[parameters('clientStartNumber')]",
+      "clientOS": "[parameters('clientOS')]"
+    }
+  },
+
+  "resources": [
+    {
+      "name": "[concat(parameters('configName'),'-CLIENT_IP')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "comments": "This is the deployment resource for CLIENT public IPs.",
+      "dependsOn": [],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/publicip.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "CLIENT"
+          },
+          "count": {
+            "value": "[parameters('numberOfClientVms')]"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "dnsLabelPrefix": {
+            "value": "[parameters('dnsLabelPrefix')]"
+          },
+          "startNumber": {
+            "value": "[parameters('clientStartNumber')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('configName'),'-CLIENT_NIC_DEPLOY')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "condition": "[greater(parameters('numberOfClientVms'),0)]",
+      "comments": "This is the deployment resource for CLIENT NICs.",
+      "dependsOn": [
+        "[concat(parameters('configName'),'-CLIENT_IP')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/nic.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "configName": { 
+            "value": "[parameters('configName')]" 
+          },
+          "tier": {
+            "value": "CLIENT"
+          },
+          "count": {
+            "value": "[parameters('numberOfClientVms')]"
+          },
+          "ipAllocation": {
+            "value": "Dynamic"
+          },
+          "vnetName": {
+            "value": "[parameters('vnetName')]"
+          },
+          "domainName": {
+            "value": "[parameters('domainName')]"
+          },
+          "dcIp": {
+            "value": "[parameters('dcIpAddress')]"
+          },
+          "startNumber": {
+            "value": "[parameters('clientStartNumber')]"
+          }
+        }
+      }
+    },
+
+    {
+      "name": "[concat(parameters('configName'),'-CLIENT_DEPLOY')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "condition": "[greater(parameters('numberOfClientVms'),0)]",
+      "comments": "This is the deployment resource for client VMs.",
+      "dependsOn": [
+        "[concat(parameters('configName'),'-CLIENT_NIC_DEPLOY')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templates'),'/client.json',parameters('_artifactsLocationSasToken'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "SharedVmConfig": { 
+            "value": "[variables('SharedVmConfig')]" 
+          },
+          "count": {
+            "value": "[parameters('numberOfClientVms')]"
+          },
+          "clientNamePrefix": {
+            "value": "[parameters('clientNamePrefix')]"
+          }
+        }
+      }
+    }
+  ],
+
+  "outputs": {}
+}
