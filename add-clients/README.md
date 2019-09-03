@@ -26,7 +26,7 @@ Provide the following information:
 + VNet name to which VMs will be connected
 + AD domain name
 + OU for computer accounts, with container identifier (i.e. _CN=Computers_)
-+ AD username and password
++ AD username and password for joining the domain. This account will also be added as the local administrator account on the VMs.
 + AD DC IP address
 + Client name prefix (the base name for the client VMs (i.e. CLIENT, which will result in VMs with names like CLIENT1, CLIENT2 etc.)
 + Client OS (Windows 7, 8.1, or 10)
