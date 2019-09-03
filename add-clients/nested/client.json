@@ -7,6 +7,9 @@
     },
     "count": {
       "type": "int"
+    },
+    "clientNamePrefix": {
+      "type": "string"
     }
   },
   "variables": {
@@ -20,7 +23,7 @@
     {
       "apiVersion": "2017-03-30",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat('CLIENT',copyIndex(parameters('SharedVmConfig').startNumber))]",
+      "name": "[concat(parameters('clientNamePrefix'),copyIndex(parameters('SharedVmConfig').startNumber))]",
       "location": "[parameters('SharedVmConfig').location]",
       "dependsOn": [],
       "copy": {
@@ -32,7 +35,7 @@
           "vmSize": "[parameters('SharedVmConfig').vmSizeClient]"
         },
         "osProfile": {
-          "computerName": "[concat('CLIENT',copyIndex(parameters('SharedVmConfig').startNumber))]",
+          "computerName": "[concat(parameters('clientNamePrefix'),copyIndex(parameters('SharedVmConfig').startNumber))]",
           "adminUsername": "[parameters('SharedVmConfig').adminUsername]",
           "adminPassword": "[parameters('SharedVmConfig').adminPassword]"
         },
@@ -62,7 +65,7 @@
       "name": "/JoinDomain",
       "location": "[parameters('SharedVmConfig').location]",
       "dependsOn": [
-        "[concat('CLIENT',copyIndex(parameters('SharedVmConfig').startNumber))]"
+        "[concat(parameters('clientNamePrefix'),copyIndex(parameters('SharedVmConfig').startNumber))]"
       ],
       "tags": {
         "displayName": "Join Domain"
@@ -91,7 +94,7 @@
       "scale": null,
       "location": "[parameters('SharedVmConfig').location]",
       "dependsOn": [
-        "[concat('CLIENT',copyIndex(parameters('SharedVmConfig').startNumber))]"
+        "[concat(parameters('clientNamePrefix'),copyIndex(parameters('SharedVmConfig').startNumber))]"
       ],
       "properties": {
         "publisher": "Microsoft.Compute",
@@ -109,7 +112,7 @@
       "apiVersion": "2017-03-30",
       "location": "[parameters('SharedVmConfig').location]",
       "dependsOn": [
-        "[concat('CLIENT',copyIndex(parameters('SharedVmConfig').startNumber))]",
+        "[concat(parameters('clientNamePrefix'),copyIndex(parameters('SharedVmConfig').startNumber))]",
         "/JoinDomain"
       ],
       "properties": {

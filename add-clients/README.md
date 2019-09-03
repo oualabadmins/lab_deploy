@@ -1,4 +1,4 @@
-﻿# Skunkworks Lab - Add client VMs to existing deployment (Private) v1.0
+﻿# Skunkworks Lab - Add client VMs to existing deployment (Private) v1.1
 
 **Time to deploy**: ~10 minutes
 
@@ -28,6 +28,7 @@ Provide the following information:
 + OU for computer accounts, with container identifier (i.e. _CN=Computers_)
 + AD username and password
 + AD DC IP address
++ Client name prefix (the base name for the client VMs (i.e. CLIENT, which will result in VMs with names like CLIENT1, CLIENT2 etc.)
 + Client OS (Windows 7, 8.1, or 10)
 + Number of client VMs to add
 + Starting number for client names (if there are existing clients, use the next unused increment)
@@ -48,9 +49,10 @@ Developed by the **MARVEL Skunkworks Lab**
 Author: Kelley Vice (kvice@microsoft.com)  
 https://github.com/maxskunkworks
 
-Last update: _8/28/2019_
+Last update: _9/3/2019_
 
 ## Changelog
 
 + **6/19/2019**: Initial commit. Derived from oualabadmins\lab_deploy\M365-base-config_DirSync. Added parameters for vnetName, OU, clientStartNumber, dcIp.
 + **8/28/2019**: Added code to permit OS choice.
++ **9/3/2019**: Added param for client name prefix.

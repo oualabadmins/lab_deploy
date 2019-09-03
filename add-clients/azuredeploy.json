@@ -65,6 +65,13 @@
       },
       "defaultValue": 1
     },
+    "clientNamePrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "The base name for the client VMs (i.e. CLIENT, which will result in VMs with names like CLIENT1, CLIENT2 etc.)."
+      },
+      "defaultValue": "CLIENT"
+    },
     "clientStartNumber": {
       "type": "int",
       "metadata": {
@@ -186,6 +193,9 @@
           },
           "count": {
             "value": "[parameters('numberOfClientVms')]"
+          },
+          "clientNamePrefix": {
+            "value": "[parameters('clientNamePrefix')]"
           }
         }
       }
