@@ -8,11 +8,7 @@
         "vnetName": {
             "type": "string",
           "allowedValues": [
-<<<<<<< HEAD
-            "MAXLab-CORP-WCUS2-VNET-1",
-=======
             "MAXLab-CORP-WUS2-VNET-1",
->>>>>>> 7c42a655c85fe14e3753a86233e34108e21c23fe
             "MAXLab-CORP-WCUS-VNET-1",
             "MAXLab-CORP-SCUS-VNET-1",
             "MAXLab-CORP-SCUS-VNET-2"
@@ -23,7 +19,7 @@
         },
         "maxAllowedVmsPerUser": {
             "type": "string",
-            "defaultValue": "12"
+            "defaultValue": "10"
         },
         "domainUsername": {
             "type": "string",
