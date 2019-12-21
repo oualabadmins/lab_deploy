@@ -8,7 +8,7 @@
         "vnetName": {
             "type": "string",
           "allowedValues": [
-            "MAXLab-CORP-WCUS2-VNET-1",
+            "MAXLab-CORP-WUS2-VNET-1",
             "MAXLab-CORP-WCUS-VNET-1",
             "MAXLab-CORP-SCUS-VNET-1",
             "MAXLab-CORP-SCUS-VNET-2"
