@@ -1,5 +1,5 @@
 ﻿{
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "labName": {
@@ -51,7 +51,7 @@
                           },
                           {
                             "name": "domainOU",
-                            "value": "OU=OSSUATLDKM,OU=Resources,DC=redmond,DC=corp,DC=microsoft,DC=com"
+                            "value": "OU=SkunkworksLab,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
                           },
                           {
                             "name": "domainJoinUser",
@@ -170,7 +170,7 @@
                                     },
                                     {
                                         "name": "domainOU",
-                                        "value": "OU=OSSUATLDKM,OU=Resources,DC=redmond,DC=corp,DC=microsoft,DC=com"
+                                        "value": "OU=SkunkworksLab,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
                                     },
                                     {
                                         "name": "domainJoinUser",
@@ -228,7 +228,7 @@
                                     },
                                     {
                                         "name": "domainOU",
-                                        "value": "OU=OSSUATLDKM,OU=Resources,DC=redmond,DC=corp,DC=microsoft,DC=com"
+                                        "value": "OU=SkunkworksLab,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
                                     },
                                     {
                                         "name": "domainJoinUser",
@@ -286,7 +286,7 @@
                                     },
                                     {
                                         "name": "domainOU",
-                                        "value": "OU=OSSUATLDKM,OU=Resources,DC=redmond,DC=corp,DC=microsoft,DC=com"
+                                        "value": "OU=SkunkworksLab,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
                                     },
                                     {
                                         "name": "domainJoinUser",
@@ -344,7 +344,7 @@
                                     },
                                     {
                                         "name": "domainOU",
-                                        "value": "OU=OSSUATLDKM,OU=Resources,DC=redmond,DC=corp,DC=microsoft,DC=com"
+                                        "value": "OU=SkunkworksLab,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
                                     },
                                     {
                                         "name": "domainJoinUser",
@@ -402,7 +402,7 @@
                                     },
                                     {
                                         "name": "domainOU",
-                                        "value": "OU=OSSUATLDKM,OU=Resources,DC=redmond,DC=corp,DC=microsoft,DC=com"
+                                        "value": "OU=SkunkworksLab,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
                                     },
                                     {
                                         "name": "domainJoinUser",
@@ -460,7 +460,7 @@
                                     },
                                     {
                                         "name": "domainOU",
-                                        "value": "OU=OSSUATLDKM,OU=Resources,DC=redmond,DC=corp,DC=microsoft,DC=com"
+                                        "value": "OU=SkunkworksLab,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
                                     },
                                     {
                                         "name": "domainJoinUser",
@@ -518,7 +518,7 @@
                                     },
                                     {
                                         "name": "domainOU",
-                                        "value": "OU=OSSUATLDKM,OU=Resources,DC=redmond,DC=corp,DC=microsoft,DC=com"
+                                        "value": "OU=SkunkworksLab,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
                                     },
                                     {
                                         "name": "domainJoinUser",
@@ -576,7 +576,7 @@
                                     },
                                     {
                                         "name": "domainOU",
-                                        "value": "OU=OSSUATLDKM,OU=Resources,DC=redmond,DC=corp,DC=microsoft,DC=com"
+                                        "value": "OU=SkunkworksLab,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
                                     },
                                     {
                                         "name": "domainJoinUser",
