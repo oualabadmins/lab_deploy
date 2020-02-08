@@ -8,7 +8,7 @@ Param (
         [Parameter(Mandatory)]
         [string]$Username,
 	    [Parameter(Mandatory)]
-        [string]$Password,
+        [SecureString]$Password,
 		[Parameter(Mandatory)]
         [string]$Share,
 		[Parameter(Mandatory)]

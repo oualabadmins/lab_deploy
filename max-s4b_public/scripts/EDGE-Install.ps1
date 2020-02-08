@@ -9,7 +9,7 @@ Param (
         [string]$Username,
 
 	    [Parameter(Mandatory)]
-        [string]$Password,
+        [SecureString]$Password,
 
 		[Parameter(Mandatory)]
         [string]$Share,
@@ -21,7 +21,7 @@ Param (
         [string]$CAComputerName,
 
 		[Parameter(Mandatory)]
-        [string]$CertPassword,
+        [SecureString]$CertPassword,
 
 		[Parameter(Mandatory)]
         [string]$PublicCert
