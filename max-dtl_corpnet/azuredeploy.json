@@ -9,8 +9,8 @@
             "type": "string",
             "allowedValues": [
                 "MAXLab-CORP-WCUS-VNET-1",
-                "MAXLab-CORP-SCUS-VNET-1",
-                "MAXLab-CORP-SCUS-VNET-2"
+                "MAXLab-CORP-WUS2-VNET-1",
+                "MAXLab-CORP-WUS2-VNET-2"
             ],
             "metadata": {
                 "description": "Make sure the VNET exists in the subscription/region of the deployment."
