@@ -7,7 +7,7 @@
 | Subscription             | Region(s)
 | :-------------------     | :-------------------
 | MAXLAB R&D INT 1         | West US 2
-| MAXLAB R&D INT 2         | West US 2 (preferred), West Central US
+| MAXLAB R&D INT 2         | West US 2 (preferred) <br> West Central US
 
 **Time to deploy**: ~3 minutes
 
