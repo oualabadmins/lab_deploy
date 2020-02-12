@@ -182,9 +182,9 @@
             "apiVersion": "2014-10-01-preview",
             "name": "[guid(parameters('labName'),variables('UniqueStringForGuid'))]",
             "properties": {
-              "roleDefinitionId": "[variables('Owner')]",
-              "principalId": "[parameters('RbacUserID')]",
-              "scope": "[resourceGroup().id]"
+                "roleDefinitionId": "[variables('Owner')]",
+                "principalId": "[parameters('RbacUserID')]",
+                "scope": "[resourceGroup().id]"
             }
         }
     ],
