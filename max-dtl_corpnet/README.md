@@ -6,9 +6,8 @@
 
 | Subscription             | Region(s)
 | :-------------------     | :-------------------
-| MAXLAB R&D Self Service (preferred)  | South Central US <br> West Central US
-| MAXLAB R&D INT 1         | West US 2 <br> West Central US
-| MAXLAB R&D INT 2         | West US 2
+| MAXLAB R&D INT 1         | West US 2
+| MAXLAB R&D INT 2         | West US 2 (preferred) <br> West Central US
 
 **Time to deploy**: ~3 minutes
 
