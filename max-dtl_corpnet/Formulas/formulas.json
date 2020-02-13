@@ -45,6 +45,7 @@
                                 "secretname": "oualabadmin-local"
                             }
                         },
+
                     "labSubnetName": "Subnet-1",
                     "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
                     "disallowPublicIpAddress": true,
@@ -59,6 +60,7 @@
                           {
                             "name": "domainOU",
                             "value": "OU=SkunkworksLab,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
+
                           },
                           {
                             "name": "domainJoinUser",
@@ -126,6 +128,7 @@
                                 "secretname": "oualabadmin-local"
                             }
                         },
+
                     "labSubnetName": "Subnet-1",
                     "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
                     "disallowPublicIpAddress": true,
