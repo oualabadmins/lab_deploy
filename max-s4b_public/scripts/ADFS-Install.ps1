@@ -9,7 +9,7 @@ Param (
         [string]$Username,
 
 	    [Parameter(Mandatory)]
-        [SecureString]$Password,
+        [string]$Password,
 
 		[Parameter(Mandatory)]
         [string]$Share,
@@ -21,7 +21,7 @@ Param (
         [string]$StsServiceName,
 
 		[Parameter(Mandatory)]
-        [SecureString]$CertPassword,
+        [string]$CertPassword,
 
 		[Parameter(Mandatory)]
         [string]$CAComputerName,

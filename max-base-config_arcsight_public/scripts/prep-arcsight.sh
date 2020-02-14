@@ -26,8 +26,8 @@ mkdir /etc/skel/.vnc
 # Create arcsight user
 mkdir /home/arcsight
 groupadd arcsight
-username="<<ARCSIGHT_USER_NAME_HERE>>"
-password="<<ARCSIGHT_USER_PASSWORD_HERE>>"
+username="arcsight"
+password="arcsight"
 pass=$(perl -e 'print crypt($ARGV[0], "password")' $password)
 useradd -c “arcsight_software_owner” -g arcsight -d /home/arcsight -p $pass -m -s /bin/bash arcsight
 cd /home/arcsight/
@@ -48,8 +48,8 @@ sysctl -w net.ipv6.conf.all.disable_ipv6=1
 
 # Mount SMB file share //maxfilesext2.file.core.windows.net/arcsight
 mkdir -p /mnt/maxfilesext2
-mount -t cifs //maxfilesext2.file.core.windows.net/arcsight /mnt/maxfilesext2 -o vers=3.0,username=maxfilesext2,password="<<INSERT_maxfilesext2_PASSWORD_HERE>>",dir_mode=0777,file_mode=0777,sec=ntlmssp
-echo -e "//maxfilesext2.file.core.windows.net/arcsight /mnt/maxfilesext2 cifs vers=3.0,username=maxfilesext2,password="<<INSERT_maxfilesext2_PASSWORD_HERE>>",dir_mode=0777,file_mode=0777" >> /etc/fstab
+mount -t cifs //maxfilesext2.file.core.windows.net/arcsight /mnt/maxfilesext2 -o vers=3.0,username=maxfilesext2,password=yqIHW9FzyyMGCN+CDeHFzsITUFdC0k4xq/Wa0G7bqIxVOJyQtFoA1BM/9V0C6k+P3U9KaI98sDeeh8G4vSNa4A==,dir_mode=0777,file_mode=0777,sec=ntlmssp
+echo -e "//maxfilesext2.file.core.windows.net/arcsight /mnt/maxfilesext2 cifs vers=3.0,username=maxfilesext2,password=yqIHW9FzyyMGCN+CDeHFzsITUFdC0k4xq/Wa0G7bqIxVOJyQtFoA1BM/9V0C6k+P3U9KaI98sDeeh8G4vSNa4A==,dir_mode=0777,file_mode=0777" >> /etc/fstab
 
 # Create install folder, chown to arcsight
 mkdir -m777 /arcsight/arcsight_install

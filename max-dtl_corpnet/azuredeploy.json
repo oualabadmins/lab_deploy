@@ -7,11 +7,12 @@
         },
         "vnetName": {
             "type": "string",
-            "allowedValues": [
-                "MAXLab-CORP-WCUS-VNET-1",
-                "MAXLab-CORP-WUS2-VNET-1",
-                "MAXLab-CORP-WUS2-VNET-2"
-            ],
+          "allowedValues": [
+            "MAXLab-CORP-WUS2-VNET-1",
+            "MAXLab-CORP-WCUS-VNET-1",
+            "MAXLab-CORP-SCUS-VNET-1",
+            "MAXLab-CORP-SCUS-VNET-2"
+          ],
             "metadata": {
                 "description": "Make sure the VNET exists in the subscription/region of the deployment."
             }
@@ -182,9 +183,9 @@
             "apiVersion": "2014-10-01-preview",
             "name": "[guid(parameters('labName'),variables('UniqueStringForGuid'))]",
             "properties": {
-                "roleDefinitionId": "[variables('Owner')]",
-                "principalId": "[parameters('RbacUserID')]",
-                "scope": "[resourceGroup().id]"
+              "roleDefinitionId": "[variables('Owner')]",
+              "principalId": "[parameters('RbacUserID')]",
+              "scope": "[resourceGroup().id]"
             }
         }
     ],
