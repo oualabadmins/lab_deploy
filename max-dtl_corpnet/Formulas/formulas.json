@@ -36,16 +36,8 @@
                 "formulaContent": {
                   "properties": {
                     "size": "Standard_DS2_v2",
-                        "userName": "oualabadmin-local",
-                        "password": {
-                            "reference": {
-                                "kevault": {
-                                    "id": "/subscriptions/0ec458ae-137b-489d-abf1-1ce3db895272/resourceGroups/max-lab-infra/providers/Microsoft.KeyVault/vaults/MAX-Lab-Keys"
-                                },
-                                "secretname": "oualabadmin-local"
-                            }
-                        },
-
+                    "userName": "oualabadmin-local",
+                    "password": "Pr0sthetic=hat",
                     "labSubnetName": "Subnet-1",
                     "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
                     "disallowPublicIpAddress": true,
@@ -59,8 +51,7 @@
                           },
                           {
                             "name": "domainOU",
-                            "value": "OU=SkunkworksLab,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
-
+                            "value": "OU=SKUNKWORKSLAB,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
                           },
                           {
                             "name": "domainJoinUser",
@@ -119,16 +110,8 @@
                 "formulaContent": {
                   "properties": {
                     "size": "Standard_DS2_v2",
-                        "userName": "oualabadmin-local",
-                        "password": {
-                            "reference": {
-                                "kevault": {
-                                    "id": "/subscriptions/0ec458ae-137b-489d-abf1-1ce3db895272/resourceGroups/max-lab-infra/providers/Microsoft.KeyVault/vaults/MAX-Lab-Keys"
-                                },
-                                "secretname": "oualabadmin-local"
-                            }
-                        },
-
+                    "userName": "oualabadmin-local",
+                    "password": "Pr0sthetic=hat",
                     "labSubnetName": "Subnet-1",
                     "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
                     "disallowPublicIpAddress": true,
@@ -173,14 +156,7 @@
                     "properties": {
                         "size": "Standard_DS3_v2",
                         "userName": "oualabadmin-local",
-                        "password": {
-                            "reference": {
-                                "kevault": {
-                                    "id": "/subscriptions/0ec458ae-137b-489d-abf1-1ce3db895272/resourceGroups/max-lab-infra/providers/Microsoft.KeyVault/vaults/MAX-Lab-Keys"
-                                },
-                                "secretname": "oualabadmin-local"
-                            }
-                        },
+                        "password": "Pr0sthetic=hat",                        
                         "labSubnetName": "Subnet-1",
                         "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
                         "disallowPublicIpAddress": true,
@@ -194,7 +170,7 @@
                                     },
                                     {
                                         "name": "domainOU",
-                                        "value": "OU=SkunkworksLab,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
+                                        "value": "OU=SKUNKWORKSLAB,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
                                     },
                                     {
                                         "name": "domainJoinUser",
@@ -238,14 +214,7 @@
                     "properties": {
                         "size": "Standard_DS3_v2",
                         "userName": "oualabadmin-local",
-                        "password": {
-                            "reference": {
-                                "kevault": {
-                                    "id": "/subscriptions/0ec458ae-137b-489d-abf1-1ce3db895272/resourceGroups/max-lab-infra/providers/Microsoft.KeyVault/vaults/MAX-Lab-Keys"
-                                },
-                                "secretname": "oualabadmin-local"
-                            }
-                        },
+                        "password": "Pr0sthetic=hat",
                         "labSubnetName": "Subnet-1",
                         "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
                         "disallowPublicIpAddress": true,
@@ -259,7 +228,7 @@
                                     },
                                     {
                                         "name": "domainOU",
-                                        "value": "OU=SkunkworksLab,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
+                                        "value": "OU=SKUNKWORKSLAB,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
                                     },
                                     {
                                         "name": "domainJoinUser",
@@ -303,16 +272,7 @@
                     "properties": {
                         "size": "Standard_DS3_v2",
                         "userName": "oualabadmin-local",
-                        "password": {
-                            "reference": {
-                                "kevault": {
-                                    "id": "/subscriptions/0ec458ae-137b-489d-abf1-1ce3db895272/resourceGroups/max-lab-infra/providers/Microsoft.KeyVault/vaults/MAX-Lab-Keys"
-                                },
-                                "secretname": "oualabadmin-local"
-                            }
-                        },
-                        "labSubnetName": "Subnet-1",
-                        "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
+                        "password": "Pr0sthetic=hat",                        "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
                         "disallowPublicIpAddress": true,
                         "artifacts": [
                             {
@@ -324,7 +284,7 @@
                                     },
                                     {
                                         "name": "domainOU",
-                                        "value": "OU=SkunkworksLab,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
+                                        "value": "OU=SKUNKWORKSLAB,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
                                     },
                                     {
                                         "name": "domainJoinUser",
@@ -368,14 +328,7 @@
                     "properties": {
                         "size": "Standard_DS3_v2",
                         "userName": "oualabadmin-local",
-                        "password": {
-                            "reference": {
-                                "kevault": {
-                                    "id": "/subscriptions/0ec458ae-137b-489d-abf1-1ce3db895272/resourceGroups/max-lab-infra/providers/Microsoft.KeyVault/vaults/MAX-Lab-Keys"
-                                },
-                                "secretname": "oualabadmin-local"
-                            }
-                        },
+                        "password": "Pr0sthetic=hat",
                         "labSubnetName": "Subnet-1",
                         "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
                         "disallowPublicIpAddress": true,
@@ -389,7 +342,7 @@
                                     },
                                     {
                                         "name": "domainOU",
-                                        "value": "OU=SkunkworksLab,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
+                                        "value": "OU=SKUNKWORKSLAB,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
                                     },
                                     {
                                         "name": "domainJoinUser",
@@ -433,14 +386,7 @@
                     "properties": {
                         "size": "Standard_DS3_v2",
                         "userName": "oualabadmin-local",
-                        "password": {
-                            "reference": {
-                                "kevault": {
-                                    "id": "/subscriptions/0ec458ae-137b-489d-abf1-1ce3db895272/resourceGroups/max-lab-infra/providers/Microsoft.KeyVault/vaults/MAX-Lab-Keys"
-                                },
-                                "secretname": "oualabadmin-local"
-                            }
-                        },
+                        "password": "Pr0sthetic=hat",
                         "labSubnetName": "Subnet-1",
                         "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
                         "disallowPublicIpAddress": true,
@@ -454,7 +400,7 @@
                                     },
                                     {
                                         "name": "domainOU",
-                                        "value": "OU=SkunkworksLab,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
+                                        "value": "OU=SKUNKWORKSLAB,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
                                     },
                                     {
                                         "name": "domainJoinUser",
@@ -498,14 +444,7 @@
                     "properties": {
                         "size": "Standard_DS3_v2",
                         "userName": "oualabadmin-local",
-                        "password": {
-                            "reference": {
-                                "kevault": {
-                                    "id": "/subscriptions/0ec458ae-137b-489d-abf1-1ce3db895272/resourceGroups/max-lab-infra/providers/Microsoft.KeyVault/vaults/MAX-Lab-Keys"
-                                },
-                                "secretname": "oualabadmin-local"
-                            }
-                        },
+                        "password": "Pr0sthetic=hat",
                         "labSubnetName": "Subnet-1",
                         "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
                         "disallowPublicIpAddress": true,
@@ -519,7 +458,7 @@
                                     },
                                     {
                                         "name": "domainOU",
-                                        "value": "OU=SkunkworksLab,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
+                                        "value": "OU=SKUNKWORKSLAB,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
                                     },
                                     {
                                         "name": "domainJoinUser",
@@ -563,14 +502,7 @@
                     "properties": {
                         "size": "Standard_DS3_v2",
                         "userName": "oualabadmin-local",
-                        "password": {
-                            "reference": {
-                                "kevault": {
-                                    "id": "/subscriptions/0ec458ae-137b-489d-abf1-1ce3db895272/resourceGroups/max-lab-infra/providers/Microsoft.KeyVault/vaults/MAX-Lab-Keys"
-                                },
-                                "secretname": "oualabadmin-local"
-                            }
-                        },
+                        "password": "Pr0sthetic=hat",
                         "labSubnetName": "Subnet-1",
                         "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
                         "disallowPublicIpAddress": true,
@@ -584,7 +516,7 @@
                                     },
                                     {
                                         "name": "domainOU",
-                                        "value": "OU=SkunkworksLab,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
+                                        "value": "OU=SKUNKWORKSLAB,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
                                     },
                                     {
                                         "name": "domainJoinUser",
@@ -628,14 +560,7 @@
                     "properties": {
                         "size": "Standard_DS3_v2",
                         "userName": "oualabadmin-local",
-                        "password": {
-                            "reference": {
-                                "kevault": {
-                                    "id": "/subscriptions/0ec458ae-137b-489d-abf1-1ce3db895272/resourceGroups/max-lab-infra/providers/Microsoft.KeyVault/vaults/MAX-Lab-Keys"
-                                },
-                                "secretname": "oualabadmin-local"
-                            }
-                        },
+                        "password": "Pr0sthetic=hat",
                         "labSubnetName": "Subnet-1",
                         "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
                         "disallowPublicIpAddress": true,
@@ -649,7 +574,7 @@
                                     },
                                     {
                                         "name": "domainOU",
-                                        "value": "OU=SkunkworksLab,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
+                                        "value": "OU=SKUNKWORKSLAB,OU=NoSync,OU=MLS,DC=redmond,DC=corp,DC=microsoft,DC=com"
                                     },
                                     {
                                         "name": "domainJoinUser",
@@ -693,14 +618,7 @@
                     "properties": {
                         "size": "Standard_DS2_v2",
                         "userName": "oualabadmin-local",
-                        "password": {
-                            "reference": {
-                                "kevault": {
-                                    "id": "/subscriptions/0ec458ae-137b-489d-abf1-1ce3db895272/resourceGroups/max-lab-infra/providers/Microsoft.KeyVault/vaults/MAX-Lab-Keys"
-                                },
-                                "secretname": "oualabadmin-local"
-                            }
-                        },
+                        "password": "Pr0sthetic=hat",
                         "labSubnetName": "Subnet-1",
                         "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
                         "disallowPublicIpAddress": true,
@@ -750,14 +668,7 @@
                     "properties": {
                         "size": "Standard_DS2_v2",
                         "userName": "oualabadmin-local",
-                        "password": {
-                            "reference": {
-                                "kevault": {
-                                    "id": "/subscriptions/0ec458ae-137b-489d-abf1-1ce3db895272/resourceGroups/max-lab-infra/providers/Microsoft.KeyVault/vaults/MAX-Lab-Keys"
-                                },
-                                "secretname": "oualabadmin-local"
-                            }
-                        },
+                        "password": "Pr0sthetic=hat",
                         "labSubnetName": "Subnet-1",
                         "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
                         "disallowPublicIpAddress": true,
@@ -807,14 +718,7 @@
                     "properties": {
                         "size": "Standard_DS3_v2",
                         "userName": "oualabadmin-local",
-                        "password": {
-                            "reference": {
-                                "kevault": {
-                                    "id": "/subscriptions/0ec458ae-137b-489d-abf1-1ce3db895272/resourceGroups/max-lab-infra/providers/Microsoft.KeyVault/vaults/MAX-Lab-Keys"
-                                },
-                                "secretname": "oualabadmin-local"
-                            }
-                        },
+                        "password": "Pr0sthetic=hat",
                         "labSubnetName": "Subnet-1",
                         "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
                         "disallowPublicIpAddress": true,
@@ -872,14 +776,7 @@
                     "properties": {
                         "size": "Standard_DS3_v2",
                         "userName": "oualabadmin-local",
-                        "password": {
-                            "reference": {
-                                "kevault": {
-                                    "id": "/subscriptions/0ec458ae-137b-489d-abf1-1ce3db895272/resourceGroups/max-lab-infra/providers/Microsoft.KeyVault/vaults/MAX-Lab-Keys"
-                                },
-                                "secretname": "oualabadmin-local"
-                            }
-                        },
+                        "password": "Pr0sthetic=hat",
                         "labSubnetName": "Subnet-1",
                         "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
                         "disallowPublicIpAddress": true,
@@ -937,14 +834,7 @@
                     "properties": {
                         "size": "Standard_DS3_v2",
                         "userName": "oualabadmin-local",
-                        "password": {
-                            "reference": {
-                                "kevault": {
-                                    "id": "/subscriptions/0ec458ae-137b-489d-abf1-1ce3db895272/resourceGroups/max-lab-infra/providers/Microsoft.KeyVault/vaults/MAX-Lab-Keys"
-                                },
-                                "secretname": "oualabadmin-local"
-                            }
-                        },
+                        "password": "Pr0sthetic=hat",
                         "labSubnetName": "Subnet-1",
                         "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
                         "disallowPublicIpAddress": true,
@@ -1002,14 +892,7 @@
                     "properties": {
                         "size": "Standard_DS3_v2",
                         "userName": "oualabadmin-local",
-                        "password": {
-                            "reference": {
-                                "kevault": {
-                                    "id": "/subscriptions/0ec458ae-137b-489d-abf1-1ce3db895272/resourceGroups/max-lab-infra/providers/Microsoft.KeyVault/vaults/MAX-Lab-Keys"
-                                },
-                                "secretname": "oualabadmin-local"
-                            }
-                        },
+                        "password": "Pr0sthetic=hat",
                         "labSubnetName": "Subnet-1",
                         "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
                         "disallowPublicIpAddress": true,
@@ -1067,14 +950,7 @@
                     "properties": {
                         "size": "Standard_DS3_v2",
                         "userName": "oualabadmin-local",
-                        "password": {
-                            "reference": {
-                                "kevault": {
-                                    "id": "/subscriptions/0ec458ae-137b-489d-abf1-1ce3db895272/resourceGroups/max-lab-infra/providers/Microsoft.KeyVault/vaults/MAX-Lab-Keys"
-                                },
-                                "secretname": "oualabadmin-local"
-                            }
-                        },
+                        "password": "Pr0sthetic=hat",
                         "labSubnetName": "Subnet-1",
                         "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
                         "disallowPublicIpAddress": true,
@@ -1132,14 +1008,7 @@
                     "properties": {
                         "size": "Standard_DS3_v2",
                         "userName": "oualabadmin-local",
-                        "password": {
-                            "reference": {
-                                "kevault": {
-                                    "id": "/subscriptions/0ec458ae-137b-489d-abf1-1ce3db895272/resourceGroups/max-lab-infra/providers/Microsoft.KeyVault/vaults/MAX-Lab-Keys"
-                                },
-                                "secretname": "oualabadmin-local"
-                            }
-                        },
+                        "password": "Pr0sthetic=hat",
                         "labSubnetName": "Subnet-1",
                         "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
                         "disallowPublicIpAddress": true,
@@ -1196,15 +1065,8 @@
                 "formulaContent": {
                   "properties": {
                     "size": "Standard_DS2_v2",
-                        "userName": "oualabadmin-local",
-                        "password": {
-                            "reference": {
-                                "kevault": {
-                                    "id": "/subscriptions/0ec458ae-137b-489d-abf1-1ce3db895272/resourceGroups/max-lab-infra/providers/Microsoft.KeyVault/vaults/MAX-Lab-Keys"
-                                },
-                                "secretname": "oualabadmin-local"
-                            }
-                        },
+                    "userName": "oualabadmin-local",
+                    "password": "Pr0sthetic=hat",
                     "labSubnetName": "Subnet-1",
                     "labVirtualNetworkId": "[concat('/virtualnetworks/', parameters('VnetName'))]",
                     "disallowPublicIpAddress": true,
